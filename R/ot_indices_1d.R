@@ -1,47 +1,67 @@
 #' Evaluate optimal transport indices on one dimensional vectors
 #'
-#' @param x an array containing the input values
+#' @param x a data.frame containing the input(s) values
 #' @param y an array containing the output values
-#' @param M a scalar representing the number of partitions
+#' @param M a scalar representing the number of partitions for continuous inputs
+#' @param ext_out logical indicating if the function should return the inner statistics and the partitions
 #'
-#' @return A sensitivity index between 0 and 1
+#' @return A sensitivity index between 0 and 1 for each of the columns in x
 #' @export
 #'
 #' @examples
 #' x <- rnorm(1000)
 #' y <- 10*x
-#' ot_indices_1d(x, y, 30)
-ot_indices_1d <- function(x, y, M) {
-  # Input checks
-  stopifnot(is.double(x), is.double(y))
-  stopifnot(length(x) == length(y))
-  stopifnot(length(x) > M)
+#' ot_indices_1d(data.frame(x), y, 30)
 
-  # Retrieve x ranks
-  ord <- rank(x)
+ot_indices_1d <- function(x, y, M, ext_out = FALSE) {
+  # Input checks
+  stopifnot(is.data.frame(x))
+  stopifnot(dim(x)[1] == length(y))
+  stopifnot(dim(x)[1] > M)
+
+  # Build partitions for estimator
+  partitions <- build_partition(x, M)
 
   # Sort y
   y_sort <- sort(y)
 
-  # Get the number of realizations
-  N <- length(x)
+  # Get inputs features
+  N <- dim(x)[1]
+  K <- dim(x)[2]
 
-  # Build the partitions. Each partition has ~ the same number of elements
-  partitions_indices <- floor(seq(from = 1, to = N + 1, length.out = M + 1))
+  # Evaluate upper bound
+  V <- 2 * stats::var(y)
 
-  # Get the number of elements in each partition
-  n <- diff(partitions_indices)
+  # Build the return structure
+  W <- array(dim = K)
+  if (ext_out) IS <- list()
 
-  # Initialize the return structure
-  W <- matrix(nrow = 1, ncol = M)
+  for (k in seq(K)) {
+    # Get the partitions for the current input
+    partition <- partitions[[k]]
 
-  for (m in seq(M)) {
-    partition <- partitions_indices[m]:(partitions_indices[m+1] - 1)
-    partition <- which(ord %in% partition)
-    yc <- sort(y[partition])
+    # Set the number of partition elements
+    M <- length(partition)
 
-    W[1, m] <- optimal_transport_1d(partition, y_sort, yc)
+    # Initialize the return structure
+    Wk <- matrix(nrow = 1, ncol = M)
+    n <- matrix(nrow = M)
+
+    for (m in seq(M)) {
+      partition_element <- partition[[m]]
+      yc <- sort(y[partition_element])
+
+      Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc)
+      n[m] <- length(partition_element)
+    }
+
+    W[k] <- ((Wk %*% n) / (V * N))[1, 1]
+    if (ext_out) IS[[k]] <- Wk
   }
 
-  return(((W %*% n) / (2 * stats::var(y) * N))[1, 1])
+  if (ext_out) {
+    return(list(W = W, IS = IS, partitions = partitions))
+  } else {
+    return(list(W = W))
+  }
 }

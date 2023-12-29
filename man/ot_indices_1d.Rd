@@ -4,17 +4,19 @@
 \alias{ot_indices_1d}
 \title{Evaluate optimal transport indices on one dimensional vectors}
 \usage{
-ot_indices_1d(x, y, M)
+ot_indices_1d(x, y, M, ext_out = FALSE)
 }
 \arguments{
-\item{x}{an array containing the input values}
+\item{x}{a data.frame containing the input(s) values}
 
 \item{y}{an array containing the output values}
 
-\item{M}{a scalar representing the number of partitions}
+\item{M}{a scalar representing the number of partitions for continuous inputs}
+
+\item{ext_out}{logical indicating if the function should return the inner statistics and the partitions}
 }
 \value{
-A sensitivity index between 0 and 1
+A sensitivity index between 0 and 1 for each of the columns in x
 }
 \description{
 Evaluate optimal transport indices on one dimensional vectors
@@ -22,5 +24,5 @@ Evaluate optimal transport indices on one dimensional vectors
 \examples{
 x <- rnorm(1000)
 y <- 10*x
-ot_indices_1d(x, y, 30)
+ot_indices_1d(data.frame(x), y, 30)
 }
