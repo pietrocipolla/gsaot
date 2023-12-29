@@ -13,6 +13,10 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    Rcpp,
     stats
 URL: https://github.com/pietrocipolla/gsaot
 BugReports: https://github.com/pietrocipolla/gsaot/issues
+LinkingTo: 
+    Rcpp,
+    RcppEigen

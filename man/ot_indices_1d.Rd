@@ -23,6 +23,6 @@ Evaluate optimal transport indices on one dimensional vectors
 }
 \examples{
 x <- rnorm(1000)
-y <- 10*x
+y <- 10 * x
 ot_indices_1d(data.frame(x), y, 30)
 }
