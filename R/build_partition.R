@@ -10,7 +10,7 @@ build_partition <- function(x, M) {
     # If the variable is continuous build the partititon using quantiles
     if (is.numeric(x[, k])) {
       partition_indices[[k]] <- build_continuous_partition(x[, k], M)
-    # Otherwise use the unique different elements of the inputs
+      # Otherwise use the unique different elements of the inputs
     } else {
       partition_indices[[k]] <- build_discrete_partition(x[, k])
     }

@@ -10,9 +10,8 @@
 #'
 #' @examples
 #' x <- rnorm(1000)
-#' y <- 10*x
+#' y <- 10 * x
 #' ot_indices_1d(data.frame(x), y, 30)
-
 ot_indices_1d <- function(x, y, M, ext_out = FALSE) {
   # Input checks
   stopifnot(is.data.frame(x))

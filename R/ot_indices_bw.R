@@ -28,7 +28,6 @@
 #' y <- data.frame(y)
 #'
 #' ot_indices_bw(x, y, 100)
-
 ot_indices_bw <- function(x, y, M, ext_out = FALSE) {
   # Input checks
   stopifnot(is.data.frame(x), is.data.frame(y))
