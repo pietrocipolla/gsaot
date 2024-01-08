@@ -2,6 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 optimal_transport_sinkhorn <- function(costMatrix, numIterations, epsilon) {
-    .Call('_gsaot_optimal_transport_sinkhorn', PACKAGE = 'gsaot', costMatrix, numIterations, epsilon)
+    .Call(`_gsaot_optimal_transport_sinkhorn`, costMatrix, numIterations, epsilon)
+}
+
+optimal_transport_sinkhorn_hist <- function(a, b, costMatrix, numIterations, epsilon) {
+    .Call(`_gsaot_optimal_transport_sinkhorn_hist`, a, b, costMatrix, numIterations, epsilon)
 }
 

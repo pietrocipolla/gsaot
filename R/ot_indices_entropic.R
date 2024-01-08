@@ -1,4 +1,38 @@
-ot_indices_entropic <- function(x, y, M, eps, d = 2, num_iterations = 10000, cost = "euclidean") {
+#' Title
+#'
+#' @param x a data.frame containing the input(s) values
+#' @param y a data.frame containing the outputs values
+#' @param M a scalar representing the number of partitions for continuous inputs
+#' @param eps a double representing the coefficient of the entropic regularization. If negative the value is scaled according to the maximum of the cost matrix.
+#' @param d exponential of the cost
+#' @param cost type of cost. The types are defined by the function dist of the stats package
+#' @param num_iterations maximum number of iterations of the Sinkhorn algorithm
+#'
+#' @return A sensitivity index between 0 and 1 for each of the columns in x
+#' @export
+#'
+#' @examples
+#' N <- 1000
+#'
+#' mx <- c(1, 1, 1)
+#' Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
+#'
+#' x1 <- rnorm(N)
+#' x2 <- rnorm(N)
+#' x3 <- rnorm(N)
+#'
+#' x <- cbind(x1, x2, x3)
+#' x <- mx + x %*% chol(Sigmax)
+#'
+#' A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
+#' y <- t(A %*% t(x))
+#'
+#' x <- data.frame(x)
+#' y <- data.frame(y)
+#'
+#' ot_indices_entropic(x, y, 25, -0.01)
+ot_indices_entropic <- function(x, y, M, eps, d = 2, cost = "euclidean",
+                                num_iterations = 10000) {
   # Input checks
   stopifnot(is.data.frame(x), is.data.frame(y))
   stopifnot(dim(x)[1] == dim(y)[1])
@@ -7,7 +41,7 @@ ot_indices_entropic <- function(x, y, M, eps, d = 2, num_iterations = 10000, cos
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = cost))^d
   if (eps < 0) {
-    eps <- - eps * max(C)
+    eps <- -eps * max(C)
   }
 
   # Retrieve values useful for the algorithm

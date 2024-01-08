@@ -24,9 +24,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// optimal_transport_sinkhorn_hist
+List optimal_transport_sinkhorn_hist(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd costMatrix, int numIterations, double epsilon);
+RcppExport SEXP _gsaot_optimal_transport_sinkhorn_hist(SEXP aSEXP, SEXP bSEXP, SEXP costMatrixSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type a(aSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type b(bSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type costMatrix(costMatrixSEXP);
+    Rcpp::traits::input_parameter< int >::type numIterations(numIterationsSEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    rcpp_result_gen = Rcpp::wrap(optimal_transport_sinkhorn_hist(a, b, costMatrix, numIterations, epsilon));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gsaot_optimal_transport_sinkhorn", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn, 3},
+    {"_gsaot_optimal_transport_sinkhorn_hist", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn_hist, 5},
     {NULL, NULL, 0}
 };
 
