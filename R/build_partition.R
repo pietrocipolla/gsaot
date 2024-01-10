@@ -36,10 +36,6 @@ build_continuous_partition <- function(x, M) {
   for (m in seq(M)) {
     partitions[[m]] <- partitions_indices[m]:(partitions_indices[m + 1] - 1)
     partitions[[m]] <- which(ord %in% partitions[[m]])
-
-    if (length(partitions[[m]]) == 1) {
-      warning("Partition ", m, " has only 1 element")
-    }
   }
 
   return(partitions)
@@ -64,6 +60,10 @@ build_discrete_partition <- function(x) {
   # Find the indices assigned to each partition
   for (m in seq(M)) {
     partitions[[m]] <- which(x == x_unique[m])
+
+    if (length(partitions[[m]]) == 1) {
+      warning("Partition ", m, " has only 1 element")
+    }
   }
 
   return(partitions)

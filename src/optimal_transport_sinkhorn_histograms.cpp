@@ -36,13 +36,13 @@ List sinkhorn_cpp_hist(Eigen::VectorXd a,
          err > maxErr && err < std::numeric_limits<double>::infinity())) {
     // Compute v updates
     v = K.transpose() * u;
-    v = b * (v.cwiseInverse() / numCols);
+    v = b.array() * (v.cwiseInverse().array() / numCols);
 
     //std::cout << "v: " << v << std::endl;
 
     // Compute u updates
     u = K * v;
-    u = a * (u.cwiseInverse() / numRows);
+    u = a.array() * (u.cwiseInverse() / numRows).array();
 
     //std::cout << "u: " << u << std::endl;
 

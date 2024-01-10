@@ -30,10 +30,10 @@
 #' x <- data.frame(x)
 #' y <- data.frame(y)
 #'
-#' ot_indices_entropic(x, y, 25, -0.01)
-ot_indices_entropic <- function(x, y, M, eps,
+#' ot_indices_divergence(x, y, 25, -0.01)
+ot_indices_divergence <- function(x, y, M, eps,
                                 d = 2, cost = "euclidean",
-                                num_iterations = 1e6) {
+                                num_iterations = 1e8) {
   # Input checks
   stopifnot(is.data.frame(x), is.data.frame(y))
   stopifnot(dim(x)[1] == dim(y)[1])
@@ -41,9 +41,8 @@ ot_indices_entropic <- function(x, y, M, eps,
 
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = cost))^d
-  maxC <- max(C)
   if (eps < 0) {
-    eps <- -eps * maxC
+    eps <- -eps * max(C)
   }
 
   # Retrieve values useful to the algorithm
@@ -55,6 +54,8 @@ ot_indices_entropic <- function(x, y, M, eps,
 
   # Build return structure
   W <- array(dim = K)
+  Wpart <- array(dim = K)
+  Wtot <- optimal_transport_sinkhorn(C, num_iterations, eps)$W22
 
   # Evaluate the upper bound of the indices
   V <- 2 * sum(diag(stats::cov(y)))
@@ -73,11 +74,12 @@ ot_indices_entropic <- function(x, y, M, eps,
     for (m in seq(M)) {
       partition_element <- partition[[m]]
       ret <- optimal_transport_sinkhorn(C[partition_element, ], num_iterations, eps)
-      Wk[, m] <- ret$W22
+      ret_part <- optimal_transport_sinkhorn(C[partition_element, partition_element], num_iterations, eps)
+      Wk[, m] <- ret$W22 - ret_part$W22
       n[m] <- length(partition_element)
     }
 
-    W[k] <- ((Wk[1, ] %*% n) / (V * N))[1, 1]
+    W[k] <- ((Wk[1, ] %*% n) / (V * N))[1, 1] - Wtot / V
   }
 
   return(W)

@@ -2,6 +2,7 @@
 
 export(ot_indices_1d)
 export(ot_indices_bw)
+export(ot_indices_divergence)
 export(ot_indices_entropic)
 import(RcppEigen)
 importFrom(Rcpp,sourceCpp)
