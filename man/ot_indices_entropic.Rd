@@ -21,7 +21,7 @@ ot_indices_entropic(
 
 \item{M}{a scalar representing the number of partitions for continuous inputs}
 
-\item{eps}{a double representing the coefficient of the entropic regularization. If negative the value is scaled according to the maximum of the cost matrix.}
+\item{eps}{a double representing the coefficient of the entropic regularization. If negative, the cost matrix is normalized.}
 
 \item{d}{exponential of the cost}
 

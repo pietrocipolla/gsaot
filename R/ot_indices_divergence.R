@@ -41,8 +41,11 @@ ot_indices_divergence <- function(x, y, M, eps,
 
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = cost))^d
+  scaling <- 1
   if (eps < 0) {
-    eps <- -eps * max(C)
+    scaling <- max(C)
+    eps <- -eps
+    C <- C / scaling
   }
 
   # Retrieve values useful to the algorithm
@@ -55,7 +58,7 @@ ot_indices_divergence <- function(x, y, M, eps,
   # Build return structure
   W <- array(dim = K)
   Wpart <- array(dim = K)
-  Wtot <- optimal_transport_sinkhorn(C, num_iterations, eps)$W22
+  Wtot <- optimal_transport_sinkhorn(C, num_iterations, eps)$W22 * scaling
 
   # Evaluate the upper bound of the indices
   V <- 2 * sum(diag(stats::cov(y)))
@@ -75,7 +78,7 @@ ot_indices_divergence <- function(x, y, M, eps,
       partition_element <- partition[[m]]
       ret <- optimal_transport_sinkhorn(C[partition_element, ], num_iterations, eps)
       ret_part <- optimal_transport_sinkhorn(C[partition_element, partition_element], num_iterations, eps)
-      Wk[, m] <- ret$W22 - ret_part$W22
+      Wk[, m] <- (ret$W22 - ret_part$W22) * scaling
       n[m] <- length(partition_element)
     }
 

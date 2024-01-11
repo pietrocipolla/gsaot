@@ -3,7 +3,7 @@
 #' @param x a data.frame containing the input(s) values
 #' @param y a data.frame containing the outputs values
 #' @param M a scalar representing the number of partitions for continuous inputs
-#' @param eps a double representing the coefficient of the entropic regularization. If negative the value is scaled according to the maximum of the cost matrix.
+#' @param eps a double representing the coefficient of the entropic regularization. If negative, the cost matrix is normalized.
 #' @param d exponential of the cost
 #' @param cost type of cost. The types are defined by the function dist of the stats package
 #' @param num_iterations maximum number of iterations of the Sinkhorn algorithm
@@ -41,9 +41,11 @@ ot_indices_entropic <- function(x, y, M, eps,
 
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = cost))^d
-  maxC <- max(C)
+  scaling <- 1
   if (eps < 0) {
-    eps <- -eps * maxC
+    scaling <- max(C)
+    eps <- -eps
+    C <- C / scaling
   }
 
   # Retrieve values useful to the algorithm
@@ -73,7 +75,7 @@ ot_indices_entropic <- function(x, y, M, eps,
     for (m in seq(M)) {
       partition_element <- partition[[m]]
       ret <- optimal_transport_sinkhorn(C[partition_element, ], num_iterations, eps)
-      Wk[, m] <- ret$W22
+      Wk[, m] <- ret$W22 * scaling
       n[m] <- length(partition_element)
     }
 

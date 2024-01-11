@@ -1,11 +1,13 @@
 #include <RcppEigen.h>
 using namespace Rcpp;
 
-// Define the Sinkhorn algorithm function
+// Define the Sinkhorn algorithm function with marginal inputs
 List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
-                  int numIterations,
-                  double epsilon,
-                  double maxErr) {
+                       int numIterations,
+                       double epsilon,
+                       Eigen::VectorXd u,
+                       Eigen::VectorXd v,
+                       double maxErr) {
   int numRows = costMatrix.rows();
   int numCols = costMatrix.cols();
 
@@ -17,19 +19,33 @@ List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
   K = K.array().exp();
 
   // Initialize all the dual variables to vectors of 1
-  Eigen::VectorXd u(numRows);
-  Eigen::VectorXd v(numCols);
+  // Eigen::VectorXd u(numRows);
+  // Eigen::VectorXd v(numCols);
+  //
+  // u.setOnes();
+  // v.setOnes();
 
-  u.setOnes();
-  v.setOnes();
+  if (u.size() != numRows || v.size() != numCols) {
+    Rcerr << "Wrong initialization" << std::endl;
+    return List::create(Named("Error") = "Wrong initialization");
+  }
+
 
   // Initialize the marginal weights and the other useful variables
-  Eigen::VectorXd Wm(v / numCols);
+  Eigen::VectorXd Wm(numCols);
+  Wm.setOnes();
+  Wm = Wm / numCols;
+
+  // Rcout << "Empirical marginal " << Wm << std::endl;
+  // Rcout << "Initialized u " << u << std::endl;
+  // Rcout << "Initialized v " << v << std::endl;
+
   Eigen::VectorXd Estimated_marginal;
 
   // Initialize algorithms values
   int iter = 1;
   double err = std::numeric_limits<double>::infinity();
+  std::vector<double> errors;
 
   while (iter == 1 || (iter <= numIterations &&
          err > maxErr && err < std::numeric_limits<double>::infinity())) {
@@ -37,17 +53,21 @@ List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
     v = K.transpose() * u;
     v = v.cwiseInverse() / numCols;
 
-    //std::cout << "v: " << v << std::endl;
+    //Rcout << "v: " << v << std::endl;
 
     // Compute u updates
     u = K * v;
     u = u.cwiseInverse() / numRows;
 
-    //std::cout << "u: " << u << std::endl;
+    //Rcout << "u: " << u << std::endl;
 
     // Update error
     Estimated_marginal = v.array() * (K.transpose() * u).array();
     err = (Estimated_marginal - Wm).cwiseAbs().sum();
+
+    errors.push_back(err);
+
+    // Rcout << "Error at iteration " << iter << ": " << err << std::endl;
 
     // Update iteration
     iter++;
@@ -76,20 +96,24 @@ List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
   // Return u and v as a List
   return List::create(
     Named("iter") = iter,
+    Named("u") = u,
     Named("f") = f,
     Named("g") = g,
     Named("P") = P,
     Named("W22") = W22_prime,
-    Named("W22_dual") = W22
+    Named("W22_dual") = W22,
+    Named("Errors") = errors
   );
 }
 
 // Expose the Sinkhorn function to R
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-List optimal_transport_sinkhorn(Eigen::MatrixXd costMatrix,
-                                int numIterations,
-                                double epsilon,
-                                double maxErr = 1e-9) {
-  return sinkhorn_cpp(costMatrix, numIterations, epsilon, maxErr);
+List optimal_transport_sinkhorn_init(Eigen::MatrixXd costMatrix,
+                                     int numIterations,
+                                     double epsilon,
+                                     Eigen::VectorXd u,
+                                     Eigen::VectorXd v,
+                                     double maxErr = 1e-9) {
+  return sinkhorn_cpp(costMatrix, numIterations, epsilon, u, v, maxErr);
 }
