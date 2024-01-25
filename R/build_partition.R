@@ -8,7 +8,7 @@ build_partition <- function(x, M) {
   # Build the partition for each input
   for (k in seq(K)) {
     # If the variable is continuous build the partititon using quantiles
-    if (is.numeric(x[, k])) {
+    if (is.double(x[, k])) {
       partition_indices[[k]] <- build_continuous_partition(x[, k], M)
       # Otherwise use the unique different elements of the inputs
     } else {
