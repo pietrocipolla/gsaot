@@ -1,18 +1,18 @@
-#' Evaluate optimal transport indices on one dimensional vectors
+#' Evaluate Optimal Transport indices on one dimensional outputs
 #'
 #' @param x a data.frame containing the input(s) values
 #' @param y an array containing the output values
 #' @param M a scalar representing the number of partitions for continuous inputs
-#' @param ext_out logical indicating if the function should return the inner statistics and the partitions
+#' @param extended_out logical indicating if the function should return the inner statistics and the partitions
 #'
-#' @return A sensitivity index between 0 and 1 for each of the columns in x
+#' @return An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x
 #' @export
 #'
 #' @examples
 #' x <- rnorm(1000)
 #' y <- 10 * x
 #' ot_indices_1d(data.frame(x), y, 30)
-ot_indices_1d <- function(x, y, M, ext_out = FALSE) {
+ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
   # Input checks
   stopifnot(is.data.frame(x))
   stopifnot(dim(x)[1] == length(y))
@@ -33,7 +33,8 @@ ot_indices_1d <- function(x, y, M, ext_out = FALSE) {
 
   # Build the return structure
   W <- array(dim = K)
-  if (ext_out) IS <- list()
+  names(W) <- colnames(x)
+  if (extended_out) IS <- list()
 
   for (k in seq(K)) {
     # Get the partitions for the current input
@@ -55,10 +56,10 @@ ot_indices_1d <- function(x, y, M, ext_out = FALSE) {
     }
 
     W[k] <- ((Wk %*% n) / (V * N))[1, 1]
-    if (ext_out) IS[[k]] <- Wk
+    if (extended_out) IS[[k]] <- Wk
   }
 
-  if (ext_out) {
+  if (extended_out) {
     return(list(W = W, IS = IS, partitions = partitions))
   } else {
     return(list(W = W))

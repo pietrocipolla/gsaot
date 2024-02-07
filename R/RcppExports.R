@@ -13,7 +13,7 @@ optimal_transport_sinkhorn_init <- function(costMatrix, numIterations, epsilon, 
     .Call(`_gsaot_optimal_transport_sinkhorn_init`, costMatrix, numIterations, epsilon, u, v, maxErr)
 }
 
-sinkhorn_log <- function(costMatrix, numIterations, epsilon) {
-    .Call(`_gsaot_sinkhorn_log`, costMatrix, numIterations, epsilon)
+optimal_transport_sinkhorn_log <- function(costMatrix, numIterations, epsilon, maxErr = 1e-9) {
+    .Call(`_gsaot_optimal_transport_sinkhorn_log`, costMatrix, numIterations, epsilon, maxErr)
 }
 

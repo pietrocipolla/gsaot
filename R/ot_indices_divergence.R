@@ -4,8 +4,6 @@
 #' @param y a data.frame containing the outputs values
 #' @param M a scalar representing the number of partitions for continuous inputs
 #' @param eps a double representing the coefficient of the entropic regularization. If negative the value is scaled according to the maximum of the cost matrix.
-#' @param d exponential of the cost
-#' @param cost type of cost. The types are defined by the function dist of the stats package
 #' @param num_iterations maximum number of iterations of the Sinkhorn algorithm
 #'
 #' @return A sensitivity index between 0 and 1 for each of the columns in x
@@ -32,7 +30,6 @@
 #'
 #' ot_indices_divergence(x, y, 25, -0.01)
 ot_indices_divergence <- function(x, y, M, eps,
-                                d = 2, cost = "euclidean",
                                 num_iterations = 1e8) {
   # Input checks
   stopifnot(is.data.frame(x), is.data.frame(y))
@@ -40,7 +37,7 @@ ot_indices_divergence <- function(x, y, M, eps,
   stopifnot(dim(x)[1] > M)
 
   # Build cost matrix
-  C <- as.matrix(stats::dist(y, method = cost))^d
+  C <- as.matrix(stats::dist(y, method = "euclidean"))^2
   scaling <- 1
   if (eps < 0) {
     scaling <- max(C)

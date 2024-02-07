@@ -9,9 +9,8 @@ ot_indices_entropic(
   y,
   M,
   eps,
-  d = 2,
-  cost = "euclidean",
-  num_iterations = 1e+06
+  num_iterations = 1e+06,
+  algorithm = "sinkhorn"
 )
 }
 \arguments{
@@ -23,14 +22,12 @@ ot_indices_entropic(
 
 \item{eps}{a double representing the coefficient of the entropic regularization. If negative, the cost matrix is normalized.}
 
-\item{d}{exponential of the cost}
-
-\item{cost}{type of cost. The types are defined by the function dist of the stats package}
-
 \item{num_iterations}{maximum number of iterations of the Sinkhorn algorithm}
+
+\item{algorithm}{algorithm to solve the Optimal Transport problem}
 }
 \value{
-A sensitivity index between 0 and 1 for each of the columns in x
+A sensitivity index between 0 and 1 for each column in x
 }
 \description{
 Title

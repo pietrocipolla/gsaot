@@ -1,19 +1,19 @@
 #include <RcppEigen.h>
 using namespace Rcpp;
 
-// Define the logsumexp for algorithm use
-Eigen::VectorXd logsumexp(const Eigen::MatrixXd x, int axis) {
-  if (axis == 0) { // Compute log-sum-exp along rows
+// Define the logsumexp for Eigen matrices
+Eigen::VectorXd logsumexp(const Eigen::MatrixXd x,
+                          int axis) {
+  if (axis == 0) {
+    // Compute log-sum-exp along rows
     Eigen::VectorXd maxCoeffs = x.rowwise().maxCoeff();
-
     return maxCoeffs.array() + (x.colwise() - maxCoeffs).array().exp().rowwise().sum().log();
-  } else if (axis == 1) { // Compute log-sum-exp along columns
+  } else if (axis == 1) {
+    // Compute log-sum-exp along columns
     Eigen::VectorXd maxCoeffs = x.colwise().maxCoeff();
-
     return maxCoeffs.transpose().array() + (x.rowwise() - maxCoeffs.transpose()).array().exp().colwise().sum().log();
   } else {
     // Invalid axis value
-    //Rcerr << "Invalid axis value. Use 0 for column-wise or 1 for row-wise." << std::endl;
     return Eigen::VectorXd::Zero(x.rows());
   }
 
@@ -21,7 +21,10 @@ Eigen::VectorXd logsumexp(const Eigen::MatrixXd x, int axis) {
 }
 
 // Define the Sinkhorn algorithm function
-List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix, int numIterations, double epsilon) {
+List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
+                      int numIterations,
+                      double epsilon,
+                      double maxErr) {
   int numRows = costMatrix.rows();
   int numCols = costMatrix.cols();
 
@@ -57,7 +60,6 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix, int numIterations, double epsi
 
   // Initialize algorithms values
   int iter = 1;
-  double maxErr = 1e-9;
   double err = std::numeric_limits<double>::infinity();
 
   while (iter == 1 || (iter <= numIterations &&
@@ -121,6 +123,9 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix, int numIterations, double epsi
 // Expose the Sinkhorn function to R
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-List sinkhorn_log(Eigen::MatrixXd costMatrix, int numIterations, double epsilon) {
-  return sinkhorn_log_cpp(costMatrix, numIterations, epsilon);
+List optimal_transport_sinkhorn_log(Eigen::MatrixXd costMatrix,
+                  int numIterations,
+                  double epsilon,
+                  double maxErr = 1e-9) {
+  return sinkhorn_log_cpp(costMatrix, numIterations, epsilon, maxErr);
 }

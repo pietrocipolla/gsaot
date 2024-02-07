@@ -4,15 +4,7 @@
 \alias{ot_indices_divergence}
 \title{Title}
 \usage{
-ot_indices_divergence(
-  x,
-  y,
-  M,
-  eps,
-  d = 2,
-  cost = "euclidean",
-  num_iterations = 1e+08
-)
+ot_indices_divergence(x, y, M, eps, num_iterations = 1e+08)
 }
 \arguments{
 \item{x}{a data.frame containing the input(s) values}
@@ -22,10 +14,6 @@ ot_indices_divergence(
 \item{M}{a scalar representing the number of partitions for continuous inputs}
 
 \item{eps}{a double representing the coefficient of the entropic regularization. If negative the value is scaled according to the maximum of the cost matrix.}
-
-\item{d}{exponential of the cost}
-
-\item{cost}{type of cost. The types are defined by the function dist of the stats package}
 
 \item{num_iterations}{maximum number of iterations of the Sinkhorn algorithm}
 }
