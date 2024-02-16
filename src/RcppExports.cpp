@@ -11,17 +11,19 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// optimal_transport_sinkhorn
-List optimal_transport_sinkhorn(Eigen::MatrixXd costMatrix, int numIterations, double epsilon, double maxErr);
-RcppExport SEXP _gsaot_optimal_transport_sinkhorn(SEXP costMatrixSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
+// sinkhorn
+List sinkhorn(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd costm, int numIterations, double epsilon, double maxErr);
+RcppExport SEXP _gsaot_sinkhorn(SEXP aSEXP, SEXP bSEXP, SEXP costmSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type costMatrix(costMatrixSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type a(aSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type b(bSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type costm(costmSEXP);
     Rcpp::traits::input_parameter< int >::type numIterations(numIterationsSEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< double >::type maxErr(maxErrSEXP);
-    rcpp_result_gen = Rcpp::wrap(optimal_transport_sinkhorn(costMatrix, numIterations, epsilon, maxErr));
+    rcpp_result_gen = Rcpp::wrap(sinkhorn(a, b, costm, numIterations, epsilon, maxErr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -56,9 +58,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// optimal_transport_sinkhorn_log
-List optimal_transport_sinkhorn_log(Eigen::MatrixXd costMatrix, int numIterations, double epsilon, double maxErr);
-RcppExport SEXP _gsaot_optimal_transport_sinkhorn_log(SEXP costMatrixSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
+// sinkhorn_log
+List sinkhorn_log(Eigen::MatrixXd costMatrix, int numIterations, double epsilon, double maxErr);
+RcppExport SEXP _gsaot_sinkhorn_log(SEXP costMatrixSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -66,16 +68,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type numIterations(numIterationsSEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< double >::type maxErr(maxErrSEXP);
-    rcpp_result_gen = Rcpp::wrap(optimal_transport_sinkhorn_log(costMatrix, numIterations, epsilon, maxErr));
+    rcpp_result_gen = Rcpp::wrap(sinkhorn_log(costMatrix, numIterations, epsilon, maxErr));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gsaot_optimal_transport_sinkhorn", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn, 4},
+    {"_gsaot_sinkhorn", (DL_FUNC) &_gsaot_sinkhorn, 6},
     {"_gsaot_optimal_transport_sinkhorn_hist", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn_hist, 5},
     {"_gsaot_optimal_transport_sinkhorn_init", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn_init, 6},
-    {"_gsaot_optimal_transport_sinkhorn_log", (DL_FUNC) &_gsaot_optimal_transport_sinkhorn_log, 4},
+    {"_gsaot_sinkhorn_log", (DL_FUNC) &_gsaot_sinkhorn_log, 4},
     {NULL, NULL, 0}
 };
 

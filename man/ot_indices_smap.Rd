@@ -9,11 +9,9 @@ ot_indices_smap(x, y, M)
 \arguments{
 \item{x}{a data.frame containing the input(s) values}
 
-\item{y}{a data.frame containing the output(s) values}
+\item{y}{a matrix containing the output(s) values}
 
 \item{M}{a scalar representing the number of partitions for continuous inputs}
-
-\item{extended_out}{logical indicating if the function should return the inner statistics and the partitions}
 }
 \value{
 An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x

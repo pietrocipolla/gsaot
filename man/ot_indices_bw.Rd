@@ -38,7 +38,7 @@ A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
 y <- t(A \%*\% t(x))
 
 x <- data.frame(x)
-y <- data.frame(y)
+y <- y
 
 ot_indices_bw(x, y, 100)
 }

@@ -2,30 +2,32 @@
 using namespace Rcpp;
 
 // Define the Sinkhorn algorithm function
-List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
+// The function is similar to Python Optimal Transport implementation
+List sinkhorn_cpp(Eigen::VectorXd a,
+                  Eigen::VectorXd b,
+                  Eigen::MatrixXd costMatrix,
                   int numIterations,
                   double epsilon,
                   double maxErr) {
   int numRows = costMatrix.rows();
   int numCols = costMatrix.cols();
 
-  // If eps is negative, set to relative value
-  if (epsilon < 0) epsilon = -epsilon * costMatrix.maxCoeff();
-
   // Initialize the K matrix
   Eigen::MatrixXd K(- costMatrix / epsilon);
   K = K.array().exp();
+
+  // Rcout << "K " << K << std::endl;
+  // Rcout << "a " << a << std::endl;
+  // Rcout << "b " << b << std::endl;
 
   // Initialize all the dual variables to vectors of 1
   Eigen::VectorXd u(numRows);
   Eigen::VectorXd v(numCols);
 
   u.setOnes();
-  v.setOnes();
 
   // Initialize the marginal weights and the other useful variables
-  Eigen::VectorXd Wm(v / numCols);
-  Eigen::VectorXd Estimated_marginal;
+  Eigen::VectorXd estimated_marginal;
 
   // Initialize algorithms values
   int iter = 1;
@@ -35,19 +37,21 @@ List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
          err > maxErr && err < std::numeric_limits<double>::infinity())) {
     // Compute v updates
     v = K.transpose() * u;
-    v = v.cwiseInverse() / numCols;
+    v = b.array() * v.array().inverse();
 
-    //std::cout << "v: " << v << std::endl;
+    // Rcout << "v " << v << std::endl;
 
     // Compute u updates
     u = K * v;
-    u = u.cwiseInverse() / numRows;
+    u = a.array() * u.array().inverse();
 
-    //std::cout << "u: " << u << std::endl;
+    // Rcout << "u " << u << std::endl;
 
     // Update error
-    Estimated_marginal = v.array() * (K.transpose() * u).array();
-    err = (Estimated_marginal - Wm).cwiseAbs().sum();
+    if (iter % 10 == 0 || iter == 1) {
+      estimated_marginal = v.array() * (K.transpose() * u).array();
+      err = (estimated_marginal - b).cwiseAbs().sum();
+    }
 
     // Update iteration
     iter++;
@@ -79,17 +83,19 @@ List sinkhorn_cpp(Eigen::MatrixXd costMatrix,
     Named("f") = f,
     Named("g") = g,
     Named("P") = P,
-    Named("W22") = W22_prime,
-    Named("W22_dual") = W22
+    Named("cost") = W22_prime,
+    Named("cost_dual") = W22
   );
 }
 
 // Expose the Sinkhorn function to R
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-List optimal_transport_sinkhorn(Eigen::MatrixXd costMatrix,
-                                int numIterations,
-                                double epsilon,
-                                double maxErr = 1e-9) {
-  return sinkhorn_cpp(costMatrix, numIterations, epsilon, maxErr);
+List sinkhorn(Eigen::VectorXd a,
+              Eigen::VectorXd b,
+              Eigen::MatrixXd costm,
+              int numIterations,
+              double epsilon,
+              double maxErr) {
+  return sinkhorn_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }

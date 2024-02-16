@@ -25,12 +25,12 @@
 #' y <- t(A %*% t(x))
 #'
 #' x <- data.frame(x)
-#' y <- data.frame(y)
+#' y <- y
 #'
 #' ot_indices_bw(x, y, 100)
 ot_indices_bw <- function(x, y, M, ext_out = FALSE) {
   # Input checks
-  stopifnot(is.data.frame(x), is.data.frame(y))
+  stopifnot(is.data.frame(x), is.numeric(y))
   stopifnot(dim(x)[1] == dim(y)[1])
   stopifnot(dim(x)[1] > M)
 

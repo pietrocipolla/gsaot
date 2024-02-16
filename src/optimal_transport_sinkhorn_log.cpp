@@ -123,7 +123,7 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
 // Expose the Sinkhorn function to R
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-List optimal_transport_sinkhorn_log(Eigen::MatrixXd costMatrix,
+List sinkhorn_log(Eigen::MatrixXd costMatrix,
                   int numIterations,
                   double epsilon,
                   double maxErr = 1e-9) {

@@ -15,7 +15,8 @@ Config/testthat/edition: 3
 Imports: 
     Rcpp,
     RcppEigen,
-    stats
+    stats,
+    transport
 URL: https://github.com/pietrocipolla/gsaot
 BugReports: https://github.com/pietrocipolla/gsaot/issues
 LinkingTo: 
