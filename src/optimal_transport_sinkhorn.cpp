@@ -63,11 +63,11 @@ List sinkhorn_cpp(Eigen::VectorXd a,
   }
 
   // Potentials (dual variables)
-  Eigen::VectorXd f(epsilon * (numRows * u).array().log());
-  Eigen::VectorXd g(epsilon * (numCols * v).array().log());
+  Eigen::VectorXd f(epsilon * u.array().log());
+  Eigen::VectorXd g(epsilon * v.array().log());
 
   // Wasserstein dual
-  double W22 = f.mean() + g.mean();
+  double W22 = f.dot(a) + g.dot(b);
 
   // Optimal coupling
   Eigen::MatrixXd U(u.asDiagonal());
@@ -99,3 +99,12 @@ List sinkhorn(Eigen::VectorXd a,
               double maxErr) {
   return sinkhorn_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }
+
+// # /***R
+// # n <- 100
+// # m <- 100
+// # a <- rep(1 / n, n)
+// # b <- rep(1 / m, m)
+// # C <- as.matrix(dist(rnorm(100)))
+// # sinkhorn(a, b, C, 1e3, 0.1, 1e-3)
+// # */

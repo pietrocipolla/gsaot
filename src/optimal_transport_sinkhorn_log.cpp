@@ -8,32 +8,29 @@ Eigen::VectorXd logsumexp(const Eigen::MatrixXd x,
     // Compute log-sum-exp along rows
     Eigen::VectorXd maxCoeffs = x.rowwise().maxCoeff();
     return maxCoeffs.array() + (x.colwise() - maxCoeffs).array().exp().rowwise().sum().log();
-  } else if (axis == 1) {
+  }
+  if (axis == 1) {
     // Compute log-sum-exp along columns
     Eigen::VectorXd maxCoeffs = x.colwise().maxCoeff();
     return maxCoeffs.transpose().array() + (x.rowwise() - maxCoeffs.transpose()).array().exp().colwise().sum().log();
-  } else {
-    // Invalid axis value
-    return Eigen::VectorXd::Zero(x.rows());
   }
 
+  // Invalid axis value
   return Eigen::VectorXd::Zero(x.rows());
 }
 
 // Define the Sinkhorn algorithm function
-List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
+List sinkhorn_log_cpp(Eigen::VectorXd a,
+                      Eigen::VectorXd b,
+                      Eigen::MatrixXd costMatrix,
                       int numIterations,
                       double epsilon,
                       double maxErr) {
-  int numRows = costMatrix.rows();
-  int numCols = costMatrix.cols();
-
-  // If eps is negative, set to relative value
-  if (epsilon < 0) epsilon = - epsilon * costMatrix.maxCoeff();
+  const int numRows = costMatrix.rows();
+  const int numCols = costMatrix.cols();
 
   // Initialize the K matrix
-  Eigen::MatrixXd K(- costMatrix / epsilon);
-  //std::cout << "K:\n" << K << std::endl;
+  Eigen::MatrixXd K(-costMatrix / epsilon);
 
   // Initialize all the dual variables to vectors of 1
   Eigen::VectorXd u(numRows);
@@ -42,21 +39,14 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
   u.setZero();
   v.setZero();
 
-  //std::cout << "u:\n" << u << std::endl;
-  //std::cout << "v:\n" << v << std::endl;
-
   // Build potential matrices
   Eigen::MatrixXd U(u.array().exp().matrix().asDiagonal());
   Eigen::MatrixXd V(v.array().exp().matrix().asDiagonal());
 
   // Initialize the marginal weights and the other useful variables
-  Eigen::VectorXd a(numCols);
-  a.setOnes();
-  Eigen::VectorXd Wm(a / numCols);
-
-  //std::cout << "a:\n" << Wm << std::endl;
-
-  Eigen::VectorXd Estimated_marginal;
+  Eigen::VectorXd estimated_marginal;
+  Eigen::VectorXd loga = a.array().log();
+  Eigen::VectorXd logb = b.array().log();
 
   // Initialize algorithms values
   int iter = 1;
@@ -64,28 +54,26 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
 
   while (iter == 1 || (iter <= numIterations &&
          err > maxErr && err < std::numeric_limits<double>::infinity())) {
-    //std::cout << "iter: " << iter << std::endl;
-
     // Compute v updates
-    //std::cout << "Inner term v: " << K.transpose().colwise() + u << std::endl;
-    v = - logsumexp( K.colwise() + u, 1).array() - log(numCols);
-
-    //std::cout << "v: " << v.array().exp() << std::endl;
+    v = logb - logsumexp(K.colwise() + u, 1);
+    // Rcout << "v " << v << std::endl;
 
     // Compute u updates
-    //std::cout << "Inner term u: " << K.colwise() + v << std::endl;
-    u = - logsumexp(K.transpose().colwise() + v, 1).array() - log(numRows);
+    u = loga - logsumexp(K.transpose().colwise() + v, 1);
+    // Rcout << "u " << u << std::endl;
 
-    //std::cout << "u: " << u.array().exp() << std::endl;
+    if (iter % 10 == 0 || iter == 1) {
+      // Update potential matrices
+      U = u.array().exp().matrix().asDiagonal();
+      V = v.array().exp().matrix().asDiagonal();
+      // Rcout << "U " << U << std::endl;
+      // Rcout << "V " << V << std::endl;
 
-    // Update potential matrices
-    U = u.array().exp().matrix().asDiagonal();
-    V = v.array().exp().matrix().asDiagonal();
-
-    // Update error
-    Estimated_marginal = V * K.transpose().array().exp().matrix() * U * a;
-    //std::cout << "Estimated_marginal: " << Estimated_marginal << std::endl;
-    err = (Estimated_marginal - Wm).cwiseAbs().sum();
+      // Update error
+      estimated_marginal = (V * K.transpose().array().exp().matrix() * U).array().rowwise().sum();
+      err = (estimated_marginal - b).cwiseAbs().sum();
+      // Rcout << "err " << err << std::endl;
+    }
 
     // Update iteration
     iter++;
@@ -97,11 +85,11 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
   }
 
   // Potentials (dual variables)
-  Eigen::VectorXd f(epsilon * (numRows * u.array().exp()).log());
-  Eigen::VectorXd g(epsilon * (numCols * v.array().exp()).log());
+  Eigen::VectorXd f(epsilon * u);
+  Eigen::VectorXd g(epsilon * v);
 
   // Wasserstein dual
-  double W22 = f.mean() + g.mean();
+  double W22 = f.dot(a) + g.dot(b);
 
   // Optimal coupling
   Eigen::MatrixXd P(U * K.array().exp().matrix() * V);
@@ -115,17 +103,28 @@ List sinkhorn_log_cpp(Eigen::MatrixXd costMatrix,
     Named("f") = f,
     Named("g") = g,
     Named("P") = P,
-    Named("W22") = W22_prime,
-    Named("W22_dual") = W22
+    Named("cost") = W22_prime,
+    Named("cost_dual") = W22
   );
 }
 
 // Expose the Sinkhorn function to R
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
-List sinkhorn_log(Eigen::MatrixXd costMatrix,
+List sinkhorn_log(Eigen::VectorXd a,
+                  Eigen::VectorXd b,
+                  Eigen::MatrixXd costm,
                   int numIterations,
                   double epsilon,
-                  double maxErr = 1e-9) {
-  return sinkhorn_log_cpp(costMatrix, numIterations, epsilon, maxErr);
+                  double maxErr) {
+  return sinkhorn_log_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }
+
+// # /***R
+// # n <- 100
+// # m <- 50
+// # a <- rep(1 / n, n)
+// # b <- rep(1 / m, m)
+// # C <- as.matrix(dist(rnorm(100)))[, 1:50]
+// # sinkhorn_log(a, b, C, 1e5, 0.1, 1e-3)
+// # */

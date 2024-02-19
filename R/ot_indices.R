@@ -104,6 +104,9 @@ ot_indices <- function(x,
 
       # Save the estimated distance
       Wk[, m] <- ret$cost * scaling_param
+
+      # Quick exit from the loop if NaNs are present
+      if (is.na(ret$cost)) m <- M
     }
 
     W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
