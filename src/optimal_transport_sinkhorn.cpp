@@ -5,7 +5,7 @@ using namespace Rcpp;
 // The function is similar to Python Optimal Transport implementation
 List sinkhorn_cpp(Eigen::VectorXd a,
                   Eigen::VectorXd b,
-                  Eigen::MatrixXd costMatrix,
+                  const Eigen::MatrixXd costMatrix,
                   int numIterations,
                   double epsilon,
                   double maxErr) {
@@ -62,17 +62,11 @@ List sinkhorn_cpp(Eigen::VectorXd a,
     return List::create(Named("Error") = "Increase number of iterations");
   }
 
-  // Potentials (dual variables)
-  Eigen::VectorXd f(epsilon * u.array().log());
-  Eigen::VectorXd g(epsilon * v.array().log());
-
-  // Wasserstein dual
-  double W22 = f.dot(a) + g.dot(b);
-
   // Optimal coupling
-  Eigen::MatrixXd U(u.asDiagonal());
-  Eigen::MatrixXd V(v.asDiagonal());
-  Eigen::MatrixXd P(U * K * V);
+//  Eigen::MatrixXd U(u.asDiagonal());
+//  Eigen::MatrixXd V(v.asDiagonal());
+  Eigen::MatrixXd P((K.array().colwise() * u.array()).rowwise() * v.array().transpose());
+//  Rcout << P << std::endl;
 
   // Wasserstein distance
   double W22_prime = (P.transpose() * costMatrix).trace();
@@ -80,11 +74,8 @@ List sinkhorn_cpp(Eigen::VectorXd a,
   // Return u and v as a List
   return List::create(
     Named("iter") = iter,
-    Named("f") = f,
-    Named("g") = g,
-    Named("P") = P,
-    Named("cost") = W22_prime,
-    Named("cost_dual") = W22
+//    Named("P") = P,
+    Named("cost") = W22_prime
   );
 }
 
@@ -100,11 +91,11 @@ List sinkhorn(Eigen::VectorXd a,
   return sinkhorn_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }
 
-// # /***R
-// # n <- 100
-// # m <- 100
-// # a <- rep(1 / n, n)
-// # b <- rep(1 / m, m)
-// # C <- as.matrix(dist(rnorm(100)))
-// # sinkhorn(a, b, C, 1e3, 0.1, 1e-3)
-// # */
+// /***R
+// n <- 100
+// m <- 50
+// a <- rep(1 / n, n)
+// b <- rep(1 / m, m)
+// C <- as.matrix(dist(rnorm(100)))[, 1:50]
+// ret <- sinkhorn(a, b, C, 1e3, 0.1, 1e-3)
+// */
