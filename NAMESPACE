@@ -2,8 +2,8 @@
 
 export(ot_indices)
 export(ot_indices_1d)
-export(ot_indices_bw)
 export(ot_indices_smap)
+export(ot_indices_wb)
 import(RcppEigen)
 importFrom(Rcpp,sourceCpp)
 useDynLib(gsaot, .registration = TRUE)

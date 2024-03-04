@@ -1,9 +1,7 @@
 #' Evaluate Optimal Transport indices on one dimensional outputs
 #'
-#' @param x a data.frame containing the input(s) values
+#' @inheritParams ot_indices
 #' @param y an array containing the output values
-#' @param M a scalar representing the number of partitions for continuous inputs
-#' @param extended_out logical indicating if the function should return the inner statistics and the partitions
 #'
 #' @return An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x
 #' @export
@@ -17,6 +15,12 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
   stopifnot(is.data.frame(x))
   stopifnot(dim(x)[1] == length(y))
   stopifnot(dim(x)[1] > M)
+
+  # Remove any NA in output
+  y_na <- apply(y, 1, function(row) any(is.na(row)))
+  y <- y[!y_na, ]
+  x <- x[!y_na, ]
+  cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Build partitions for estimator
   partitions <- build_partition(x, M)

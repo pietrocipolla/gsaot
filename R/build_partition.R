@@ -1,5 +1,6 @@
 build_partition <- function(x, M) {
   # Get number of inputs
+  n <- dim(x)[1]
   K <- dim(x)[2]
 
   # Build the return structure
@@ -9,11 +10,14 @@ build_partition <- function(x, M) {
   for (k in seq(K)) {
     # If the variable is continuous build the partititon using quantiles
     if (is.double(x[, k])) {
-      partition_indices[[k]] <- build_continuous_partition(x[, k], M)
-      # Otherwise use the unique different elements of the inputs
+      partition_indices[[k]] <- build_continuous_partition(x[!is.na(x[, k]), k], M)
+    # Otherwise use the unique different elements of the inputs
     } else {
-      partition_indices[[k]] <- build_discrete_partition(x[, k])
+      partition_indices[[k]] <- build_discrete_partition(x[!is.na(x[, k]), k])
     }
+
+    if (any(is.na(x[, k])))
+      cat("Removed", sum(is.na(x[, k])), "NA(s) in column", k, "\n")
   }
 
   return(partition_indices)

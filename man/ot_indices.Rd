@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices.R
 \name{ot_indices}
 \alias{ot_indices}
-\title{Title}
+\title{Calculate Optimal Transport sensitivity indices for multivariate y}
 \usage{
 ot_indices(
   x,
@@ -15,25 +15,35 @@ ot_indices(
 )
 }
 \arguments{
-\item{x}{a data.frame containing the input(s) values}
+\item{x}{A data.frame containing the input(s) values. The values can be numeric, factors or strings.}
 
-\item{y}{a matrix containing the outputs values}
+\item{y}{A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.}
 
-\item{M}{a scalar representing the number of partitions for continuous inputs}
+\item{M}{A scalar representing the number of partitions for continuous inputs.}
 
-\item{solver}{maximum number of iterations of the Sinkhorn algorithm}
+\item{solver}{(optional) Solver for the Optimal Transport problems: \code{sinkhorn} (default), \code{sinkhorn_log}, or \code{wasserstein}.}
 
-\item{solver_optns}{algorithm to solve the Optimal Transport problem}
+\item{solver_optns}{(optional) Options for the Optimal Transport solver. See \link{details} for allowed options.}
 
-\item{scaling}{Lore ipsum}
+\item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the cost matrix.}
 
-\item{extended_out}{a double representing the coefficient of the entropic regularization. If negative, the cost matrix is normalized.}
+\item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
 }
 \value{
-A sensitivity index between 0 and 1 for each column in x
+A list containing:
+\itemize{
+\item \code{W}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
+\item \code{IS}: values of the inner statistics for the partitions defined by \code{partitions}. Returned only if \code{extended_out = TRUE}.
+\item \code{partitions}: the partitions built to calculate the sensitivity indices. Returned only if \code{extended_out = TRUE}.
+}
 }
 \description{
-Title
+\code{ot_indices} calculates sensitivity indices using Optimal Transport (OT) for multivariate output data \code{y} with respect to input data \code{x}.
+Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
+The OT sensitivity measure is particularly useful when dealing with high-dimensional and non-linear relationships between inputs and outputs.
+}
+\details{
+The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
 }
 \examples{
 N <- 1000
@@ -53,5 +63,14 @@ y <- t(A \%*\% t(x))
 
 x <- data.frame(x)
 
+M <- 25
+
+# Calculate sensitivity indices
+sensitivity_indices <- ot_indices(x, y, M)
+sensitivity_indices
+
+# With extended output
+sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
+sensitivity_indices_extended
 
 }

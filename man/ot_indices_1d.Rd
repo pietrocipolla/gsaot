@@ -7,13 +7,13 @@
 ot_indices_1d(x, y, M, extended_out = FALSE)
 }
 \arguments{
-\item{x}{a data.frame containing the input(s) values}
+\item{x}{A data.frame containing the input(s) values. The values can be numeric, factors or strings.}
 
 \item{y}{an array containing the output values}
 
-\item{M}{a scalar representing the number of partitions for continuous inputs}
+\item{M}{A scalar representing the number of partitions for continuous inputs.}
 
-\item{extended_out}{logical indicating if the function should return the inner statistics and the partitions}
+\item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
 }
 \value{
 An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x

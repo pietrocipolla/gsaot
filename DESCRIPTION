@@ -1,10 +1,12 @@
 Package: gsaot
-Title: Compute Optimal Transport Sensitivity Indices
+Title: Global Sensitivity Analysis Using Optimal Transport 
 Version: 0.0.0.9000
 Authors@R: 
     person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-2491-6290"))
-Description: What the package does (one paragraph).
+Description: Tools for evaluating Global Sensitivity Indices from given data    
+    using Optimal Transport problem. You provide two samples, decide the     
+    algorithm, and compute the indices.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

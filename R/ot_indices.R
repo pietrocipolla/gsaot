@@ -1,15 +1,25 @@
-#' Title
+#' Calculate Optimal Transport sensitivity indices for multivariate y
 #'
-#' @param x a data.frame containing the input(s) values
-#' @param y a matrix containing the outputs values
-#' @param M a scalar representing the number of partitions for continuous inputs
-#' @param solver maximum number of iterations of the Sinkhorn algorithm
-#' @param solver_optns algorithm to solve the Optimal Transport problem
-#' @param scaling Lore ipsum
-#' @param extended_out a double representing the coefficient of the entropic regularization. If negative, the cost matrix is normalized.
+#' @description
+#' `ot_indices` calculates sensitivity indices using Optimal Transport (OT) for multivariate output data `y` with respect to input data `x`.
+#' Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
+#' The OT sensitivity measure is particularly useful when dealing with high-dimensional and non-linear relationships between inputs and outputs.
 #'
-#' @return A sensitivity index between 0 and 1 for each column in x
-#' @export
+#' @param x A data.frame containing the input(s) values. The values can be numeric, factors or strings.
+#' @param y A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.
+#' @param M A scalar representing the number of partitions for continuous inputs.
+#' @param solver (optional) Solver for the Optimal Transport problems: `sinkhorn` (default), `sinkhorn_log`, or `wasserstein`.
+#' @param solver_optns (optional) Options for the Optimal Transport solver. See [details] for allowed options.
+#' @param scaling (default `TRUE`) Logical that sets whether or not to scale the cost matrix.
+#' @param extended_out (default `FALSE`) Logical indicating if the function should return the inner statistics and the partitions.
+#'
+#' @details
+#' The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
+#'
+#' @return A list containing:
+#' * `W`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
+#' * `IS`: values of the inner statistics for the partitions defined by `partitions`. Returned only if `extended_out = TRUE`.
+#' * `partitions`: the partitions built to calculate the sensitivity indices. Returned only if `extended_out = TRUE`.
 #'
 #' @examples
 #' N <- 1000
@@ -29,6 +39,17 @@
 #'
 #' x <- data.frame(x)
 #'
+#' M <- 25
+#'
+#' # Calculate sensitivity indices
+#' sensitivity_indices <- ot_indices(x, y, M)
+#' sensitivity_indices
+#'
+#' # With extended output
+#' sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
+#' sensitivity_indices_extended
+#'
+#' @export
 #'
 ot_indices <- function(x,
                        y,
@@ -41,6 +62,12 @@ ot_indices <- function(x,
   stopifnot(is.data.frame(x), is.numeric(y))
   stopifnot(dim(x)[1] == dim(y)[1])
   stopifnot(dim(x)[1] > M)
+
+  # Remove any NA in output
+  y_na <- apply(y, 1, function(row) any(is.na(row)))
+  y <- y[!y_na, ]
+  x <- x[!y_na, ]
+  cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
@@ -71,6 +98,8 @@ ot_indices <- function(x,
 
   # Build return structure
   W <- array(dim = K)
+  names(W) <- colnames(x)
+  if (extended_out) IS <- list()
 
   # Evaluate the upper bound of the indices
   V <- 2 * sum(diag(stats::cov(y)))
@@ -110,7 +139,12 @@ ot_indices <- function(x,
     }
 
     W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
+    if (extended_out) IS[[k]] <- Wk
   }
 
-  return(W)
+  if (extended_out) {
+    return(list(W = W, IS = IS, partitions = partitions))
+  } else {
+    return(list(W = W))
+  }
 }

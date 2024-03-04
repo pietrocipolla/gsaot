@@ -1,15 +1,13 @@
 #' Evaluate Wasserstein-Bures approximation of the Optimal Transport solution
 #'
-#' @param x a data.frame containing the input(s) values
-#' @param y a data.frame containing the outputs values
-#' @param M a scalar representing the number of partitions for continuous inputs
-#' @param ext_out logical indicating if the function should return the inner statistics and the partitions
+#' @inheritParams ot_indices
 #'
-#' @return A sensitivity index between 0 and 1 for each of the columns in x
+#' @inherit ot_indices return
+#'
 #' @export
 #'
 #' @examples
-#' N <- 10000
+#' N <- 1000
 #'
 #' mx <- c(1, 1, 1)
 #' Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
@@ -27,12 +25,18 @@
 #' x <- data.frame(x)
 #' y <- y
 #'
-#' ot_indices_bw(x, y, 100)
-ot_indices_bw <- function(x, y, M, ext_out = FALSE) {
+#' ot_indices_wb(x, y, 100)
+ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
   # Input checks
   stopifnot(is.data.frame(x), is.numeric(y))
   stopifnot(dim(x)[1] == dim(y)[1])
   stopifnot(dim(x)[1] > M)
+
+  # Remove any NA in output
+  y_na <- apply(y, 1, function(row) any(is.na(row)))
+  y <- y[!y_na, ]
+  x <- x[!y_na, ]
+  cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Compute the statistics for the unconditioned distribution
   my <- colMeans(y)
@@ -52,7 +56,7 @@ ot_indices_bw <- function(x, y, M, ext_out = FALSE) {
   Adv <- array(dim = K)
   Diff <- array(dim = K)
 
-  if (ext_out) IS <- list()
+  if (extended_out) IS <- list()
 
   # Evaluate the upper bound of the indices
   V <- 2 * traceCy
@@ -79,10 +83,10 @@ ot_indices_bw <- function(x, y, M, ext_out = FALSE) {
     Adv[k] <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
     Diff[k] <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
 
-    if (ext_out) IS[[k]] <- Wk
+    if (extended_out) IS[[k]] <- Wk
   }
 
-  if (ext_out) {
+  if (extended_out) {
     return(list(W = W, Adv = Adv, Diff = Diff, IS = IS, partitions = partitions))
   } else {
     return(list(W = W, Adv = Adv, Diff = Diff))
