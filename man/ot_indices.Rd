@@ -23,7 +23,7 @@ ot_indices(
 
 \item{solver}{(optional) Solver for the Optimal Transport problems: \code{sinkhorn} (default), \code{sinkhorn_log}, or \code{wasserstein}.}
 
-\item{solver_optns}{(optional) Options for the Optimal Transport solver. See \link{details} for allowed options.}
+\item{solver_optns}{(optional) Options for the Optimal Transport solver. See details for allowed options.}
 
 \item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the cost matrix.}
 

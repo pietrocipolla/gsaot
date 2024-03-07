@@ -84,12 +84,12 @@ List sinkhorn_log_cpp(Eigen::VectorXd a,
     return List::create(Named("Error") = "Increase number of iterations");
   }
 
-  // Potentials (dual variables)
-  Eigen::VectorXd f(epsilon * u);
-  Eigen::VectorXd g(epsilon * v);
-
-  // Wasserstein dual
-  double W22 = f.dot(a) + g.dot(b);
+  // // Potentials (dual variables)
+  // Eigen::VectorXd f(epsilon * u);
+  // Eigen::VectorXd g(epsilon * v);
+  //
+  // // Wasserstein dual
+  // double W22 = f.dot(a) + g.dot(b);
 
   // Optimal coupling
   Eigen::MatrixXd P(U * K.array().exp().matrix() * V);
@@ -100,11 +100,11 @@ List sinkhorn_log_cpp(Eigen::VectorXd a,
   // Return u and v as a List
   return List::create(
     Named("iter") = iter,
-    Named("f") = f,
-    Named("g") = g,
-    Named("P") = P,
-    Named("cost") = W22_prime,
-    Named("cost_dual") = W22
+    // Named("f") = f,
+    // Named("g") = g,
+    // Named("P") = P,
+    Named("cost") = W22_prime
+    // Named("cost_dual") = W22
   );
 }
 
@@ -120,11 +120,11 @@ List sinkhorn_log(Eigen::VectorXd a,
   return sinkhorn_log_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }
 
-// # /***R
+// #  /***R
 // # n <- 100
-// # m <- 50
+// # m <- 100
 // # a <- rep(1 / n, n)
 // # b <- rep(1 / m, m)
-// # C <- as.matrix(dist(rnorm(100)))[, 1:50]
+// # C <- as.matrix(dist(rnorm(100)))#[, 1:50]
 // # sinkhorn_log(a, b, C, 1e5, 0.1, 1e-3)
 // # */

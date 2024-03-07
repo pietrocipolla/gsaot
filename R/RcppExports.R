@@ -5,14 +5,6 @@ sinkhorn <- function(a, b, costm, numIterations, epsilon, maxErr) {
     .Call(`_gsaot_sinkhorn`, a, b, costm, numIterations, epsilon, maxErr)
 }
 
-optimal_transport_sinkhorn_hist <- function(a, b, costMatrix, numIterations, epsilon) {
-    .Call(`_gsaot_optimal_transport_sinkhorn_hist`, a, b, costMatrix, numIterations, epsilon)
-}
-
-optimal_transport_sinkhorn_init <- function(costMatrix, numIterations, epsilon, u, v, maxErr = 1e-9) {
-    .Call(`_gsaot_optimal_transport_sinkhorn_init`, costMatrix, numIterations, epsilon, u, v, maxErr)
-}
-
 sinkhorn_log <- function(a, b, costm, numIterations, epsilon, maxErr) {
     .Call(`_gsaot_sinkhorn_log`, a, b, costm, numIterations, epsilon, maxErr)
 }

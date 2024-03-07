@@ -35,8 +35,9 @@ ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
   # Remove any NA in output
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- y[!y_na, ]
-  x <- x[!y_na, ]
-  cat("Removed", sum(y_na), "NA(s) in output\n")
+  x <- data.frame(x[!y_na, ])
+  if (any(y_na))
+    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Compute the statistics for the unconditioned distribution
   my <- colMeans(y)

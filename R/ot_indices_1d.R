@@ -17,10 +17,11 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
   stopifnot(dim(x)[1] > M)
 
   # Remove any NA in output
-  y_na <- apply(y, 1, function(row) any(is.na(row)))
-  y <- y[!y_na, ]
-  x <- x[!y_na, ]
-  cat("Removed", sum(y_na), "NA(s) in output\n")
+  y_na <- is.na(y)
+  y <- y[!y_na]
+  x <- as.data.frame(x[!y_na, ])
+  if (any(y_na))
+    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Build partitions for estimator
   partitions <- build_partition(x, M)

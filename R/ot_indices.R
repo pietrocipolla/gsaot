@@ -9,7 +9,7 @@
 #' @param y A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.
 #' @param M A scalar representing the number of partitions for continuous inputs.
 #' @param solver (optional) Solver for the Optimal Transport problems: `sinkhorn` (default), `sinkhorn_log`, or `wasserstein`.
-#' @param solver_optns (optional) Options for the Optimal Transport solver. See [details] for allowed options.
+#' @param solver_optns (optional) Options for the Optimal Transport solver. See details for allowed options.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the cost matrix.
 #' @param extended_out (default `FALSE`) Logical indicating if the function should return the inner statistics and the partitions.
 #'
@@ -66,8 +66,11 @@ ot_indices <- function(x,
   # Remove any NA in output
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- y[!y_na, ]
-  x <- x[!y_na, ]
-  cat("Removed", sum(y_na), "NA(s) in output\n")
+  col_names <- colnames(x)
+  x <- data.frame(x[!y_na, ])
+  colnames(x) <- col_names
+  if (any(y_na))
+    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Build cost matrix
   C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
