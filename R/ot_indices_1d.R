@@ -61,12 +61,12 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
     }
 
     W[k] <- ((Wk %*% n) / (V * N))[1, 1]
-    if (extended_out) IS[[k]] <- Wk
+    if (extended_out) IS[[k]] <- Wk / V
   }
 
-  if (extended_out) {
-    return(list(W = W, IS = IS, partitions = partitions))
-  } else {
-    return(list(W = W))
-  }
+  out <- gsaot_indices(method = "1-dimensional", indices = W, bound = V,
+                       IS = IS, partitions = partitions,
+                       x = x, y = y, extended_out)
+
+  return(out)
 }

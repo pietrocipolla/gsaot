@@ -16,9 +16,9 @@ ot_indices_wb(x, y, M, extended_out = FALSE)
 \item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
 }
 \value{
-A list containing:
+An object containing:
 \itemize{
-\item \code{W}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
+\item \code{indices}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
 \item \code{IS}: values of the inner statistics for the partitions defined by \code{partitions}. Returned only if \code{extended_out = TRUE}.
 \item \code{partitions}: the partitions built to calculate the sensitivity indices. Returned only if \code{extended_out = TRUE}.
 }

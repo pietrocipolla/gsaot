@@ -29,7 +29,7 @@ ot_indices_smap <- function(x, y, M) {
   # Evaluate an OT index for each univariate output separately
   for (p in seq(P)) {
     ret <- ot_indices_1d(x, y[, p], M)
-    W[p, ] <- ret$W
+    W[p, ] <- ret$indices
   }
 
   return(W)

@@ -3,7 +3,6 @@
 #' @description
 #' `ot_indices` calculates sensitivity indices using Optimal Transport (OT) for multivariate output data `y` with respect to input data `x`.
 #' Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
-#' The OT sensitivity measure is particularly useful when dealing with high-dimensional and non-linear relationships between inputs and outputs.
 #'
 #' @param x A data.frame containing the input(s) values. The values can be numeric, factors or strings.
 #' @param y A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.
@@ -16,8 +15,8 @@
 #' @details
 #' The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
 #'
-#' @return A list containing:
-#' * `W`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
+#' @return An object containing:
+#' * `indices`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
 #' * `IS`: values of the inner statistics for the partitions defined by `partitions`. Returned only if `extended_out = TRUE`.
 #' * `partitions`: the partitions built to calculate the sensitivity indices. Returned only if `extended_out = TRUE`.
 #'
@@ -142,12 +141,12 @@ ot_indices <- function(x,
     }
 
     W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
-    if (extended_out) IS[[k]] <- Wk
+    if (extended_out) IS[[k]] <- Wk / V
   }
 
-  if (extended_out) {
-    return(list(W = W, IS = IS, partitions = partitions))
-  } else {
-    return(list(W = W))
-  }
+  out <- gsaot_indices(method = solver, indices = W, bound = V,
+                       IS = IS, partitions = partitions,
+                       x = x, y = y, extended_out)
+
+  return(out)
 }

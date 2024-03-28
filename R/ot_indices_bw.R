@@ -54,8 +54,11 @@ ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
 
   # Initialize the result matrices
   W <- array(dim = K)
+  names(W) <- colnames(x)
   Adv <- array(dim = K)
+  names(Adv) <- colnames(x)
   Diff <- array(dim = K)
+  names(Diff) <- colnames(x)
 
   if (extended_out) IS <- list()
 
@@ -84,12 +87,13 @@ ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
     Adv[k] <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
     Diff[k] <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
 
-    if (extended_out) IS[[k]] <- Wk
+    if (extended_out) IS[[k]] <- Wk / V
   }
 
-  if (extended_out) {
-    return(list(W = W, Adv = Adv, Diff = Diff, IS = IS, partitions = partitions))
-  } else {
-    return(list(W = W, Adv = Adv, Diff = Diff))
-  }
+  out <- gsaot_indices(method = "wasserstein-bures", indices = W, bound = V,
+                       IS = IS, partitions = partitions,
+                       x = x, y = y, extended_out,
+                       Adv = Adv, Diff = Diff)
+
+  return(out)
 }

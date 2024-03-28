@@ -30,9 +30,9 @@ ot_indices(
 \item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
 }
 \value{
-A list containing:
+An object containing:
 \itemize{
-\item \code{W}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
+\item \code{indices}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
 \item \code{IS}: values of the inner statistics for the partitions defined by \code{partitions}. Returned only if \code{extended_out = TRUE}.
 \item \code{partitions}: the partitions built to calculate the sensitivity indices. Returned only if \code{extended_out = TRUE}.
 }
@@ -40,7 +40,6 @@ A list containing:
 \description{
 \code{ot_indices} calculates sensitivity indices using Optimal Transport (OT) for multivariate output data \code{y} with respect to input data \code{x}.
 Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
-The OT sensitivity measure is particularly useful when dealing with high-dimensional and non-linear relationships between inputs and outputs.
 }
 \details{
 The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
