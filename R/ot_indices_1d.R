@@ -3,8 +3,11 @@
 #' @inheritParams ot_indices
 #' @param y an array containing the output values
 #'
-#' @return An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x
+#' @return An Optimal Transport sensitivity index between 0 and 1 for each of
+#'   the columns in x
 #' @export
+#'
+#' @seealso [ot_indices()], [ot_indices_wb()]
 #'
 #' @examples
 #' x <- rnorm(1000)

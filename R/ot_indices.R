@@ -1,24 +1,36 @@
 #' Calculate Optimal Transport sensitivity indices for multivariate y
 #'
-#' @description
-#' `ot_indices` calculates sensitivity indices using Optimal Transport (OT) for multivariate output data `y` with respect to input data `x`.
-#' Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
+#' @description `ot_indices` calculates sensitivity indices using Optimal
+#'   Transport (OT) for multivariate output data `y` with respect to input data
+#'   `x`. Sensitivity indices measure the influence of input variables on output
+#'   variables, with values ranging between 0 and 1.
 #'
-#' @param x A data.frame containing the input(s) values. The values can be numeric, factors or strings.
-#' @param y A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.
-#' @param M A scalar representing the number of partitions for continuous inputs.
-#' @param solver (optional) Solver for the Optimal Transport problems: `sinkhorn` (default), `sinkhorn_log`, or `wasserstein`.
-#' @param solver_optns (optional) Options for the Optimal Transport solver. See details for allowed options.
-#' @param scaling (default `TRUE`) Logical that sets whether or not to scale the cost matrix.
-#' @param extended_out (default `FALSE`) Logical indicating if the function should return the inner statistics and the partitions.
+#' @param x A data.frame containing the input(s) values. The values can be
+#'   numeric, factors or strings.
+#' @param y A matrix containing the output values. Each column represents a
+#'   different output variable, and each row represents a different observation.
+#'   Only numeric values are allowed.
+#' @param M A scalar representing the number of partitions for continuous
+#'   inputs.
+#' @param solver (optional) Solver for the Optimal Transport problems:
+#'   `sinkhorn` (default), `sinkhorn_log`, or `wasserstein`.
+#' @param solver_optns (optional) Options for the Optimal Transport solver. See
+#'   details for allowed options.
+#' @param scaling (default `TRUE`) Logical that sets whether or not to scale the
+#'   cost matrix.
+#' @param extended_out (default `FALSE`) Logical indicating if the function
+#'   should return the inner statistics and the partitions.
 #'
-#' @details
-#' The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
+#' @details The solvers of the OT problem implemented in this package can be
+#'   divided into two categories: standard and entropic. And then bla, blabla,
+#'   blablabla
 #'
 #' @return An object containing:
 #' * `indices`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
 #' * `IS`: values of the inner statistics for the partitions defined by `partitions`. Returned only if `extended_out = TRUE`.
 #' * `partitions`: the partitions built to calculate the sensitivity indices. Returned only if `extended_out = TRUE`.
+#'
+#' @seealso [ot_indices_1d()], [ot_indices_wb()]
 #'
 #' @examples
 #' N <- 1000

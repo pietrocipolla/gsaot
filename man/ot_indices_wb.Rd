@@ -7,13 +7,18 @@
 ot_indices_wb(x, y, M, extended_out = FALSE)
 }
 \arguments{
-\item{x}{A data.frame containing the input(s) values. The values can be numeric, factors or strings.}
+\item{x}{A data.frame containing the input(s) values. The values can be
+numeric, factors or strings.}
 
-\item{y}{A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.}
+\item{y}{A matrix containing the output values. Each column represents a
+different output variable, and each row represents a different observation.
+Only numeric values are allowed.}
 
-\item{M}{A scalar representing the number of partitions for continuous inputs.}
+\item{M}{A scalar representing the number of partitions for continuous
+inputs.}
 
-\item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
+\item{extended_out}{(default \code{FALSE}) Logical indicating if the function
+should return the inner statistics and the partitions.}
 }
 \value{
 An object containing:
@@ -46,4 +51,7 @@ x <- data.frame(x)
 y <- y
 
 ot_indices_wb(x, y, 100)
+}
+\seealso{
+\code{\link[=ot_indices]{ot_indices()}}, \code{\link[=ot_indices_1d]{ot_indices_1d()}}
 }

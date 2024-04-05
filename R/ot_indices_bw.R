@@ -6,6 +6,8 @@
 #'
 #' @export
 #'
+#' @seealso [ot_indices()], [ot_indices_1d()]
+#'
 #' @examples
 #' N <- 1000
 #'

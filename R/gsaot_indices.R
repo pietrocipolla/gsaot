@@ -195,6 +195,9 @@ plot_inner_stats <- function(x, ...) {
   # Get the number of inputs
   K <- ncol(x$x)
 
+  # Get the names of the inputs
+  input_names <- names(x$indices)
+
   # Set the environment
   graphics::par(mfrow = c(K, 1))
   if (x$method == "wasserstein-bures") graphics::par(mfrow = c(K, 3))
@@ -228,21 +231,19 @@ plot_inner_stats <- function(x, ...) {
       # Plot the inner statistics
       graphics::plot(x_means, x$inner_statistics[[k]][1, ],
                      xlim = xlim,  ylim = c(0, 1),
-                     xlab = "Input", ylab = "Index")
+                     xlab = input_names[k], ylab = "Index", ...)
       graphics::title(main = paste("Indices calculated using", x$method, "solver"))
 
       # Plot the advective and diffusive components if wb
       if (x$method == "wasserstein-bures") {
-        plot(x_means, x$inner_statistics[[k]][2, ],
-             xlim = xlim, ylim = c(0, 1),
-             xlab = "Input", ylab = "Index")
-        graphics::title(main = paste("Advective component"),
-                        xlab = "Input", ylab = "Index")
-        plot(x_means, x$inner_statistics[[k]][3, ],
-             xlim = xlim,  ylim = c(0, 1),
-             xlab = "Input", ylab = "Index")
-        graphics::title(main = paste("Diffusive component"),
-                        xlab = "Input", ylab = "Index")
+        graphics::plot(x_means, x$inner_statistics[[k]][2, ],
+                       xlim = xlim, ylim = c(0, 1),
+                       xlab = input_names[k], ylab = "Index", ...)
+        graphics::title(main = paste("Advective component"))
+        graphics::plot(x_means, x$inner_statistics[[k]][3, ],
+                       xlim = xlim,  ylim = c(0, 1),
+                       xlab = input_names[k], ylab = "Index", ...)
+        graphics::title(main = paste("Diffusive component"))
       }
     } else {
     # If the input is non-numeric, use barplot
@@ -255,21 +256,19 @@ plot_inner_stats <- function(x, ...) {
       # Plot the inner statistics
       graphics::barplot(x$inner_statistics[[k]][1, ],
                         names.arg = x_unique,  ylim = c(0, 1),
-                        xlab = "Input", ylab = "Index")
+                        xlab = input_names[k], ylab = "Index", ...)
       graphics::title(main = paste("Indices calculated using", x$method, "solver"))
 
       # Plot the advective and diffusive components if wb
       if (x$method == "wasserstein-bures") {
         graphics::barplot(x$inner_statistics[[k]][2, ],
                           names.arg = x_unique,  ylim = c(0, 1),
-                          xlab = "Input", ylab = "Index")
-        graphics::title(main = paste("Advective component"),
-                        xlab = "Input", ylab = "Index")
+                          xlab = input_names[k], ylab = "Index", ...)
+        graphics::title(main = paste("Advective component"))
         graphics::barplot(x$inner_statistics[[k]][3, ],
                           names.arg = x_unique,  ylim = c(0, 1),
-                          xlab = "Input", ylab = "Index")
-        graphics::title(main = paste("Diffusive component"),
-                        xlab = "Input", ylab = "Index")
+                          xlab = input_names[k], ylab = "Index", ...)
+        graphics::title(main = paste("Diffusive component"))
       }
     }
   }

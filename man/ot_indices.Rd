@@ -15,19 +15,27 @@ ot_indices(
 )
 }
 \arguments{
-\item{x}{A data.frame containing the input(s) values. The values can be numeric, factors or strings.}
+\item{x}{A data.frame containing the input(s) values. The values can be
+numeric, factors or strings.}
 
-\item{y}{A matrix containing the output values. Each column represents a different output variable, and each row represents a different observation. Only numeric values are allowed.}
+\item{y}{A matrix containing the output values. Each column represents a
+different output variable, and each row represents a different observation.
+Only numeric values are allowed.}
 
-\item{M}{A scalar representing the number of partitions for continuous inputs.}
+\item{M}{A scalar representing the number of partitions for continuous
+inputs.}
 
-\item{solver}{(optional) Solver for the Optimal Transport problems: \code{sinkhorn} (default), \code{sinkhorn_log}, or \code{wasserstein}.}
+\item{solver}{(optional) Solver for the Optimal Transport problems:
+\code{sinkhorn} (default), \code{sinkhorn_log}, or \code{wasserstein}.}
 
-\item{solver_optns}{(optional) Options for the Optimal Transport solver. See details for allowed options.}
+\item{solver_optns}{(optional) Options for the Optimal Transport solver. See
+details for allowed options.}
 
-\item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the cost matrix.}
+\item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the
+cost matrix.}
 
-\item{extended_out}{(default \code{FALSE}) Logical indicating if the function should return the inner statistics and the partitions.}
+\item{extended_out}{(default \code{FALSE}) Logical indicating if the function
+should return the inner statistics and the partitions.}
 }
 \value{
 An object containing:
@@ -38,11 +46,15 @@ An object containing:
 }
 }
 \description{
-\code{ot_indices} calculates sensitivity indices using Optimal Transport (OT) for multivariate output data \code{y} with respect to input data \code{x}.
-Sensitivity indices measure the influence of input variables on output variables, with values ranging between 0 and 1.
+\code{ot_indices} calculates sensitivity indices using Optimal
+Transport (OT) for multivariate output data \code{y} with respect to input data
+\code{x}. Sensitivity indices measure the influence of input variables on output
+variables, with values ranging between 0 and 1.
 }
 \details{
-The solvers of the OT problem implemented in this package can be divided into two categories: standard and entropic. And then bla, blabla, blablabla
+The solvers of the OT problem implemented in this package can be
+divided into two categories: standard and entropic. And then bla, blabla,
+blablabla
 }
 \examples{
 N <- 1000
@@ -72,4 +84,7 @@ sensitivity_indices
 sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
 sensitivity_indices_extended
 
+}
+\seealso{
+\code{\link[=ot_indices_1d]{ot_indices_1d()}}, \code{\link[=ot_indices_wb]{ot_indices_wb()}}
 }
