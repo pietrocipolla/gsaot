@@ -150,7 +150,7 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
     # Plot the indices ordered by magnitude
     ggplot2::ggplot(data = x_indices, ggplot2::aes(x = .data[["Inputs"]],
                                                    y = .data[["Indices"]])) +
-      ggplot2::geom_bar(stat = "identity", fill = "#2d3650") +
+      ggplot2::geom_bar(stat = "identity") +
       ggplot2::scale_y_continuous(limits = c(0,1)) +
       ggplot2::labs(title = paste("Indices calculated using", x$method, "solver"),
            x = "Inputs", y = "Indices")
@@ -174,8 +174,7 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
                         width = .7) +
       ggplot2::scale_y_continuous(limits = c(0,1)) +
       ggplot2::labs(title = paste("Indices calculated using", x$method, "solver"),
-           x = "Inputs", y = "Indices") +
-      ggplot2::scale_fill_manual(values = c("#2d3650", "#d5bfd4", "#ffef89"))
+           x = "Inputs", y = "Indices")
   }
 }
 
