@@ -12,7 +12,7 @@ plot_inner_stats(x, ...)
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Plot Optimal Transport based inner statistics for each partition.
+Plot Optimal Transport based inner statistics for each partition using \code{ggplot2} package.
 }
 \examples{
 N <- 1000

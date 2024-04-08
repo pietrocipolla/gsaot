@@ -2,7 +2,7 @@
 % Please edit documentation in R/gsaot_indices.R
 \name{plot.gsaot_indices}
 \alias{plot.gsaot_indices}
-\title{Plot Optimal Transport sensitivity indices information}
+\title{Plot Optimal Transport sensitivity indices}
 \usage{
 \method{plot}{gsaot_indices}(x, ranking = NULL, ...)
 }
@@ -13,8 +13,11 @@
 
 \item{...}{Further arguments passed to or from other methods.}
 }
+\value{
+A \code{ggplot} object that, if called, will print
+}
 \description{
-Plot Optimal Transport based sensitivity indices.
+Plot Optimal Transport based sensitivity indices using \code{ggplot2} package.
 }
 \examples{
 N <- 1000
