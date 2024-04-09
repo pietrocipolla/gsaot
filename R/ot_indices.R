@@ -67,6 +67,7 @@ ot_indices <- function(x,
   stopifnot(dim(x)[1] == dim(y)[1])
   stopifnot(dim(x)[1] > M)
 
+
   # Remove any NA in output
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- y[!y_na, ]
@@ -149,8 +150,11 @@ ot_indices <- function(x,
     IS[[k]] <- Wk / V
   }
 
-  out <- gsaot_indices(method = solver, indices = W, bound = V,
-                       IS = IS, partitions = partitions,
+  out <- gsaot_indices(method = solver,
+                       indices = W,
+                       bound = V,
+                       IS = IS,
+                       partitions = partitions,
                        x = x, y = y)
 
   return(out)

@@ -116,9 +116,11 @@ optimal_trasport_bw <- function(partition, y, my, Cy, traceCy, Ry) {
   mc <- colMeans(yc)
   Cc <- stats::cov(yc)
 
+  # Evaluate the advective and diffusive parts separately
   Adv <- sum((my - mc)^2)
   Diff <- traceCy + sum(diag(Cc)) - 2 * tracesqrtm(Ry %*% Cc %*% Ry)
 
+  # Evaluate the index
   W <- Adv + Diff
 
   return(cbind(W, Adv, Diff))

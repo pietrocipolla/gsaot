@@ -69,8 +69,11 @@ ot_indices_1d <- function(x, y, M, grid = 1e-3) {
     IS[[k]] <- Wk / V
   }
 
-  out <- gsaot_indices(method = "1-dimensional", indices = W, bound = V,
-                       IS = IS, partitions = partitions,
+  out <- gsaot_indices(method = "1-dimensional",
+                       indices = W,
+                       bound = V,
+                       IS = IS,
+                       partitions = partitions,
                        x = x, y = y)
 
   return(out)
