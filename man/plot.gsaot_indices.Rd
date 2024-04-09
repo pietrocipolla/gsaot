@@ -45,10 +45,4 @@ sensitivity_indices
 
 plot(sensitivity_indices)
 
-# With extended output
-sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
-sensitivity_indices_extended
-
-plot(sensitivity_indices_extended)
-
 }

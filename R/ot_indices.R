@@ -18,8 +18,6 @@
 #'   details for allowed options.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the
 #'   cost matrix.
-#' @param extended_out (default `FALSE`) Logical indicating if the function
-#'   should return the inner statistics and the partitions.
 #'
 #' @details The solvers of the OT problem implemented in this package can be
 #'   divided into two categories: standard and entropic. And then bla, blabla,
@@ -27,8 +25,8 @@
 #'
 #' @return An object containing:
 #' * `indices`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
-#' * `IS`: values of the inner statistics for the partitions defined by `partitions`. Returned only if `extended_out = TRUE`.
-#' * `partitions`: the partitions built to calculate the sensitivity indices. Returned only if `extended_out = TRUE`.
+#' * `IS`: values of the inner statistics for the partitions defined by `partitions`.
+#' * `partitions`: the partitions built to calculate the sensitivity indices.
 #'
 #' @seealso [ot_indices_1d()], [ot_indices_wb()]
 #'
@@ -56,10 +54,6 @@
 #' sensitivity_indices <- ot_indices(x, y, M)
 #' sensitivity_indices
 #'
-#' # With extended output
-#' sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
-#' sensitivity_indices_extended
-#'
 #' @export
 #'
 ot_indices <- function(x,
@@ -67,8 +61,7 @@ ot_indices <- function(x,
                        M,
                        solver = "sinkhorn",
                        solver_optns = NULL,
-                       scaling = TRUE,
-                       extended_out = FALSE) {
+                       scaling = TRUE) {
   # Input checks
   stopifnot(is.data.frame(x), is.numeric(y))
   stopifnot(dim(x)[1] == dim(y)[1])
@@ -113,7 +106,7 @@ ot_indices <- function(x,
   # Build return structure
   W <- array(dim = K)
   names(W) <- colnames(x)
-  if (extended_out) IS <- list()
+  IS <- list()
 
   # Evaluate the upper bound of the indices
   V <- 2 * sum(diag(stats::cov(y)))
@@ -153,12 +146,12 @@ ot_indices <- function(x,
     }
 
     W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
-    if (extended_out) IS[[k]] <- Wk / V
+    IS[[k]] <- Wk / V
   }
 
   out <- gsaot_indices(method = solver, indices = W, bound = V,
                        IS = IS, partitions = partitions,
-                       x = x, y = y, extended_out)
+                       x = x, y = y)
 
   return(out)
 }

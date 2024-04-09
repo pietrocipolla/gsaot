@@ -11,6 +11,9 @@ plot_inner_stats(x, ...)
 
 \item{...}{Further arguments passed to or from other methods.}
 }
+\value{
+A \code{patchwork} object that, if called, will print
+}
 \description{
 Plot Optimal Transport based inner statistics for each partition using \code{ggplot2} package.
 }
@@ -34,8 +37,8 @@ x <- data.frame(x)
 
 M <- 25
 
-# With extended output
-sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
-plot_inner_stats(sensitivity_indices_extended)
+# Get sensitivity indices
+sensitivity_indices <- ot_indices(x, y, M)
+plot_inner_stats(sensitivity_indices)
 
 }

@@ -1,7 +1,8 @@
 #' Evaluate Optimal Transport indices on one dimensional outputs
 #'
 #' @inheritParams ot_indices
-#' @param y an array containing the output values
+#' @param y An array containing the output values.
+#' @param grid The spacing of the grid over which the integral of \eqn{\lVert F_Y - F_{Y|X_i \in \mathcal{X}_i} \rVert}.
 #'
 #' @return An Optimal Transport sensitivity index between 0 and 1 for each of
 #'   the columns in x
@@ -13,7 +14,7 @@
 #' x <- rnorm(1000)
 #' y <- 10 * x
 #' ot_indices_1d(data.frame(x), y, 30)
-ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
+ot_indices_1d <- function(x, y, M, grid = 1e-3) {
   # Input checks
   stopifnot(is.data.frame(x))
   stopifnot(dim(x)[1] == length(y))
@@ -30,7 +31,7 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
   partitions <- build_partition(x, M)
 
   # Sort y
-  y_sort <- sort(y)
+  y_ecdf <- stats::ecdf(y)
 
   # Get inputs features
   N <- dim(x)[1]
@@ -42,7 +43,7 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
   # Build the return structure
   W <- array(dim = K)
   names(W) <- colnames(x)
-  if (extended_out) IS <- list()
+  IS <- list()
 
   for (k in seq(K)) {
     # Get the partitions for the current input
@@ -59,31 +60,33 @@ ot_indices_1d <- function(x, y, M, extended_out = FALSE) {
       partition_element <- partition[[m]]
       yc <- sort(y[partition_element])
 
-      Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc)
+      # Compute the OT distance in each partition
+      Wk[1, m] <- optimal_transport_1d(partition_element, y_ecdf, yc, grid)
       n[m] <- length(partition_element)
     }
 
     W[k] <- ((Wk %*% n) / (V * N))[1, 1]
-    if (extended_out) IS[[k]] <- Wk / V
+    IS[[k]] <- Wk / V
   }
 
   out <- gsaot_indices(method = "1-dimensional", indices = W, bound = V,
                        IS = IS, partitions = partitions,
-                       x = x, y = y, extended_out)
+                       x = x, y = y)
 
   return(out)
 }
 
-optimal_transport_1d <- function(partition, y_sort, yc) {
-  # Set the scaling parameters
-  N <- length(y_sort)
-  Nc <- length(yc)
+optimal_transport_1d <- function(partition, y_ecdf, yc, grid) {
+  # Compute the empirical CDF for the conditioned distribution
+  yc_ecdf <- stats::ecdf(yc)
 
-  # Expand the empirical CDF quantiles to match with y1 length
-  yc <- yc[floor(seq(1 / Nc, 1, length.out = N) * Nc + 0.5)]
+  # Fix the grid and compute quantiles
+  probs <- seq(0, 1, grid)
+  qy <- stats::quantile(y_ecdf, probs)
+  qyc <- stats::quantile(yc_ecdf, probs)
 
   # Evaluate the L2 norm of the empirical CDF
-  W <- mean((y_sort - yc)^2)
+  W <- mean((qy - qyc)^2)
 
   return(W)
 }

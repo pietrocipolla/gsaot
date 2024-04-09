@@ -4,7 +4,7 @@
 \alias{ot_indices_wb}
 \title{Evaluate Wasserstein-Bures approximation of the Optimal Transport solution}
 \usage{
-ot_indices_wb(x, y, M, extended_out = FALSE)
+ot_indices_wb(x, y, M)
 }
 \arguments{
 \item{x}{A data.frame containing the input(s) values. The values can be
@@ -16,16 +16,13 @@ Only numeric values are allowed.}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
-
-\item{extended_out}{(default \code{FALSE}) Logical indicating if the function
-should return the inner statistics and the partitions.}
 }
 \value{
 An object containing:
 \itemize{
 \item \code{indices}: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
-\item \code{IS}: values of the inner statistics for the partitions defined by \code{partitions}. Returned only if \code{extended_out = TRUE}.
-\item \code{partitions}: the partitions built to calculate the sensitivity indices. Returned only if \code{extended_out = TRUE}.
+\item \code{IS}: values of the inner statistics for the partitions defined by \code{partitions}.
+\item \code{partitions}: the partitions built to calculate the sensitivity indices.
 }
 }
 \description{

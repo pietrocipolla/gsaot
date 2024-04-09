@@ -4,19 +4,18 @@
 \alias{ot_indices_1d}
 \title{Evaluate Optimal Transport indices on one dimensional outputs}
 \usage{
-ot_indices_1d(x, y, M, extended_out = FALSE)
+ot_indices_1d(x, y, M, grid = 0.001)
 }
 \arguments{
 \item{x}{A data.frame containing the input(s) values. The values can be
 numeric, factors or strings.}
 
-\item{y}{an array containing the output values}
+\item{y}{An array containing the output values}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
 
-\item{extended_out}{(default \code{FALSE}) Logical indicating if the function
-should return the inner statistics and the partitions.}
+\item{grid}{The spacing of the grid over which the integral of \eqn{\lVert F_Y - F_{Y|X_i \in \mathcal{X}_i} \rVert}}
 }
 \value{
 An Optimal Transport sensitivity index between 0 and 1 for each of

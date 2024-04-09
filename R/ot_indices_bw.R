@@ -28,15 +28,19 @@
 #' y <- y
 #'
 #' ot_indices_wb(x, y, 100)
-ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
+ot_indices_wb <- function(x, y, M) {
   # Input checks
   stopifnot(is.data.frame(x), is.numeric(y))
+
+  # Conversion to matrices
+  if (!is.matrix(y)) y <- matrix(y, ncol = 1)
+
   stopifnot(dim(x)[1] == dim(y)[1])
   stopifnot(dim(x)[1] > M)
 
   # Remove any NA in output
   y_na <- apply(y, 1, function(row) any(is.na(row)))
-  y <- y[!y_na, ]
+  y <- as.matrix(y[!y_na, ])
   x <- data.frame(x[!y_na, ])
   if (any(y_na))
     cat("Removed", sum(y_na), "NA(s) in output\n")
@@ -62,7 +66,7 @@ ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
   Diff <- array(dim = K)
   names(Diff) <- colnames(x)
 
-  if (extended_out) IS <- list()
+  IS <- list()
 
   # Evaluate the upper bound of the indices
   V <- 2 * traceCy
@@ -89,20 +93,24 @@ ot_indices_wb <- function(x, y, M, extended_out = FALSE) {
     Adv[k] <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
     Diff[k] <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
 
-    if (extended_out) IS[[k]] <- Wk / V
+    IS[[k]] <- Wk / V
   }
 
-  out <- gsaot_indices(method = "wasserstein-bures", indices = W, bound = V,
-                       IS = IS, partitions = partitions,
-                       x = x, y = y, extended_out,
-                       Adv = Adv, Diff = Diff)
+  out <- gsaot_indices(method = "wasserstein-bures",
+                       indices = W,
+                       bound = V,
+                       IS = IS,
+                       partitions = partitions,
+                       x = x, y = y,
+                       Adv = Adv,
+                       Diff = Diff)
 
   return(out)
 }
 
 optimal_trasport_bw <- function(partition, y, my, Cy, traceCy, Ry) {
   # Get the current partition indices for y
-  yc <- y[partition, ]
+  yc <- as.matrix(y[partition, ])
 
   # Get the conditioned statistics
   mc <- colMeans(yc)

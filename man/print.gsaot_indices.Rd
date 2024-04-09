@@ -40,8 +40,4 @@ M <- 25
 sensitivity_indices <- ot_indices(x, y, M)
 print(sensitivity_indices)
 
-# With extended output
-sensitivity_indices_extended <- ot_indices(x, y, M, extended_out = TRUE)
-print(sensitivity_indices_extended)
-
 }
