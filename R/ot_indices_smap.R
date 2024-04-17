@@ -12,10 +12,8 @@
 #' y <- 10 * x
 #' ot_indices_1d(data.frame(x), y, 30)
 ot_indices_smap <- function(x, y, M) {
-  # Input checks
-  stopifnot(is.data.frame(x), is.matrix(y))
-  stopifnot(dim(x)[1] == dim(y)[1])
-  stopifnot(dim(x)[1] > M)
+  # Check if the output is a numerical
+  if (!is.numeric(y) | !is.matrix(y)) stop("`y` must be a matrix of numerical values!")
 
   # Get sizes of input and output
   K <- dim(x)[2]

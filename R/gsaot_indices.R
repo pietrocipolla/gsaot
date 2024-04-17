@@ -1,18 +1,40 @@
 # Add .data to the global variables in order to avoid NOTEs from R CMD check
 utils::globalVariables(c(".data"))
 
-gsaot_indices <- function(method, indices, bound, IS, partitions, x, y,
-                          Adv = NULL, Diff = NULL) {
+# gsaot_indices object constructor
+gsaot_indices <- function(method,
+                          indices,
+                          bound,
+                          IS,
+                          partitions,
+                          x, y,
+                          Adv = NULL,
+                          Diff = NULL,
+                          indices_ci = NULL,
+                          bound_ci = NULL,
+                          IS_ci = NULL,
+                          type = NULL,
+                          conf = NULL) {
   value <- list(method = method,
                 indices = indices,
                 bound = bound,
                 x = x, y = y,
                 inner_statistics = IS,
-                partitions = partitions)
+                partitions = partitions,
+                boot = FALSE)
 
   if (!is.null(Adv)) {
     value[["adv"]] <- Adv
     value[["diff"]] <- Diff
+  }
+
+  if (!is.null(indices_ci)) {
+    value[["boot"]] <- TRUE
+    value[["indices_ci"]] <- indices_ci
+    value[["inner_statistics_ci"]] <- IS_ci
+    value[["bound_ci"]] <- bound_ci
+    value[["type"]] <- type
+    value[["conf"]] <- conf
   }
 
   attr(value, "class") <- "gsaot_indices"
@@ -58,13 +80,7 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
   cat("Method:", x$method, "\n")
   cat("\nIndices:\n")
   print(x$indices)
-  cat("\nUpper bound:", x$bound, "\n")
-  # if (exists("inner_statistics", where = x)) {
-  #   cat("Inner statistics:\n")
-  #   print(x$inner_statistics)
-  #   cat("Partitions:\n")
-  #   print(x$partitions)
-  # }
+
   if (data) {
     cat("Data:\n")
     print(x$x)
@@ -76,6 +92,16 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
     cat("\nDiffusive component:\n")
     print(x$diff)
   }
+  if (x$boot) {
+    cat("\nType of confidence interval:", x$type, "\n")
+    cat("Confidence level:", x$conf, "\n")
+    cat("Indices confidence intervals:\n")
+    print(x$indices_ci)
+
+    cat("\nUpper bound:", mean(x$bound), "\n")
+  }
+  else
+    cat("\nUpper bound:", x$bound, "\n")
 }
 
 #' Plot Optimal Transport sensitivity indices
@@ -119,11 +145,15 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
 #'
 #' plot(sensitivity_indices)
 #'
-plot.gsaot_indices <- function(x, ranking = NULL, ...) {
+plot.gsaot_indices <- function(x,
+                               ranking = NULL,
+                               wb_all = FALSE, ...) {
   # If ranking is defined, plot only the selected inputs
   N <- nrow(x$indices)
 
+  # Select only the inputs requested by `ranking`
   if (!is.null(ranking)) {
+    # Check if ranking is an integer less than the number of inputs
     if (ranking %% 1 == 0 & abs(ranking) <= N) {
       inputs_to_plot <-
         ifelse(rep(sign(ranking), each = abs(ranking)) > 0,
@@ -136,7 +166,7 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
 
   # If the indices are not from ot_indices_wb, print only the indices
   # Otherwise, plot the indices, the advective component and the diffusive one
-  if (!exists("adv", where = x)) {
+  if (!exists("adv", where = x) | !wb_all) {
     # Create a data.frame to store all the indices
     x_indices <-
       data.frame(
@@ -148,7 +178,7 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
                                levels = unique(x_indices$Inputs))
 
     # Plot the indices ordered by magnitude
-    ggplot2::ggplot(data = x_indices, ggplot2::aes(x = .data[["Inputs"]],
+    p <- ggplot2::ggplot(data = x_indices, ggplot2::aes(x = .data[["Inputs"]],
                                                    y = .data[["Indices"]],
                                                    fill = .data[["Component"]])) +
       ggplot2::geom_bar(stat = "identity") +
@@ -174,7 +204,7 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
     x_indices$Component <- factor(x_indices$Component,
                                   levels = unique(x_indices$Component))
 
-    ggplot2::ggplot(data = x_indices, ggplot2::aes(x = .data[["Inputs"]],
+    p <- ggplot2::ggplot(data = x_indices, ggplot2::aes(x = .data[["Inputs"]],
                                                    y = .data[["Indices"]],
                                                    fill = .data[["Component"]])) +
       ggplot2::geom_bar(
@@ -188,6 +218,15 @@ plot.gsaot_indices <- function(x, ranking = NULL, ...) {
         x = "Inputs",
         y = "Indices"
       )
+  }
+
+  if (x$boot) {
+    ci_data <- data.frame(Inputs = rownames(x$indices_ci),
+                          x$indices_ci)
+    ci_data <- merge(ci_data, x_indices)
+    p +
+      ggplot2::geom_errorbar(data = ci_data,
+                             ggplot2::aes(ymin = low.ci, ymax = high.ci))
   }
 }
 
