@@ -28,37 +28,68 @@
 #' y <- y
 #'
 #' ot_indices_wb(x, y, 100)
-ot_indices_wb <- function(x, y, M) {
+ot_indices_wb <- function(x,
+                          y,
+                          M,
+                          boot = FALSE,
+                          R = NULL,
+                          parallel = "no",
+                          ncpus = 1,
+                          conf = 0.95,
+                          type = "norm") {
   # Input checks
-  stopifnot(is.data.frame(x), is.numeric(y))
+  # ----------------------------------------------------------------------------
+  # Check if x is a data.frame or a matrix
+  if (!(is.data.frame(x) | is.matrix(x))) stop("`x` must be a matrix or a data.frame!")
+  x <- as.data.frame(x)
 
-  # Conversion to matrices
+  # Check if the output is a numerical
+  if (!is.numeric(y) | !is.matrix(y)) stop("`y` must be a matrix or vector of numerical values!")
+
+  # Conversion to matrix in case
   if (!is.matrix(y)) y <- matrix(y, ncol = 1)
 
-  stopifnot(dim(x)[1] == dim(y)[1])
-  stopifnot(dim(x)[1] > M)
+  # Check if the dimensions match
+  if (!(nrow(x) == nrow(y))) stop("The number of samples in `x` and `y` should be the same")
+
+  # Check if the number of partitions is lower than the number of samples
+  if (nrow(x) <= M) stop("The number of partitions should be lower than the number of samples")
+
+  # Check that bootstrapping is correctly set
+  if ((!boot & !is.null(R)) | (boot & is.null(R))) {
+    stop("Bootstrapping requires boot = TRUE and an integer in R")
+  }
 
   # Remove any NA in output
+  # ----------------------------------------------------------------------------
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- as.matrix(y[!y_na, ])
   x <- data.frame(x[!y_na, ])
   if (any(y_na))
     cat("Removed", sum(y_na), "NA(s) in output\n")
 
-  # Compute the statistics for the unconditioned distribution
-  my <- colMeans(y)
-  Cy <- stats::cov(y)
-  traceCy <- sum(diag(Cy))
-  Ry <- sqrtm(Cy)
+  # Compute the statistics for the unconditioned distribution if no boot
+  # ----------------------------------------------------------------------------
+  if (!boot) {
+    my <- colMeans(y)
+    Cy <- stats::cov(y)
+    traceCy <- sum(diag(Cy))
+    Ry <- sqrtm(Cy)
+
+    # Evaluate the upper bound of the indices
+    V <- 2 * traceCy
+  }
 
   # Retrieve values useful for the algorithm
   N <- dim(x)[1]
   K <- dim(x)[2]
 
   # Define the partitions for the estimation
+  # ----------------------------------------------------------------------------
   partitions <- build_partition(x, M)
 
   # Initialize the result matrices
+  # ----------------------------------------------------------------------------
   W <- array(dim = K)
   names(W) <- colnames(x)
   Adv <- array(dim = K)
@@ -68,32 +99,108 @@ ot_indices_wb <- function(x, y, M) {
 
   IS <- list()
 
-  # Evaluate the upper bound of the indices
-  V <- 2 * traceCy
+  if (boot) {
+    V <- array(dim = K)
+    W_ci <- data.frame(matrix(nrow = K * 3,
+                              ncol = 4,
+                              dimnames = list(NULL,
+                                              c("Inputs", "Index", "low.ci", "high.ci"))))
+    W_ci$Inputs <- rep(names(W), times = 3)
+    W_ci$Index <- rep(c("WB", "Advective", "Diffusive"), each = K)
 
-  # Run the algorithm for each variable
-  for (k in seq_len(K)) {
-    # Get the current partition
-    partition <- partitions[[k]]
+    IS_ci <- list()
+    V_ci <- list()
+  }
 
-    # Get the current number of partition elements
-    M <- length(partition)
+  # ESTIMATE THE INDICES FOR EACH PARTITION
+  # ----------------------------------------------------------------------------
+  for (k in seq(K)) {
+    # Get the partitions for the current input
+    partition <- partitions[, k]
 
-    # Build the inner return structure
-    Wk <- matrix(nrow = 3, ncol = M)
-    n <- matrix(nrow = M)
+    # Set the number of partition elements
+    M <- max(partition)
 
-    for (m in seq(M)) {
-      partition_element <- partition[[m]]
-      Wk[, m] <- optimal_trasport_bw(partition_element, y, my, Cy, traceCy, Ry)
-      n[m] <- length(partition_element)
+    # NO BOOTSTRAP ESTIMATION
+    if (!boot) {
+      # Initialize the return structure
+      Wk <- matrix(nrow = 3, ncol = M)
+      n <- matrix(nrow = M)
+
+      for (m in seq(M)) {
+        partition_element <- which(partition == m)
+        Wk[, m] <- optimal_trasport_bw(partition_element, y, my, Cy, traceCy, Ry)
+        n[m] <- length(partition_element)
+      }
+
+      W[k] <- ((Wk[1, ] %*% n) / (V * N))[1, 1]
+      Adv[k] <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
+      Diff[k] <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
+
+      IS[[k]] <- Wk / V
+    } else {
+      # BOOTSTRAP ESTIMATION
+      dat <- cbind(partition, y)
+
+      # Do boostrap estimation stratified by the partitions
+      W_boot <- boot::boot(data = dat,
+                           statistic = ot_wb_boot,
+                           R = R,
+                           strata = partition,
+                           parallel = parallel,
+                           ncpus = ncpus)
+
+      # Transform the results into readable quantities
+      W_stats <- bootstats(W_boot, type = type, conf = conf)
+
+      # Save the results
+      # It is a bit of a mess in this case, but it is all because everything is
+      # replicated three times
+      # As in the base case
+      W[k] <- W_stats$original[1]
+      Adv[k] <- W_stats$original[2]
+      Diff[k] <- W_stats$original[3]
+      IS[[k]] <- rbind(W_stats$original[4:(M + 3)],
+                       W_stats$original[(M + 4):(2 * M + 3)],
+                       W_stats$original[(2 * M + 4):(3 * M + 3)])
+
+      # Bootstrap estimate of the variance
+      V[k] <- W_stats$original[3 * M + 4]
+
+      # Boostrap estimates of the indices
+      W_ci[k, 3:4] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
+      W_ci[K + k, 3:4] <- c(W_stats$low.ci[2], W_stats$high.ci[2])
+      W_ci[2 * K + k, 3:4] <- c(W_stats$low.ci[3], W_stats$high.ci[3])
+
+      # Bootstrap estimates of the inner statistics
+      IS_ci[[k]] <- rbind(cbind(W_stats$low.ci[4:(M + 3)],
+                                W_stats$high.ci[4:(M + 3)]),
+                          cbind(W_stats$low.ci[(M + 4):(2 * M + 3)],
+                                W_stats$high.ci[(M + 4):(2 * M + 3)]),
+                          cbind(W_stats$low.ci[(2 * M + 4):(3 * M + 3)],
+                                W_stats$high.ci[(2 * M + 4):(3 * M + 3)]))
+
+      # Bootstrap estimates for the variance
+      V_ci[[k]] <- cbind(W_stats$low.ci[3 * M + 4], W_stats$high.ci[3 * M + 4])
     }
+  }
 
-    W[k] <- ((Wk[1, ] %*% n) / (V * N))[1, 1]
-    Adv[k] <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
-    Diff[k] <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
+  if (boot) {
+    out <- gsaot_indices(method = "wasserstein-bures",
+                         indices = W,
+                         bound = V,
+                         IS = IS,
+                         partitions = partitions,
+                         x = x, y = y,
+                         Adv = Adv,
+                         Diff = Diff,
+                         indices_ci = W_ci,
+                         bound_ci = V_ci,
+                         IS_ci = IS_ci,
+                         conf = conf,
+                         type = type)
 
-    IS[[k]] <- Wk / V
+    return(out)
   }
 
   out <- gsaot_indices(method = "wasserstein-bures",
@@ -106,6 +213,49 @@ ot_indices_wb <- function(x, y, M) {
                        Diff = Diff)
 
   return(out)
+}
+
+# Function generating bootstrap statistics
+ot_wb_boot <- function(d,
+                       indices) {
+  # Retrieve the partitions
+  partition <- d[indices, 1]
+
+  # Retrieve the output
+  y <- d[indices, 2:ncol(d)]
+
+  # Get the number of realizations
+  N <- length(partition)
+
+  # Get the replica statistics
+  my <- colMeans(y)
+  Cy <- stats::cov(y)
+  traceCy <- sum(diag(Cy))
+  Ry <- sqrtm(Cy)
+
+  # Evaluate the upper bound of the indices
+  V <- 2 * traceCy
+
+  # Get the number of partitions
+  M <- max(partition)
+
+  # Initialize the return structure
+  Wk <- matrix(nrow = 3, ncol = M)
+  n <- matrix(nrow = M)
+
+  # Estimate the inner statistic
+  for (m in seq(M)) {
+    partition_element <- which(partition == m)
+    Wk[, m] <- optimal_trasport_bw(partition_element, y, my, Cy, traceCy, Ry)
+    n[m] <- length(partition_element)
+  }
+
+  # Calculate the 1d index
+  W <- ((Wk %*% n) / (V * N))[1, 1]
+  Adv <- ((Wk[2, ] %*% n) / (V * N))[1, 1]
+  Diff <- ((Wk[3, ] %*% n) / (V * N))[1, 1]
+
+  return(c(W, Adv, Diff, Wk[1, ] / V, Wk[2, ] / V, Wk[3, ] / V, V))
 }
 
 optimal_trasport_bw <- function(partition, y, my, Cy, traceCy, Ry) {

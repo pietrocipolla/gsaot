@@ -78,10 +78,11 @@ ot_indices_1d <- function(x,
   IS <- list()
   if (boot) {
     V <- array(dim = K)
-    W_ci <- matrix(nrow = K,
-                   ncol = 2,
-                   dimnames = list(names(W),
-                                   c("low.ci", "high.ci")))
+    W_ci <- data.frame(matrix(nrow = K,
+                              ncol = 3,
+                              dimnames = list(NULL,
+                                              c("Inputs", "low.ci", "high.ci"))))
+    W_ci$Inputs <- names(W)
     IS_ci <- list()
     V_ci <- list()
   }
@@ -130,9 +131,9 @@ ot_indices_1d <- function(x,
 
       # Save the results
       W[k] <- W_stats$original[1]
-      IS[[k]] <- W_stats$original[2:(M + 1)]
+      IS[[k]] <- matrix(W_stats$original[2:(M + 1)], nrow = 1)
       V[k] <- W_stats$original[M + 2]
-      W_ci[k, ] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
+      W_ci[k, 2:3] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
       IS_ci[[k]] <- cbind(W_stats$low.ci[2:(M + 1)], W_stats$high.ci[2:(M + 1)])
       V_ci[[k]] <- cbind(W_stats$low.ci[M + 2], W_stats$high.ci[M + 2])
     }
@@ -172,6 +173,9 @@ ot_1d_boot <- function(d,
 
   # Retrieve the output
   y <- d[indices, 2:ncol(d)]
+
+  # Get the number of realizations
+  N <- length(partition)
 
   # Sort y
   y_sort <- sort(y)
@@ -215,62 +219,4 @@ optimal_transport_1d <- function(partition, y_sort, yc) {
   W <- mean((y_sort - yc)^2)
 
   return(W)
-}
-
-bootstats <- function(b,
-                      conf,
-                      type) {
-  # Get the number of estimated quantities
-  p <- length(b$t0)
-
-  # Define the labels of the output
-  lab <- c("original", "bias", "std.error", "low.ci", "high.ci")
-
-  # Initialize the output structure
-  tmp <- as.data.frame(matrix(nrow = p,
-                              ncol = length(lab),
-                              dimnames = list(NULL, lab)))
-
-  # For each estimated quantity evaluate the
-  for (i in 1:p) {
-    # Original estimation, bias, standard deviation
-    tmp[i, "original"] <- b$t0[i]
-    tmp[i, "bias"] <- mean(b$t[, i]) - b$t0[i]
-    tmp[i, "std.error"] <- stats::sd(b$t[, i])
-
-    # Confidence interval
-    if (type == "norm") {
-      ci <- boot::boot.ci(b, index = i, type = "norm", conf = conf)
-
-      if (!is.null(ci)) {
-        tmp[i, "low.ci"] <- ci$norm[2]
-        tmp[i, "high.ci"] <- ci$norm[3]
-      }
-
-    } else if (type == "basic") {
-      ci <- boot::boot.ci(b, index = i, type = "basic", conf = conf)
-      if (!is.null(ci)) {
-        tmp[i, "low.ci"] <- ci$basic[4]
-        tmp[i, "high.ci"] <- ci$basic[5]
-      }
-
-    } else if (type == "percent") {
-      ci <- boot::boot.ci(b, index = i, type = "perc", conf = conf)
-
-      if (!is.null(ci)) {
-        tmp[i, "low.ci"] <- ci$percent[4]
-        tmp[i, "high.ci"] <- ci$percent[5]
-      }
-
-    } else if (type == "bca") {
-      ci <- boot::boot.ci(b, index = i, conf = conf)
-
-      if (!is.null(ci)) {
-        tmp[i, "low.ci"] <- ci$bca[4]
-        tmp[i, "high.ci"] <- ci$bca[5]
-      }
-    }
-  }
-
-  return(tmp)
 }

@@ -4,7 +4,15 @@
 \alias{ot_indices}
 \title{Calculate Optimal Transport sensitivity indices for multivariate y}
 \usage{
-ot_indices(x, y, M, solver = "sinkhorn", solver_optns = NULL, scaling = TRUE)
+ot_indices(
+  x,
+  y,
+  M,
+  discrete_out = FALSE,
+  solver = "sinkhorn",
+  solver_optns = NULL,
+  scaling = TRUE
+)
 }
 \arguments{
 \item{x}{A data.frame containing the input(s) values. The values can be
@@ -16,6 +24,13 @@ Only numeric values are allowed.}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
+
+\item{discrete_out}{(default \code{FALSE}) Logical, by default the output sample
+in \code{y} are equally weighted. If \code{discrete_out=TRUE}, the function tries to
+create an histogram of the realizations and to use the histogram as
+weigths. This works if the output is assumed to be discrete or mixed and
+the number of realizations is high. The main advantage of this option is to
+reduce the dimension of the cost matrix.}
 
 \item{solver}{(optional) Solver for the Optimal Transport problems:
 \code{sinkhorn} (default), \code{sinkhorn_log}, or \code{wasserstein}.}

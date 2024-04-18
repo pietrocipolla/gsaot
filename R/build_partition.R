@@ -56,6 +56,9 @@ build_discrete_partition <- function(x) {
     x_unique <- unique(x[!is.na(x)])
   }
 
+  # Get the number of realizations
+  N <- length(x)
+
   # Set the number of partitions
   M <- length(x_unique)
 

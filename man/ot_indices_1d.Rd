@@ -4,7 +4,17 @@
 \alias{ot_indices_1d}
 \title{Evaluate Optimal Transport indices on one dimensional outputs}
 \usage{
-ot_indices_1d(x, y, M)
+ot_indices_1d(
+  x,
+  y,
+  M,
+  boot = FALSE,
+  R = NULL,
+  parallel = "no",
+  ncpus = 1,
+  conf = 0.95,
+  type = "norm"
+)
 }
 \arguments{
 \item{x}{A data.frame containing the input(s) values. The values can be
