@@ -37,7 +37,7 @@ ot_indices_wb <- function(x,
                           ncpus = 1,
                           conf = 0.95,
                           type = "norm") {
-  # Input checks
+  # INPUT CHECKS
   # ----------------------------------------------------------------------------
   # Check if x is a data.frame or a matrix
   if (!(is.data.frame(x) | is.matrix(x))) stop("`x` must be a matrix or a data.frame!")
@@ -60,7 +60,7 @@ ot_indices_wb <- function(x,
     stop("Bootstrapping requires boot = TRUE and an integer in R")
   }
 
-  # Remove any NA in output
+  # REMOVE ANY NA IN OUTPUT
   # ----------------------------------------------------------------------------
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- as.matrix(y[!y_na, ])

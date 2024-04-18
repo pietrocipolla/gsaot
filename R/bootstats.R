@@ -1,3 +1,6 @@
+# Function to extract bootstrap estimates from boot object
+# The function comes from https://github.com/arnaldpuy/sensobol/blob/master
+
 bootstats <- function(b,
                       conf,
                       type) {

@@ -68,7 +68,15 @@ ot_indices <- function(x,
                        discrete_out = FALSE,
                        solver = "sinkhorn",
                        solver_optns = NULL,
-                       scaling = TRUE) {
+                       scaling = TRUE,
+                       boot = FALSE,
+                       R = NULL,
+                       parallel = "no",
+                       ncpus = 1,
+                       conf = 0.95,
+                       type = "norm") {
+  # INPUT CHECKS
+  # ----------------------------------------------------------------------------
   # Check if x is a data.frame or a matrix
   if (!(is.data.frame(x) | is.matrix(x))) stop("`x` must be a matrix or a data.frame!")
   x <- as.data.frame(x)
@@ -89,7 +97,13 @@ ot_indices <- function(x,
   # Check if the solver is present in the pool
   match.arg(solver, c("sinkhorn", "sinkhorn_log", "wasserstein"))
 
-  # Remove any NA in output
+  # Check that bootstrapping is correctly set
+  if ((!boot & !is.null(R)) | (boot & is.null(R))) {
+    stop("Bootstrapping requires boot = TRUE and an integer in R")
+  }
+
+  # REMOVE ANY NA IN OUTPUT
+  # ----------------------------------------------------------------------------
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- y[!y_na, ]
   col_names <- colnames(x)
@@ -102,35 +116,49 @@ ot_indices <- function(x,
   N <- dim(x)[1]
   K <- dim(x)[2]
 
-  # Build an histogram if requested, otherwise assume equal weights
+  # BUILD AN HISTOGRAM IF REQUESTED (otherwise assume equal weights)
+  # ----------------------------------------------------------------------------
+  # Default values for continuous output
   a <- rep(1 / N, N)
+  y_unique <- NULL
+
   if (discrete_out) {
+    # y_unique is always needed, in order to avoid mismatches between the
+    # pre-computed cost matrix and the resampled outputs
     y_unique <- unique(y)
 
-    a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
-      apply(y, 1, FUN = function(row) all(row == u))
-    )) / N
+    # Function to build the histogram (maybe we can put this outside to make it
+    # easier to change?). If bootstrap is requested, the histogram is computed
+    # inside each statistic function
+    if (!boot)
+      a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
+        apply(y, 1, FUN = function(row) all(row == u))
+      )) / N
   }
 
-  if (identical(a, rep(1 / N, N)) & discrete_out)
+  if (identical(a, rep(1 / N, N)) & discrete_out & !boot)
     warning("The output is continuous, consider using `discrete_out=FALSE`")
 
-  # Build cost matrix
+  # BUILD COST MATRIX
+  # ----------------------------------------------------------------------------
   if (discrete_out) {
     C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
   } else
     C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
 
+  # If the scaling is requested, scale the cost matrix by the highest value
   scaling_param <- 1
   if (scaling) {
     scaling_param <- max(C)
     C <- C / scaling_param
   }
 
-  # Define the partitions for the estimation
+  # DEFINE THE PARTITIONS FOR THE ESTIMATION
+  # ----------------------------------------------------------------------------
   partitions <- build_partition(x, M)
 
-  # Define the OT solver
+  # DEFINE THE OT SOLVER
+  # ----------------------------------------------------------------------------
   solver_fun <- switch (
     solver,
     "sinkhorn" = sinkhorn,
@@ -142,55 +170,120 @@ ot_indices <- function(x,
   # Check the consistency of the options provided
   solver_optns <- check_solver_optns(solver, solver_optns)
 
-  # Build return structure
+  # BUILD THE RETURN STRUCTURE
+  # ----------------------------------------------------------------------------
   W <- array(dim = K)
   names(W) <- colnames(x)
   IS <- list()
+  if (boot) {
+    V <- array(dim = K)
+    W_ci <- data.frame(matrix(nrow = K,
+                              ncol = 3,
+                              dimnames = list(NULL,
+                                              c("Inputs", "low.ci", "high.ci"))))
+    W_ci$Inputs <- names(W)
+    IS_ci <- list()
+    V_ci <- list()
+  }
 
-  # Evaluate the upper bound of the indices
-  V <- 2 * sum(diag(stats::cov(y)))
+  # Evaluate the upper bound of the indices (if no boot), otherwise it is
+  # evaluated inside the bootstrap function
+  # ----------------------------------------------------------------------------
+  if (!boot)
+    V <- 2 * sum(diag(stats::cov(y)))
 
+  # ESTIMATE THE INDICES FOR EACH PARTITION
+  # ----------------------------------------------------------------------------
   for (k in seq_len(K)) {
-    # Get the current partition
-    partition <- partitions[[k]]
+    # Get the partitions for the current input
+    partition <- partitions[, k]
 
-    # Get the current number of partition elements
-    M <- length(partition)
+    # Set the number of partition elements
+    M <- max(partition)
 
-    # Build the inner return structure
-    Wk <- matrix(nrow = 1, ncol = M)
-    n <- matrix(nrow = M)
+    # NO BOOTSTRAP ESTIMATION
+    if (!boot) {
+      # Build the inner return structure
+      Wk <- matrix(nrow = 1, ncol = M)
+      n <- matrix(nrow = M)
 
-    for (m in seq(M)) {
-      # Retrieve the elements in the partition
-      partition_element <- partition[[m]]
+      for (m in seq(M)) {
+        # Retrieve the elements in the partition
+        partition_element <- which(partition == m)
+        n[m] <- length(partition_element)
 
-      # Build the partition histogram
-      # The idea is to use the marginal histogram b both as histogram and as selector for the cost matrix parts. Indeed, as.logical transforms everything > 0 to TRUE and everything else t FALSE
-      n[m] <- length(partition_element)
-      if (discrete_out) {
-        b <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
-          apply(y[partition_element, ], 1, FUN = function(row) all(row == u))
-        )) / n[m]
-      } else {
-        b <- array(0, dim = N)
-        b[partition_element] <- 1 / n[m]
+        # Build the partition histogram. The idea is to use the marginal histogram
+        # b both as histogram and as selector for the cost matrix parts. Indeed,
+        # as.logical transforms everything > 0 to TRUE and everything else t FALSE
+        if (discrete_out) {
+          b <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
+            apply(y[partition_element, ], 1, FUN = function(row) all(row == u))
+          )) / n[m]
+        } else {
+          b <- numeric(length = N)
+          b[partition_element] <- 1 / n[m]
+        }
+
+        # Call the solver
+        ret <- do.call(solver_fun,
+                       c(list(a = a, b = b[b > 0], costm = C[, (b > 0)]),
+                         solver_optns))
+
+        # Save the estimated distance
+        Wk[, m] <- ret$cost * scaling_param
+
+        # Quick exit from the loop if NaNs are present
+        if (is.na(ret$cost)) stop("NA are present, consider increasing the
+                                  regularization parameter or change solver")
       }
 
-      # Call the solver
-      ret <- do.call(solver_fun,
-                     c(list(a = a, b = b[b > 0], costm = C[, (b > 0)]),
-                       solver_optns))
+      W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
+      IS[[k]] <- Wk / V
+    } else {
+      # BOOTSTRAP ESTIMATION
+      dat <- cbind(partition, y)
 
-      # Save the estimated distance
-      Wk[, m] <- ret$cost * scaling_param
+      # Do boostrap estimation stratified by the partitions
+      W_boot <- boot::boot(data = dat,
+                           statistic = ot_boot,
+                           R = R,
+                           strata = partition,
+                           discrete_out = discrete_out,
+                           C = C,
+                           y_unique = y_unique,
+                           solver_fun = solver_fun,
+                           solver_optns = solver_optns,
+                           scaling_param = scaling_param,
+                           parallel = parallel,
+                           ncpus = ncpus)
 
-      # Quick exit from the loop if NaNs are present
-      if (is.na(ret$cost)) m <- M
+      # Transform the results into readable quantities
+      W_stats <- bootstats(W_boot, type = type, conf = conf)
+
+      # Save the results
+      W[k] <- W_stats$original[1]
+      IS[[k]] <- matrix(W_stats$original[2:(M + 1)], nrow = 1)
+      V[k] <- W_stats$original[M + 2]
+      W_ci[k, 2:3] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
+      IS_ci[[k]] <- cbind(W_stats$low.ci[2:(M + 1)], W_stats$high.ci[2:(M + 1)])
+      V_ci[[k]] <- cbind(W_stats$low.ci[M + 2], W_stats$high.ci[M + 2])
     }
+  }
 
-    W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
-    IS[[k]] <- Wk / V
+  if (boot) {
+    out <- gsaot_indices(method = solver,
+                         indices = W,
+                         bound = V,
+                         IS = IS,
+                         partitions = partitions,
+                         x = x, y = y,
+                         indices_ci = W_ci,
+                         bound_ci = V_ci,
+                         IS_ci = IS_ci,
+                         conf = conf,
+                         type = type)
+
+    return(out)
   }
 
   out <- gsaot_indices(method = solver,
@@ -201,4 +294,146 @@ ot_indices <- function(x,
                        x = x, y = y)
 
   return(out)
+}
+
+ot_boot <- function(d,
+                    i,
+                    discrete_out,
+                    C,
+                    y_unique,
+                    solver_fun,
+                    solver_optns,
+                    scaling_param = scaling_param) {
+  # According to discrete_out select the correct function
+  if (discrete_out) {
+    ot_boot_discrete(d, i, C, y_unique, solver_fun, solver_optns, scaling_param)
+  } else {
+    ot_boot_cont(d, i, C, solver_fun, solver_optns, scaling_param)
+  }
+}
+
+# Bootstrap for discrete output
+ot_boot_discrete <- function(d,
+                             indices,
+                             C,
+                             y_unique,
+                             solver_fun,
+                             solver_optns,
+                             scaling_param) {
+  # Retrieve the partitions
+  partition <- d[indices, 1]
+
+  # Retrieve the output
+  y <- d[indices, 2:ncol(d)]
+
+  # Get the number of realizations
+  N <- length(partition)
+
+  # Compute the unconditioned histogram
+  a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
+    apply(y, 1, FUN = function(row) all(row == u))
+  )) / N
+
+  # Compute the variance
+  V <- 2 * sum(diag(stats::cov(y)))
+
+  # Get the number of partitions
+  M <- max(partition)
+
+  # Initialize the return structure
+  Wk <- matrix(nrow = 1, ncol = M)
+  n <- matrix(nrow = M)
+
+  for (m in seq(M)) {
+    # Retrieve the elements in the partition
+    partition_element <- which(partition == m)
+    n[m] <- length(partition_element)
+
+    # Build the partition histogram
+    b <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
+        apply(y[partition_element, ], 1, FUN = function(row) all(row == u))
+      )) / n[m]
+
+    # Call the solver
+    ret <- do.call(solver_fun,
+                   c(list(a = a[a > 0],
+                          b = b[b > 0],
+                          costm = C[(a > 0), (b > 0)]),
+                     solver_optns))
+
+    # Save the estimated distance
+    Wk[, m] <- ret$cost * scaling_param
+
+    # Quick exit from the loop if NaNs are present
+    if (is.na(ret$cost)) stop("NA are present, consider increasing the
+                              regularization parameter or change solver")
+  }
+
+  # Calculate the ot index
+  W <- ((Wk %*% n) / (V * N))[1, 1]
+
+  return(c(W, Wk, V))
+}
+
+# Bootstrap for continuous output
+ot_boot_cont <- function(d,
+                         indices,
+                         C,
+                         solver_fun,
+                         solver_optns,
+                         scaling_param) {
+  # Retrieve the partitions
+  partition <- d[indices, 1]
+
+  # Retrieve the output
+  y <- d[indices, 2:ncol(d)]
+
+  # Retrieve the cost matrix
+  C <- C[indices, indices]
+
+  # Build the histogram
+  a <- rep(1 / N, N)
+
+  # Get the number of realizations
+  N <- length(partition)
+
+  # Compute the variance
+  V <- 2 * sum(diag(stats::cov(y)))
+
+  # Get the number of partitions
+  M <- max(partition)
+
+  # Initialize the return structure
+  Wk <- matrix(nrow = 1, ncol = M)
+  n <- matrix(nrow = M)
+
+  for (m in seq(M)) {
+    # Retrieve the elements in the partition
+    partition_element <- which(partition == m)
+    n[m] <- length(partition_element)
+
+    # Build the partition histogram.
+    b <- numeric(length = N)
+    b[partition_element] <- 1 / n[m]
+
+    # Call the solver
+    ret <- do.call(solver_fun,
+                   c(list(
+                     a = a, b = b[b > 0], costm = C[, (b > 0)]
+                   ),
+                   solver_optns))
+
+    # Save the estimated distance
+    Wk[, m] <- ret$cost * scaling_param
+
+    # Quick exit from the loop if NaNs are present
+    if (is.na(ret$cost))
+      stop("NA are present, consider increasing the
+                                  regularization parameter or change solver")
+  }
+
+  # Calculate the ot index
+  W <- ((Wk %*% n) / (V * N))[1, 1]
+
+  return(c(W, Wk, V))
 }

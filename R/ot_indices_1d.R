@@ -22,7 +22,7 @@ ot_indices_1d <- function(x,
                           ncpus = 1,
                           conf = 0.95,
                           type = "norm") {
-  # Input checks
+  # INPUT CHECKS
   # ----------------------------------------------------------------------------
   # Check if x is a data.frame or a matrix
   if (!(is.data.frame(x) | is.matrix(x)))
@@ -46,7 +46,7 @@ ot_indices_1d <- function(x,
     stop("Bootstrapping requires boot = TRUE and an integer in R")
   }
 
-  # Remove any NA in output
+  # REMOVE ANY NA IN OUTPUT
   # ----------------------------------------------------------------------------
   y_na <- is.na(y)
   y <- y[!y_na]

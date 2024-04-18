@@ -149,20 +149,20 @@ plot.gsaot_indices <- function(x,
                                ranking = NULL,
                                wb_all = FALSE, ...) {
   # If ranking is defined, plot only the selected inputs
-  N <- nrow(x$indices)
+  K <- nrow(x$indices)
 
   # Select only the inputs requested by `ranking`
   if (!is.null(ranking)) {
     # Check if ranking is an integer less than the number of inputs
-    if (ranking %% 1 == 0 & abs(ranking) <= N) {
+    if (ranking %% 1 == 0 & abs(ranking) <= K) {
       inputs_to_plot <-
         ifelse(rep(sign(ranking), each = abs(ranking)) > 0,
                seq(ranking),
-               seq(from = N + ranking + 1, to = N))
+               seq(from = K + ranking + 1, to = K))
     } else
       stop("`ranking` should be an integer with absolute value less than the number of inputs")
   } else
-    inputs_to_plot <- seq(N)
+    inputs_to_plot <- seq(K)
 
   # If the indices are not from ot_indices_wb, print only the indices
   # Otherwise, plot the indices, the advective component and the diffusive one
