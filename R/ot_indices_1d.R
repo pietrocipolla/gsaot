@@ -3,8 +3,7 @@
 #' @inheritParams ot_indices
 #' @param y An array containing the output values.
 #'
-#' @return An Optimal Transport sensitivity index between 0 and 1 for each of
-#'   the columns in x
+#' @inherit ot_indices return
 #' @export
 #'
 #' @seealso [ot_indices()], [ot_indices_wb()]
@@ -45,6 +44,9 @@ ot_indices_1d <- function(x,
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
     stop("Bootstrapping requires boot = TRUE and an integer in R")
   }
+
+  # Check that the bootstrapping type is in the correct set
+  match.arg(type, c("norm", "basic", "stud", "perc", "bca"))
 
   # REMOVE ANY NA IN OUTPUT
   # ----------------------------------------------------------------------------

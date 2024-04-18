@@ -14,6 +14,9 @@
 of inputs. If positive, select the first \code{ranking} inputs per importance.
 If negative, select the last \code{ranking} inputs per importance.}
 
+\item{wb_all}{(default \code{FALSE}) Logical that defines whether or not to plot
+the Advective and Diffusive components of the Wasserstein-Bures indices}
+
 \item{...}{Further arguments passed to or from other methods.}
 }
 \value{

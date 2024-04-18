@@ -18,21 +18,60 @@
 #'   weigths. This works if the output is assumed to be discrete or mixed and
 #'   the number of realizations is high. The main advantage of this option is to
 #'   reduce the dimension of the cost matrix.
-#' @param solver (optional) Solver for the Optimal Transport problems:
-#'   `sinkhorn` (default), `sinkhorn_log`, or `wasserstein`.
+#' @param solver (optional) Solver for the Optimal Transport problem. Currently
+#'   supported options are:
+#' * `sinkhorn` (default), the Sinkhorn solver.
+#' * `sinkhorn_log`, the Sinkhorn solver in log scale.
+#' * `wasserstein`, a solver of the unregularized problem from [transport] package
 #' @param solver_optns (optional) Options for the Optimal Transport solver. See
 #'   details for allowed options.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the
 #'   cost matrix.
+#' @param boot (default `FALSE`) Logical that sets whether or not to perform
+#'   bootstrapping of the OT indices
+#' @param R (default `NULL`) Positive integer, number of bootstrap replicas.
+#' @param parallel (default `"no"`) The type of parallel operation to be used
+#'   (if any). If missing, the default is taken from the option `boot.parallel`
+#'   (and if that is not set, `"no`). Only considered if `boot = TRUE`. For more
+#'   information, check the [boot::boot()] function.
+#' @param ncpus (default `1`) Positive integer: number of processes to be used
+#'   in parallel operation: typically one would chose this to the number of
+#'   available CPUs. Check the `ncpus` option in the [boot::boot()] function of
+#'   the boot package.
+#' @param conf (default `0.95`) Number between `0` and `1` representing the
+#'   confidence level. Only considered if `boot = TRUE`.
+#' @param type (default `"norm"`) Method to compute the confidence interval.
+#'   Only considered if `boot = TRUE`. For more information, check the `type`
+#'   option of [boot::boot.ci()].
 #'
 #' @details The solvers of the OT problem implemented in this package can be
 #'   divided into two categories: standard and entropic. And then bla, blabla,
 #'   blablabla
 #'
-#' @return An object containing:
-#' * `indices`: sensitivity indices between 0 and 1 for each column in x, indicating the influence of each input variable on the output variables.
-#' * `IS`: values of the inner statistics for the partitions defined by `partitions`.
-#' * `partitions`: the partitions built to calculate the sensitivity indices.
+#' @return A `gsaot_indices` object containing:
+#' * `method`: a string that identifies the type of indices computed.
+#' * `indices`: a names array containing the sensitivity indices between 0 and 1
+#'   for each column in x, indicating the influence of each input variable on
+#'   the output variables.
+#' * `bound`: a double representing the upper bound of the separation measure or
+#'   an array representing the mean of the separation for each input according
+#'   to the bootstrap replicas.
+#' * `x`, `y`: input and output data provided as arguments of the function.
+#' * `inner_statistic`: a list of matrices containing the values of the inner
+#'   statistics for the partitions defined by `partitions`. If `method =
+#'   wasserstein-bures`, each matrix has three rows containing the
+#'   Wasserstein-Bures indices, the Advective, and the Diffusive components.
+#' * `partitions`: a matrix containing the partitions built to calculate the
+#'   sensitivity indices. Each column contains the partition associated to the
+#'   same column in `x`. If `boot = TRUE`, the object contains also:
+#' * `indices_ci`: a `data.frame` with first column the input, second and third
+#'   columns the lower and upper bound of the confidence interval.
+#' * `inner_statistic_ci`: a list of matrices. Each element of the list contains
+#'   the lower and upper confidence bounds for the partition defined by the row.
+#' * `bound_ci`: a list containing the lower and upper bounds of the confidence
+#'   intervals of the separation measure bound.
+#' * `type`, `conf`: type of confidence interval and confidence level, provided
+#'   as arguments.
 #'
 #' @seealso [ot_indices_1d()], [ot_indices_wb()]
 #'
@@ -101,6 +140,9 @@ ot_indices <- function(x,
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
     stop("Bootstrapping requires boot = TRUE and an integer in R")
   }
+
+  # Check that the bootstrapping type is in the correct set
+  match.arg(type, c("norm", "basic", "stud", "perc", "bca"))
 
   # REMOVE ANY NA IN OUTPUT
   # ----------------------------------------------------------------------------

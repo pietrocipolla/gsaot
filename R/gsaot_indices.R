@@ -113,6 +113,8 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
 #' @param ranking An integer with absolute value less or equal than the number
 #'   of inputs. If positive, select the first `ranking` inputs per importance.
 #'   If negative, select the last `ranking` inputs per importance.
+#' @param wb_all (default `FALSE`) Logical that defines whether or not to plot
+#'   the Advective and Diffusive components of the Wasserstein-Bures indices
 #' @param ... Further arguments passed to or from other methods.
 #'
 #'

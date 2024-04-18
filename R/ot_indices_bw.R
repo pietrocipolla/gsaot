@@ -44,7 +44,7 @@ ot_indices_wb <- function(x,
   x <- as.data.frame(x)
 
   # Check if the output is a numerical
-  if (!is.numeric(y) | !is.matrix(y)) stop("`y` must be a matrix or vector of numerical values!")
+  if (!is.numeric(y) & !is.matrix(y)) stop("`y` must be a matrix or vector of numerical values!")
 
   # Conversion to matrix in case
   if (!is.matrix(y)) y <- matrix(y, ncol = 1)
@@ -59,6 +59,9 @@ ot_indices_wb <- function(x,
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
     stop("Bootstrapping requires boot = TRUE and an integer in R")
   }
+
+  # Check that the bootstrapping type is in the correct set
+  match.arg(type, c("norm", "basic", "stud", "perc", "bca"))
 
   # REMOVE ANY NA IN OUTPUT
   # ----------------------------------------------------------------------------
@@ -222,7 +225,7 @@ ot_wb_boot <- function(d,
   partition <- d[indices, 1]
 
   # Retrieve the output
-  y <- d[indices, 2:ncol(d)]
+  y <- matrix(d[indices, 2:ncol(d)], ncol = ncol(d) - 1)
 
   # Get the number of realizations
   N <- length(partition)

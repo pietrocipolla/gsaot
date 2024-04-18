@@ -24,10 +24,55 @@ numeric, factors or strings.}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
+
+\item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
+bootstrapping of the OT indices}
+
+\item{R}{(default \code{NULL}) Positive integer, number of bootstrap replicas.}
+
+\item{parallel}{(default \code{"no"}) The type of parallel operation to be used
+(if any). If missing, the default is taken from the option \code{boot.parallel}
+(and if that is not set, \verb{"no}). Only considered if \code{boot = TRUE}. For more
+information, check the \code{\link[boot:boot]{boot::boot()}} function.}
+
+\item{ncpus}{(default \code{1}) Positive integer: number of processes to be used
+in parallel operation: typically one would chose this to the number of
+available CPUs. Check the \code{ncpus} option in the \code{\link[boot:boot]{boot::boot()}} function of
+the boot package.}
+
+\item{conf}{(default \code{0.95}) Number between \code{0} and \code{1} representing the
+confidence level. Only considered if \code{boot = TRUE}.}
+
+\item{type}{(default \code{"norm"}) Method to compute the confidence interval.
+Only considered if \code{boot = TRUE}. For more information, check the \code{type}
+option of \code{\link[boot:boot.ci]{boot::boot.ci()}}.}
 }
 \value{
-An Optimal Transport sensitivity index between 0 and 1 for each of
-the columns in x
+A \code{gsaot_indices} object containing:
+\itemize{
+\item \code{method}: a string that identifies the type of indices computed.
+\item \code{indices}: a names array containing the sensitivity indices between 0 and 1
+for each column in x, indicating the influence of each input variable on
+the output variables.
+\item \code{bound}: a double representing the upper bound of the separation measure or
+an array representing the mean of the separation for each input according
+to the bootstrap replicas.
+\item \code{x}, \code{y}: input and output data provided as arguments of the function.
+\item \code{inner_statistic}: a list of matrices containing the values of the inner
+statistics for the partitions defined by \code{partitions}. If \code{method = wasserstein-bures}, each matrix has three rows containing the
+Wasserstein-Bures indices, the Advective, and the Diffusive components.
+\item \code{partitions}: a matrix containing the partitions built to calculate the
+sensitivity indices. Each column contains the partition associated to the
+same column in \code{x}. If \code{boot = TRUE}, the object contains also:
+\item \code{indices_ci}: a \code{data.frame} with first column the input, second and third
+columns the lower and upper bound of the confidence interval.
+\item \code{inner_statistic_ci}: a list of matrices. Each element of the list contains
+the lower and upper confidence bounds for the partition defined by the row.
+\item \code{bound_ci}: a list containing the lower and upper bounds of the confidence
+intervals of the separation measure bound.
+\item \code{type}, \code{conf}: type of confidence interval and confidence level, provided
+as arguments.
+}
 }
 \description{
 Evaluate Optimal Transport indices on one dimensional outputs
