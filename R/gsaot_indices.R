@@ -142,7 +142,7 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
 #' M <- 25
 #'
 #' # Calculate sensitivity indices
-#' sensitivity_indices <- ot_indices(x, y, M)
+#' sensitivity_indices <- ot_indices_wb(x, y, M)
 #' sensitivity_indices
 #'
 #' plot(sensitivity_indices)
@@ -186,7 +186,7 @@ plot.gsaot_indices <- function(x,
       ggplot2::geom_bar(stat = "identity") +
       ggplot2::scale_y_continuous(limits = c(0, 1)) +
       ggplot2::labs(
-        title = paste("Indices calculated using", x$method, "solver"),
+        title = paste("Indices computed using", x$method, "solver"),
         x = "Inputs",
         y = "Indices"
       ) +
@@ -197,7 +197,7 @@ plot.gsaot_indices <- function(x,
       # Remove unnecessary components from the data to plot
       if (exists("Index", where = ci_data))
         ci_data <- ci_data[!(ci_data$Index %in% c("Advective", "Diffusive")), ]
-      p +
+      p <- p +
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
                                             ymax = .data[["high.ci"]]),
@@ -226,7 +226,7 @@ plot.gsaot_indices <- function(x,
       ) +
       ggplot2::scale_y_continuous(limits = c(0, 1)) +
       ggplot2::labs(
-        title = paste("Indices calculated using", x$method, "solver"),
+        title = paste("Indices computed using", x$method, "solver"),
         x = "Inputs",
         y = "Indices"
       )
@@ -235,7 +235,7 @@ plot.gsaot_indices <- function(x,
       ci_data <- merge(x_indices, x$indices_ci,
                        by.x = c("Inputs", "Component"),
                        by.y = c("Inputs", "Index"))
-      p +
+      p <- p +
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
                                             ymax = .data[["high.ci"]]),
@@ -243,4 +243,6 @@ plot.gsaot_indices <- function(x,
                                width = .7)
     }
   }
+
+  return(p)
 }
