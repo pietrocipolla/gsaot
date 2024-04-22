@@ -1,16 +1,26 @@
-#' Evaluate one-dimensional Optimal Transport indices on multivariate outputs
+#' Evaluate sensitivity maps using Optimal Transport indices
 #'
-#' @param x a data.frame containing the input(s) values
-#' @param y a matrix containing the output(s) values
-#' @param M a scalar representing the number of partitions for continuous inputs
+#' @inheritParams ot_indices_1d
+#' @param y A matrix containing the output values. Each column is interpreted as
+#'   a different output.
 #'
-#' @return An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x
+#' @return A matrix where each column represents an input and each row
+#'   represents an output. The values are indices between 0 and 1 computed using
+#'   [ot_indices_1d()].
 #' @export
 #'
 #' @examples
-#' x <- rnorm(1000)
-#' y <- 10 * x
-#' ot_indices_1d(data.frame(x), y, 30)
+#' N <- 1000
+#'
+#' x1 <- rnorm(N)
+#' x2 <- rnorm(N)
+#' x <- cbind(x1, x2)
+#'
+#' y1 <- 10 * x1
+#' y2 <- x1 + x2
+#' y <- cbind(y1, y2)
+#'
+#' ot_indices_smap(data.frame(x), y, 30)
 ot_indices_smap <- function(x, y, M) {
   # Check if the output is a numerical
   if (!is.numeric(y) | !is.matrix(y)) stop("`y` must be a matrix of numerical values!")

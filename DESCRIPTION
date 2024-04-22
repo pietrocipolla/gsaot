@@ -1,13 +1,13 @@
 Package: gsaot
-Title: Global Sensitivity Analysis Using Optimal Transport 
+Title: Compute Global Sensitivity Analysis Using Optimal Transport 
 Version: 0.0.0.9000
 Authors@R: 
-    person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre"),
+    person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0007-2491-6290"))
-Description: Tools for evaluating Global Sensitivity Indices from given data    
-    using Optimal Transport problem. You provide two samples, decide the     
-    algorithm, and compute the indices.
-License: MIT + file LICENSE
+Description: Computing Global Sensitivity Indices from given data    
+    using Optimal Transport. You provide an input sample, an output sample, 
+    decide the algorithm, and compute the indices.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -19,14 +19,16 @@ Config/testthat/edition: 3
 Imports: 
     boot,
     ggplot2,
-    patchwork,
+    patchwork (>= 1.2.0),
     Rcpp,
-    RcppEigen,
+    RcppEigen (>= 0.3.4.0.0),
+    Rdpack (>= 2.4),
     stats,
-    transport
+    transport (>= 0.15.0)
 URL: https://github.com/pietrocipolla/gsaot
 BugReports: https://github.com/pietrocipolla/gsaot/issues
 LinkingTo: 
     Rcpp,
     RcppEigen
 VignetteBuilder: knitr
+RdMacros: Rdpack

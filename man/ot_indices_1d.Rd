@@ -17,8 +17,11 @@ ot_indices_1d(
 )
 }
 \arguments{
-\item{x}{A data.frame containing the input(s) values. The values can be
-numeric, factors or strings.}
+\item{x}{A matrix or data.frame containing the input(s) values. The values
+can be numeric, factors, or strings. The type of data changes the
+partitioning. If the values are continuous (double), the function
+partitions the data into \code{M} sets. If the values are discrete (integers,
+strings, factors), the number of partitioning sets is data-driven.}
 
 \item{y}{An array containing the output values.}
 
@@ -26,7 +29,7 @@ numeric, factors or strings.}
 inputs.}
 
 \item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
-bootstrapping of the OT indices}
+bootstrapping of the OT indices.}
 
 \item{R}{(default \code{NULL}) Positive integer, number of bootstrap replicas.}
 

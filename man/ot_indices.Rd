@@ -21,8 +21,11 @@ ot_indices(
 )
 }
 \arguments{
-\item{x}{A data.frame containing the input(s) values. The values can be
-numeric, factors or strings.}
+\item{x}{A matrix or data.frame containing the input(s) values. The values
+can be numeric, factors, or strings. The type of data changes the
+partitioning. If the values are continuous (double), the function
+partitions the data into \code{M} sets. If the values are discrete (integers,
+strings, factors), the number of partitioning sets is data-driven.}
 
 \item{y}{A matrix containing the output values. Each column represents a
 different output variable, and each row represents a different observation.
@@ -34,26 +37,26 @@ inputs.}
 \item{discrete_out}{(default \code{FALSE}) Logical, by default the output sample
 in \code{y} are equally weighted. If \code{discrete_out=TRUE}, the function tries to
 create an histogram of the realizations and to use the histogram as
-weigths. This works if the output is assumed to be discrete or mixed and
-the number of realizations is high. The main advantage of this option is to
-reduce the dimension of the cost matrix.}
+weights. It works if the output is discrete or mixed and the number of
+realizations is large. The advantage of this option is to reduce the
+dimension of the cost matrix.}
 
-\item{solver}{(optional) Solver for the Optimal Transport problem. Currently
-supported options are:
+\item{solver}{Solver for the Optimal Transport problem. Currently supported
+options are:
 \itemize{
-\item \code{sinkhorn} (default), the Sinkhorn solver.
-\item \code{sinkhorn_log}, the Sinkhorn solver in log scale.
-\item \code{wasserstein}, a solver of the unregularized problem from \link{transport} package
+\item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
+\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"wasserstein"}, a solver of the non regularized OT problem from \link{transport} package.
 }}
 
-\item{solver_optns}{(optional) Options for the Optimal Transport solver. See
-details for allowed options.}
+\item{solver_optns}{(optional) A list containing the options for the Optimal
+Transport solver. See details for allowed options and default ones.}
 
 \item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the
 cost matrix.}
 
 \item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
-bootstrapping of the OT indices}
+bootstrapping of the OT indices.}
 
 \item{R}{(default \code{NULL}) Positive integer, number of bootstrap replicas.}
 
@@ -103,14 +106,57 @@ as arguments.
 }
 \description{
 \code{ot_indices} calculates sensitivity indices using Optimal
-Transport (OT) for multivariate output data \code{y} with respect to input data
-\code{x}. Sensitivity indices measure the influence of input variables on output
-variables, with values ranging between 0 and 1.
+Transport (OT) for a multivariate output sample \code{y} with respect to input
+data \code{x}. Sensitivity indices measure the influence of inputs on outputs,
+with values ranging between 0 and 1.
 }
 \details{
-The solvers of the OT problem implemented in this package can be
-divided into two categories: standard and entropic. And then bla, blabla,
-blablabla
+\subsection{Solvers}{
+
+OT is a widely studied topic in Operational Research and Calculus. The
+reference for the OT solvers in this package is
+\insertCite{peyre2019computational;textual}{gsaot}. The default solver is
+\code{"sinkhorn"}, the Sinkhorn's solver introduced in
+\insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
+entropic-regularized version of the OT problem. The \code{"sinkhorn_log"} solves
+the same OT problem but in log scale. It is more stable for low values of
+the regularization parameter but slower to converge. The option
+\code{"wasserstein"} is used to choose a solver for the non-regularized OT
+problem. Under the hood, the function calls \code{\link[transport:transport]{transport::transport()}} from
+package \code{transport}. This option does not define the solver per se, but the
+solver should be defined with the argument \code{solver_optns}. See the next
+section for more information.
+}
+
+\subsection{Solver options}{
+
+The argument \code{solver_optns} should be empty (for default options) or a list
+with all or some of the required solver parameters. All the parameters not
+included in the list will be set to default values. The solvers
+\code{"sinkhorn"} and \code{"sinkhorn_log"} have the same options:
+\itemize{
+\item \code{numIterations} (default \code{1e3}): a positive integer defining the maximum number
+of Sinkhorn's iterations allowed. If the solver does not converge in the
+number of iterations set, the solver will throw an error.
+\item \code{epsilon} (default \code{0.01}): a positive real number defining the regularization
+coefficient. If the value is too low, the solver may return \code{NA}.
+\item \code{maxErr} (default \code{1e-9}): a positive real number defining the
+approximation error threshold between the marginal histogram of the
+partition and the one computed by the solver. The solver may fail to
+converge in \code{numIterations} if this value is too low.
+}
+
+The solver \verb{wasserstein"} has the parameters:
+\itemize{
+\item \code{method} (default \verb{"networkflow}): string defining the solver for the OT
+problem.
+\item \code{control}: a named list of parameters for the chosen method or the result
+of a call to \code{\link[transport:trcontrol]{transport::trcontrol()}}.
+\item \code{threads} (default \code{1}): an Integer specifying the number of threads used
+in parallel computing. For details regarding this solver, check the
+\code{\link[transport:transport]{transport::transport()}} help page.
+}
+}
 }
 \examples{
 N <- 1000
@@ -136,6 +182,9 @@ M <- 25
 sensitivity_indices <- ot_indices(x, y, M)
 sensitivity_indices
 
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link[=ot_indices_1d]{ot_indices_1d()}}, \code{\link[=ot_indices_wb]{ot_indices_wb()}}

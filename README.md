@@ -8,7 +8,15 @@
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of gsaot is to …
+The package `gsaot` provides a set of tools to compute and plot Optimal
+Transport (OT) based sensitivity indices. The core functions of the
+package are: \* `ot_indices()`: compute OT indices for multivariate
+outputs using different solvers for OT (network simplex, Sinkhorn, and
+so on). \* `ot_indices_wb()`: compute OT indices for univariate or
+multivariate outputs using the Wasserstein-Bures semi-metric. \*
+`ot_indices_1d()`: compute OT indices for univariate outputs using OT
+solution in one dimension. The package provides also functions to plot
+the resulting indices and the inner statistics.
 
 ## Installation
 
@@ -26,32 +34,38 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(gsaot)
-## basic example code
+
+N <- 1000
+
+# Define the inputs distribution
+mx <- c(1, 1, 1)
+Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
+
+# Sample the inputs
+x1 <- rnorm(N)
+x2 <- rnorm(N)
+x3 <- rnorm(N)
+
+x <- cbind(x1, x2, x3)
+x <- mx + x %*% chol(Sigmax)
+
+# Define the (linear)  model and the output
+A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
+y <- t(A %*% t(x))
+
+x <- data.frame(x)
+
+M <- 25
+
+# Compute the sensitivity indices using Sinkhorn's solver and default parameters
+sensitivity_indices <- ot_indices(x, y, M)
+#> Using default values for solver sinkhorn
+sensitivity_indices
+#> Method: sinkhorn 
+#> 
+#> Indices:
+#>        X1        X2        X3 
+#> 0.6104298 0.6432362 0.3063337 
+#> 
+#> Upper bound: 96.54529
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.

@@ -1,12 +1,15 @@
 #' Calculate Optimal Transport sensitivity indices for multivariate y
 #'
 #' @description `ot_indices` calculates sensitivity indices using Optimal
-#'   Transport (OT) for multivariate output data `y` with respect to input data
-#'   `x`. Sensitivity indices measure the influence of input variables on output
-#'   variables, with values ranging between 0 and 1.
+#'   Transport (OT) for a multivariate output sample `y` with respect to input
+#'   data `x`. Sensitivity indices measure the influence of inputs on outputs,
+#'   with values ranging between 0 and 1.
 #'
-#' @param x A data.frame containing the input(s) values. The values can be
-#'   numeric, factors or strings.
+#' @param x A matrix or data.frame containing the input(s) values. The values
+#'   can be numeric, factors, or strings. The type of data changes the
+#'   partitioning. If the values are continuous (double), the function
+#'   partitions the data into `M` sets. If the values are discrete (integers,
+#'   strings, factors), the number of partitioning sets is data-driven.
 #' @param y A matrix containing the output values. Each column represents a
 #'   different output variable, and each row represents a different observation.
 #'   Only numeric values are allowed.
@@ -15,20 +18,20 @@
 #' @param discrete_out (default `FALSE`) Logical, by default the output sample
 #'   in `y` are equally weighted. If `discrete_out=TRUE`, the function tries to
 #'   create an histogram of the realizations and to use the histogram as
-#'   weigths. This works if the output is assumed to be discrete or mixed and
-#'   the number of realizations is high. The main advantage of this option is to
-#'   reduce the dimension of the cost matrix.
-#' @param solver (optional) Solver for the Optimal Transport problem. Currently
-#'   supported options are:
-#' * `sinkhorn` (default), the Sinkhorn solver.
-#' * `sinkhorn_log`, the Sinkhorn solver in log scale.
-#' * `wasserstein`, a solver of the unregularized problem from [transport] package
-#' @param solver_optns (optional) Options for the Optimal Transport solver. See
-#'   details for allowed options.
+#'   weights. It works if the output is discrete or mixed and the number of
+#'   realizations is large. The advantage of this option is to reduce the
+#'   dimension of the cost matrix.
+#' @param solver Solver for the Optimal Transport problem. Currently supported
+#'   options are:
+#' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
+#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"wasserstein"`, a solver of the non regularized OT problem from [transport] package.
+#' @param solver_optns (optional) A list containing the options for the Optimal
+#'   Transport solver. See details for allowed options and default ones.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the
 #'   cost matrix.
 #' @param boot (default `FALSE`) Logical that sets whether or not to perform
-#'   bootstrapping of the OT indices
+#'   bootstrapping of the OT indices.
 #' @param R (default `NULL`) Positive integer, number of bootstrap replicas.
 #' @param parallel (default `"no"`) The type of parallel operation to be used
 #'   (if any). If missing, the default is taken from the option `boot.parallel`
@@ -44,11 +47,50 @@
 #'   Only considered if `boot = TRUE`. For more information, check the `type`
 #'   option of [boot::boot.ci()].
 #'
-#' @details The solvers of the OT problem implemented in this package can be
-#'   divided into two categories: standard and entropic. And then bla, blabla,
-#'   blablabla
+#' @details ## Solvers
 #'
-#' @return A `gsaot_indices` object containing:
+#'   OT is a widely studied topic in Operational Research and Calculus. The
+#'   reference for the OT solvers in this package is
+#'   \insertCite{peyre2019computational;textual}{gsaot}. The default solver is
+#'   `"sinkhorn"`, the Sinkhorn's solver introduced in
+#'   \insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
+#'   entropic-regularized version of the OT problem. The `"sinkhorn_log"` solves
+#'   the same OT problem but in log scale. It is more stable for low values of
+#'   the regularization parameter but slower to converge. The option
+#'   `"wasserstein"` is used to choose a solver for the non-regularized OT
+#'   problem. Under the hood, the function calls [transport::transport()] from
+#'   package `transport`. This option does not define the solver per se, but the
+#'   solver should be defined with the argument `solver_optns`. See the next
+#'   section for more information.
+#'
+#'   ## Solver options
+#'
+#'   The argument `solver_optns` should be empty (for default options) or a list
+#'   with all or some of the required solver parameters. All the parameters not
+#'   included in the list will be set to default values. The solvers
+#'   `"sinkhorn"` and `"sinkhorn_log"` have the same options:
+#'   * `numIterations` (default `1e3`): a positive integer defining the maximum number
+#'   of Sinkhorn's iterations allowed. If the solver does not converge in the
+#'   number of iterations set, the solver will throw an error.
+#'   * `epsilon` (default `0.01`): a positive real number defining the regularization
+#'   coefficient. If the value is too low, the solver may return `NA`.
+#'   * `maxErr` (default `1e-9`): a positive real number defining the
+#'   approximation error threshold between the marginal histogram of the
+#'   partition and the one computed by the solver. The solver may fail to
+#'   converge in `numIterations` if this value is too low.
+#'
+#'   The solver `wasserstein"` has the parameters:
+#'   * `method` (default `"networkflow`): string defining the solver of the OT
+#'   problem.
+#'   * `control`: a named list of parameters for the chosen method or the result
+#'   of a call to [transport::trcontrol()].
+#'   * `threads` (default `1`): an Integer specifying the number of threads used
+#'   in parallel computing.
+#'
+#'   For details regarding this solver, check the [transport::transport()] help
+#'   page.
+#'
+#' @returns A `gsaot_indices` object containing:
 #' * `method`: a string that identifies the type of indices computed.
 #' * `indices`: a names array containing the sensitivity indices between 0 and 1
 #'   for each column in x, indicating the influence of each input variable on
@@ -74,6 +116,8 @@
 #'   as arguments.
 #'
 #' @seealso [ot_indices_1d()], [ot_indices_wb()]
+#'
+#' @references \insertAllCited{}
 #'
 #' @examples
 #' N <- 1000

@@ -2,25 +2,41 @@
 % Please edit documentation in R/ot_indices_smap.R
 \name{ot_indices_smap}
 \alias{ot_indices_smap}
-\title{Evaluate one-dimensional Optimal Transport indices on multivariate outputs}
+\title{Evaluate sensitivity maps using Optimal Transport indices}
 \usage{
 ot_indices_smap(x, y, M)
 }
 \arguments{
-\item{x}{a data.frame containing the input(s) values}
+\item{x}{A matrix or data.frame containing the input(s) values. The values
+can be numeric, factors, or strings. The type of data changes the
+partitioning. If the values are continuous (double), the function
+partitions the data into \code{M} sets. If the values are discrete (integers,
+strings, factors), the number of partitioning sets is data-driven.}
 
-\item{y}{a matrix containing the output(s) values}
+\item{y}{A matrix containing the output values. Each column is interpreted as
+a different output.}
 
-\item{M}{a scalar representing the number of partitions for continuous inputs}
+\item{M}{A scalar representing the number of partitions for continuous
+inputs.}
 }
 \value{
-An Optimal Transport sensitivity index between 0 and 1 for each of the columns in x
+A matrix where each column represents an input and each row
+represents an output. The values are indices between 0 and 1 computed using
+\code{\link[=ot_indices_1d]{ot_indices_1d()}}.
 }
 \description{
-Evaluate one-dimensional Optimal Transport indices on multivariate outputs
+Evaluate sensitivity maps using Optimal Transport indices
 }
 \examples{
-x <- rnorm(1000)
-y <- 10 * x
-ot_indices_1d(data.frame(x), y, 30)
+N <- 1000
+
+x1 <- rnorm(N)
+x2 <- rnorm(N)
+x <- cbind(x1, x2)
+
+y1 <- 10 * x1
+y2 <- x1 + x2
+y <- cbind(y1, y2)
+
+ot_indices_smap(data.frame(x), y, 30)
 }
