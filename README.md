@@ -30,7 +30,7 @@ devtools::install_github("pietrocipolla/gsaot")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+A basic application of the functions implemented in the package:
 
 ``` r
 library(gsaot)
@@ -65,7 +65,45 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6104298 0.6432362 0.3063337 
+#> 0.5948837 0.6383257 0.2903069 
 #> 
-#> Upper bound: 96.54529
+#> Upper bound: 88.23182
+
+# Compute the sensitivity indices using the Network Simplex solver and default parameters
+sensitivity_indices <- ot_indices(x, y, M, solver = "wasserstein")
+#> Using default values for solver wasserstein
+sensitivity_indices
+#> Method: wasserstein 
+#> 
+#> Indices:
+#>        X1        X2        X3 
+#> 0.5028111 0.5352385 0.1810290 
+#> 
+#> Upper bound: 88.23182
+
+# Compute the Wasserstein-Bures indices
+sensitivity_indices <- ot_indices_wb(x, y, M)
+sensitivity_indices
+#> Method: wasserstein-bures 
+#> 
+#> Indices:
+#>        X1        X2        X3 
+#> 0.4837106 0.5105306 0.1366368 
+#> 
+#> Advective component:
+#>        X1        X2        X3 
+#> 0.2959860 0.3245171 0.1200289 
+#> 
+#> Diffusive component:
+#>         X1         X2         X3 
+#> 0.18772463 0.18601358 0.01660793 
+#> 
+#> Upper bound: 88.23182
+
+# Compute the sensitivity map using 1-dimensional solver
+sensitivity_indices <- ot_indices_smap(x, y, M)
+sensitivity_indices
+#>             X1         X2        X3
+#> [1,] 0.5842541 0.04656122 0.1770318
+#> [2,] 0.3161938 0.72130551 0.1410840
 ```

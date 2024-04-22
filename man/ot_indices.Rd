@@ -148,14 +148,16 @@ converge in \code{numIterations} if this value is too low.
 
 The solver \verb{wasserstein"} has the parameters:
 \itemize{
-\item \code{method} (default \verb{"networkflow}): string defining the solver for the OT
+\item \code{method} (default \verb{"networkflow}): string defining the solver of the OT
 problem.
 \item \code{control}: a named list of parameters for the chosen method or the result
 of a call to \code{\link[transport:trcontrol]{transport::trcontrol()}}.
 \item \code{threads} (default \code{1}): an Integer specifying the number of threads used
-in parallel computing. For details regarding this solver, check the
-\code{\link[transport:transport]{transport::transport()}} help page.
+in parallel computing.
 }
+
+For details regarding this solver, check the \code{\link[transport:transport]{transport::transport()}} help
+page.
 }
 }
 \examples{

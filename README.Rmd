@@ -36,7 +36,7 @@ devtools::install_github("pietrocipolla/gsaot")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+A basic application of the functions implemented in the package:
 
 ```{r example}
 library(gsaot)
@@ -65,5 +65,17 @@ M <- 25
 
 # Compute the sensitivity indices using Sinkhorn's solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M)
+sensitivity_indices
+
+# Compute the sensitivity indices using the Network Simplex solver and default parameters
+sensitivity_indices <- ot_indices(x, y, M, solver = "wasserstein")
+sensitivity_indices
+
+# Compute the Wasserstein-Bures indices
+sensitivity_indices <- ot_indices_wb(x, y, M)
+sensitivity_indices
+
+# Compute the sensitivity map using 1-dimensional solver
+sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 ```
