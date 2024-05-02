@@ -46,7 +46,7 @@ x <- data.frame(x)
 M <- 25
 
 # Calculate sensitivity indices
-sensitivity_indices <- ot_indices(x, y, M)
+sensitivity_indices <- ot_indices_wb(x, y, M)
 sensitivity_indices
 
 plot(sensitivity_indices)

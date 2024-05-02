@@ -27,8 +27,8 @@ bootstats <- function(b,
       ci <- boot::boot.ci(b, index = i, type = "norm", conf = conf)
 
       if (!is.null(ci)) {
-        tmp[i, "low.ci"] <- ci$norm[2]
-        tmp[i, "high.ci"] <- ci$norm[3]
+        tmp[i, "low.ci"] <- ci$normal[2]
+        tmp[i, "high.ci"] <- ci$normal[3]
       }
 
     } else if (type == "basic") {
@@ -38,7 +38,7 @@ bootstats <- function(b,
         tmp[i, "high.ci"] <- ci$basic[5]
       }
 
-    } else if (type == "percent") {
+    } else if (type == "perc") {
       ci <- boot::boot.ci(b, index = i, type = "perc", conf = conf)
 
       if (!is.null(ci)) {
@@ -47,7 +47,7 @@ bootstats <- function(b,
       }
 
     } else if (type == "bca") {
-      ci <- boot::boot.ci(b, index = i, conf = conf)
+      ci <- boot::boot.ci(b, index = i, type = "bca", conf = conf)
 
       if (!is.null(ci)) {
         tmp[i, "low.ci"] <- ci$bca[4]

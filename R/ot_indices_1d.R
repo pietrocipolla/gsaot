@@ -102,7 +102,7 @@ ot_indices_1d <- function(x,
     Wk <- matrix(nrow = 1, ncol = M)
     n <- matrix(nrow = M)
 
-  # NO BOOTSTRAP ESTIMATION
+    # NO BOOTSTRAP ESTIMATION
     if (!boot) {
       for (m in seq(M)) {
         partition_element <- which(partition == m)
@@ -117,7 +117,7 @@ ot_indices_1d <- function(x,
       W[k] <- ((Wk %*% n) / (V * N))[1, 1]
       IS[[k]] <- Wk / V
     } else {
-  # BOOTSTRAP ESTIMATION
+    # BOOTSTRAP ESTIMATION
       dat <- cbind(partition, y)
 
       # Do boostrap estimation stratified by the partitions
@@ -151,6 +151,7 @@ ot_indices_1d <- function(x,
                          indices_ci = W_ci,
                          bound_ci = V_ci,
                          IS_ci = IS_ci,
+                         R = R,
                          conf = conf,
                          type = type)
 

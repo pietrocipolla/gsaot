@@ -200,6 +200,7 @@ ot_indices_wb <- function(x,
                          indices_ci = W_ci,
                          bound_ci = V_ci,
                          IS_ci = IS_ci,
+                         R = R,
                          conf = conf,
                          type = type)
 

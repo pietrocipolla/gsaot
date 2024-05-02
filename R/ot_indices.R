@@ -366,6 +366,7 @@ ot_indices <- function(x,
                          indices_ci = W_ci,
                          bound_ci = V_ci,
                          IS_ci = IS_ci,
+                         R = R,
                          conf = conf,
                          type = type)
 
@@ -477,11 +478,11 @@ ot_boot_cont <- function(d,
   # Retrieve the cost matrix
   C <- C[indices, indices]
 
-  # Build the histogram
-  a <- rep(1 / N, N)
-
   # Get the number of realizations
   N <- length(partition)
+
+  # Build the histogram
+  a <- rep(1 / N, N)
 
   # Compute the variance
   V <- 2 * sum(diag(stats::cov(y)))

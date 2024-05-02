@@ -13,6 +13,7 @@ gsaot_indices <- function(method,
                           indices_ci = NULL,
                           bound_ci = NULL,
                           IS_ci = NULL,
+                          R = NULL,
                           type = NULL,
                           conf = NULL) {
   value <- list(method = method,
@@ -33,6 +34,7 @@ gsaot_indices <- function(method,
     value[["indices_ci"]] <- indices_ci
     value[["inner_statistics_ci"]] <- IS_ci
     value[["bound_ci"]] <- bound_ci
+    value[["R"]] <- R
     value[["type"]] <- type
     value[["conf"]] <- conf
   }
@@ -94,6 +96,7 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
   }
   if (x$boot) {
     cat("\nType of confidence interval:", x$type, "\n")
+    cat("Number of replicates:", x$R, "\n")
     cat("Confidence level:", x$conf, "\n")
     cat("Indices confidence intervals:\n")
     print(x$indices_ci)
@@ -184,7 +187,6 @@ plot.gsaot_indices <- function(x,
                                                    y = .data[["Indices"]],
                                                    fill = .data[["Component"]])) +
       ggplot2::geom_bar(stat = "identity") +
-      ggplot2::scale_y_continuous(limits = c(0, 1)) +
       ggplot2::labs(
         title = paste("Indices computed using", x$method, "solver"),
         x = "Inputs",
@@ -224,7 +226,6 @@ plot.gsaot_indices <- function(x,
         position = ggplot2::position_dodge2(padding = 0.2),
         width = .7
       ) +
-      ggplot2::scale_y_continuous(limits = c(0, 1)) +
       ggplot2::labs(
         title = paste("Indices computed using", x$method, "solver"),
         x = "Inputs",

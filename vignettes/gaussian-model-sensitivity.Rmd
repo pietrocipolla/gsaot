@@ -43,6 +43,9 @@ Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
 # Define the number of samples
 N <- 1000
 
+# Set the random number generator seed for reproducibility
+set.seed(777)
+
 # Sample from standard normals
 x1 <- rnorm(N)
 x2 <- rnorm(N)
