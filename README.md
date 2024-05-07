@@ -10,10 +10,10 @@
 
 The package `gsaot` provides a set of tools to compute and plot Optimal
 Transport (OT) based sensitivity indices. The core functions of the
-package are: \* `ot_indices()`: compute OT indices for multivariate
+package are: - `ot_indices()`: compute OT indices for multivariate
 outputs using different solvers for OT (network simplex, Sinkhorn, and
-so on). \* `ot_indices_wb()`: compute OT indices for univariate or
-multivariate outputs using the Wasserstein-Bures semi-metric. \*
+so on). - `ot_indices_wb()`: compute OT indices for univariate or
+multivariate outputs using the Wasserstein-Bures semi-metric. -
 `ot_indices_1d()`: compute OT indices for univariate outputs using OT
 solution in one dimension. The package provides also functions to plot
 the resulting indices and the inner statistics.
@@ -65,9 +65,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5948837 0.6383257 0.2903069 
+#> 0.5904896 0.6259631 0.2804490 
 #> 
-#> Upper bound: 88.23182
+#> Upper bound: 95.31012
 
 # Compute the sensitivity indices using the Network Simplex solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M, solver = "wasserstein")
@@ -77,9 +77,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5028111 0.5352385 0.1810290 
+#> 0.5068366 0.5323364 0.1828405 
 #> 
-#> Upper bound: 88.23182
+#> Upper bound: 95.31012
 
 # Compute the Wasserstein-Bures indices
 sensitivity_indices <- ot_indices_wb(x, y, M)
@@ -88,22 +88,22 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4837106 0.5105306 0.1366368 
+#> 0.4873015 0.5075676 0.1395621 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.2959860 0.3245171 0.1200289 
+#> 0.2967554 0.3209685 0.1213170 
 #> 
 #> Diffusive component:
 #>         X1         X2         X3 
-#> 0.18772463 0.18601358 0.01660793 
+#> 0.19054611 0.18659905 0.01824503 
 #> 
-#> Upper bound: 88.23182
+#> Upper bound: 95.31012
 
 # Compute the sensitivity map using 1-dimensional solver
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5842541 0.04656122 0.1770318
-#> [2,] 0.3161938 0.72130551 0.1410840
+#> [1,] 0.5891068 0.04332126 0.1881632
+#> [2,] 0.3145604 0.72062949 0.1395558
 ```

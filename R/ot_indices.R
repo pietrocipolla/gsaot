@@ -390,7 +390,7 @@ ot_boot <- function(d,
                     y_unique,
                     solver_fun,
                     solver_optns,
-                    scaling_param = scaling_param) {
+                    scaling_param) {
   # According to discrete_out select the correct function
   if (discrete_out) {
     ot_boot_discrete(d, i, C, y_unique, solver_fun, solver_optns, scaling_param)
@@ -459,7 +459,7 @@ ot_boot_discrete <- function(d,
   # Calculate the ot index
   W <- ((Wk %*% n) / (V * N))[1, 1]
 
-  return(c(W, Wk, V))
+  return(c(W, Wk / V, V))
 }
 
 # Bootstrap for continuous output
@@ -522,5 +522,5 @@ ot_boot_cont <- function(d,
   # Calculate the ot index
   W <- ((Wk %*% n) / (V * N))[1, 1]
 
-  return(c(W, Wk, V))
+  return(c(W, Wk / V, V))
 }

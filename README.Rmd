@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The package `gsaot` provides a set of tools to compute and plot Optimal Transport (OT) based sensitivity indices. The core functions of the package are:
-* `ot_indices()`: compute OT indices for multivariate outputs using different solvers for OT (network simplex, Sinkhorn, and so on).
-* `ot_indices_wb()`: compute OT indices for univariate or multivariate outputs using the Wasserstein-Bures semi-metric.
-* `ot_indices_1d()`: compute OT indices for univariate outputs using OT solution in one dimension.
+- `ot_indices()`: compute OT indices for multivariate outputs using different solvers for OT (network simplex, Sinkhorn, and so on).
+- `ot_indices_wb()`: compute OT indices for univariate or multivariate outputs using the Wasserstein-Bures semi-metric.
+- `ot_indices_1d()`: compute OT indices for univariate outputs using OT solution in one dimension.
 The package provides also functions to plot the resulting indices and the inner statistics.
 
 ## Installation
