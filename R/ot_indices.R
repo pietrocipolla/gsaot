@@ -315,12 +315,12 @@ ot_indices <- function(x,
                        c(list(a = a, b = b[b > 0], costm = C[, (b > 0)]),
                          solver_optns))
 
-        # Save the estimated distance
-        Wk[, m] <- ret$cost * scaling_param
-
         # Quick exit from the loop if NaNs are present
         if (is.na(ret$cost)) stop("NA are present, consider increasing the
                                   regularization parameter or change solver")
+
+        # Save the estimated distance
+        Wk[, m] <- ret$cost * scaling_param
       }
 
       W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
@@ -448,12 +448,12 @@ ot_boot_discrete <- function(d,
                           costm = C[(a > 0), (b > 0)]),
                      solver_optns))
 
-    # Save the estimated distance
-    Wk[, m] <- ret$cost * scaling_param
-
     # Quick exit from the loop if NaNs are present
     if (is.na(ret$cost)) stop("NA are present, consider increasing the
                               regularization parameter or change solver")
+
+    # Save the estimated distance
+    Wk[, m] <- ret$cost * scaling_param
   }
 
   # Calculate the ot index
@@ -510,13 +510,13 @@ ot_boot_cont <- function(d,
                    ),
                    solver_optns))
 
-    # Save the estimated distance
-    Wk[, m] <- ret$cost * scaling_param
-
     # Quick exit from the loop if NaNs are present
     if (is.na(ret$cost))
       stop("NA are present, consider increasing the
                                   regularization parameter or change solver")
+
+    # Save the estimated distance
+    Wk[, m] <- ret$cost * scaling_param
   }
 
   # Calculate the ot index
