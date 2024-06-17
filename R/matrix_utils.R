@@ -18,3 +18,12 @@ tracesqrtm <- function(A) {
 
   return(sum(sqrt(eig$values)))
 }
+
+# Function to compute the higher bound of the indices directly from the cost
+# matrix
+higher_bound <- function(C) {
+  # Compute the bound using the U-statistic estimator
+  bound <- mean(C[lower.tri(C)])
+
+  return(bound)
+}

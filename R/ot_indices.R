@@ -15,6 +15,10 @@
 #'   Only numeric values are allowed.
 #' @param M A scalar representing the number of partitions for continuous
 #'   inputs.
+#' @param cost (default `"L2"`) A string or function defining the cost function
+#'   of the Optimal Transport problem. It should be "L2" or a function taking as
+#'   input y and returning a cost matrix. If `cost="L2"`, `ot_indices` uses the
+#'   squared Euclidean metric.
 #' @param discrete_out (default `FALSE`) Logical, by default the output sample
 #'   in `y` are equally weighted. If `discrete_out=TRUE`, the function tries to
 #'   create an histogram of the realizations and to use the histogram as
@@ -148,6 +152,7 @@
 ot_indices <- function(x,
                        y,
                        M,
+                       cost = "L2",
                        discrete_out = FALSE,
                        solver = "sinkhorn",
                        solver_optns = NULL,
@@ -172,6 +177,10 @@ ot_indices <- function(x,
 
   # Check if the number of partitions is lower than the number of samples
   if (nrow(x) <= M) stop("The number of partitions should be lower than the number of samples")
+
+  # Check if the cost is defined correctly
+  cost_type <- identical(cost, "L2")
+  if (!cost_type & !is.function(cost)) stop("`cost` should be \"L2\" or a function")
 
   # Check the logical values
   if (!is.logical(discrete_out)) stop("`discrete_out` should be logical")
@@ -228,9 +237,18 @@ ot_indices <- function(x,
   # BUILD COST MATRIX
   # ----------------------------------------------------------------------------
   if (discrete_out) {
-    C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
-  } else
-    C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
+    if (cost_type) {
+      C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
+    } else {
+      C <- cost(y_unique)
+      }
+  } else {
+    if (cost_type) {
+      C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
+    } else {
+      C <- cost(y)
+    }
+  }
 
   # If the scaling is requested, scale the cost matrix by the highest value
   scaling_param <- 1
@@ -276,7 +294,7 @@ ot_indices <- function(x,
   # evaluated inside the bootstrap function
   # ----------------------------------------------------------------------------
   if (!boot)
-    V <- 2 * sum(diag(stats::cov(y)))
+    V <- higher_bound(C) * scaling_param
 
   # ESTIMATE THE INDICES FOR EACH PARTITION
   # ----------------------------------------------------------------------------
@@ -422,7 +440,7 @@ ot_boot_discrete <- function(d,
   )) / N
 
   # Compute the variance
-  V <- 2 * sum(diag(stats::cov(y)))
+  V <- higher_bound(C) * scaling_param
 
   # Get the number of partitions
   M <- max(partition)
@@ -485,7 +503,7 @@ ot_boot_cont <- function(d,
   a <- rep(1 / N, N)
 
   # Compute the variance
-  V <- 2 * sum(diag(stats::cov(y)))
+  V <- higher_bound(C) * scaling_param
 
   # Get the number of partitions
   M <- max(partition)
