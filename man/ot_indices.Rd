@@ -8,6 +8,7 @@ ot_indices(
   x,
   y,
   M,
+  cost = "L2",
   discrete_out = FALSE,
   solver = "sinkhorn",
   solver_optns = NULL,
@@ -33,6 +34,11 @@ Only numeric values are allowed.}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
+
+\item{cost}{(default \code{"L2"}) A string or function defining the cost function
+of the Optimal Transport problem. It should be "L2" or a function taking as
+input y and returning a cost matrix. If \code{cost="L2"}, \code{ot_indices} uses the
+squared Euclidean metric.}
 
 \item{discrete_out}{(default \code{FALSE}) Logical, by default the output sample
 in \code{y} are equally weighted. If \code{discrete_out=TRUE}, the function tries to
