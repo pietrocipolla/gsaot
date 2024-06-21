@@ -2,6 +2,7 @@
 
 S3method(plot,gsaot_indices)
 S3method(print,gsaot_indices)
+export(lower_bound)
 export(ot_indices)
 export(ot_indices_1d)
 export(ot_indices_smap)

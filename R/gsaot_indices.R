@@ -152,7 +152,8 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
 #'
 plot.gsaot_indices <- function(x,
                                ranking = NULL,
-                               wb_all = FALSE, ...) {
+                               wb_all = FALSE,
+                               dummy = NULL, ...) {
   # If ranking is defined, plot only the selected inputs
   K <- nrow(x$indices)
 
@@ -168,6 +169,13 @@ plot.gsaot_indices <- function(x,
       stop("`ranking` should be an integer with absolute value less than the number of inputs")
   } else
     inputs_to_plot <- seq(K)
+
+  # Find the threshold to be plotted if dummy is defined
+  if (!(class(dummy) == "gsaot_indices") & !is.double(dummy) & !is.null(dummy))
+    stop("`dummy` should be an object of class `gsaot_indices` or a double")
+
+  if (!is.null(dummy) & !is.double(dummy))
+    dummy <- dummy$indices[1]
 
   # If the indices are not from ot_indices_wb, print only the indices
   # Otherwise, plot the indices, the advective component and the diffusive one
@@ -244,6 +252,10 @@ plot.gsaot_indices <- function(x,
                                width = .7)
     }
   }
+
+  if (!is.null(dummy))
+    p <- p +
+      geom_hline(yintercept = dummy, linetype = 2, color = "red")
 
   return(p)
 }
