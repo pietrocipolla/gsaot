@@ -118,6 +118,8 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
 #'   If negative, select the last `ranking` inputs per importance.
 #' @param wb_all (default `FALSE`) Logical that defines whether or not to plot
 #'   the Advective and Diffusive components of the Wasserstein-Bures indices
+#' @param dummy (default `NULL`) A double or and object of class `gsaot_indices`
+#'   that represents a lower bound.
 #' @param ... Further arguments passed to or from other methods.
 #'
 #'
@@ -171,7 +173,7 @@ plot.gsaot_indices <- function(x,
     inputs_to_plot <- seq(K)
 
   # Find the threshold to be plotted if dummy is defined
-  if (!(class(dummy) == "gsaot_indices") & !is.double(dummy) & !is.null(dummy))
+  if (!inherits(dummy, "gsaot_indices") & !is.double(dummy) & !is.null(dummy))
     stop("`dummy` should be an object of class `gsaot_indices` or a double")
 
   if (!is.null(dummy) & !is.double(dummy))
@@ -255,7 +257,7 @@ plot.gsaot_indices <- function(x,
 
   if (!is.null(dummy))
     p <- p +
-      geom_hline(yintercept = dummy, linetype = 2, color = "red")
+      ggplot2::geom_hline(yintercept = dummy, linetype = 2, color = "red")
 
   return(p)
 }

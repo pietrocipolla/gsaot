@@ -52,7 +52,7 @@ options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 \item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
-\item \code{"wasserstein"}, a solver of the non regularized OT problem from \link{transport} package.
+\item \code{"transport"}, a solver of the non regularized OT problem from \link{transport} package.
 }}
 
 \item{solver_optns}{(optional) A list containing the options for the Optimal
@@ -127,7 +127,7 @@ reference for the OT solvers in this package is
 entropic-regularized version of the OT problem. The \code{"sinkhorn_log"} solves
 the same OT problem but in log scale. It is more stable for low values of
 the regularization parameter but slower to converge. The option
-\code{"wasserstein"} is used to choose a solver for the non-regularized OT
+\code{"transport"} is used to choose a solver for the non-regularized OT
 problem. Under the hood, the function calls \code{\link[transport:transport]{transport::transport()}} from
 package \code{transport}. This option does not define the solver per se, but the
 solver should be defined with the argument \code{solver_optns}. See the next
@@ -152,7 +152,7 @@ partition and the one computed by the solver. The solver may fail to
 converge in \code{numIterations} if this value is too low.
 }
 
-The solver \verb{wasserstein"} has the parameters:
+The solver \code{"transport"} has the parameters:
 \itemize{
 \item \code{method} (default \verb{"networkflow}): string defining the solver of the OT
 problem.

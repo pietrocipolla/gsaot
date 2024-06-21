@@ -29,7 +29,7 @@
 #'   options are:
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 #' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
-#' * `"wasserstein"`, a solver of the non regularized OT problem from [transport] package.
+#' * `"transport"`, a solver of the non regularized OT problem from [transport] package.
 #' @param solver_optns (optional) A list containing the options for the Optimal
 #'   Transport solver. See details for allowed options and default ones.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the
@@ -61,7 +61,7 @@
 #'   entropic-regularized version of the OT problem. The `"sinkhorn_log"` solves
 #'   the same OT problem but in log scale. It is more stable for low values of
 #'   the regularization parameter but slower to converge. The option
-#'   `"wasserstein"` is used to choose a solver for the non-regularized OT
+#'   `"transport"` is used to choose a solver for the non-regularized OT
 #'   problem. Under the hood, the function calls [transport::transport()] from
 #'   package `transport`. This option does not define the solver per se, but the
 #'   solver should be defined with the argument `solver_optns`. See the next
@@ -83,7 +83,7 @@
 #'   partition and the one computed by the solver. The solver may fail to
 #'   converge in `numIterations` if this value is too low.
 #'
-#'   The solver `wasserstein"` has the parameters:
+#'   The solver `"transport"` has the parameters:
 #'   * `method` (default `"networkflow`): string defining the solver of the OT
 #'   problem.
 #'   * `control`: a named list of parameters for the chosen method or the result
@@ -187,7 +187,7 @@ ot_indices <- function(x,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log", "wasserstein"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_log", "transport"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -267,7 +267,7 @@ ot_indices <- function(x,
     solver,
     "sinkhorn" = sinkhorn,
     "sinkhorn_log" = sinkhorn_log,
-    "wasserstein" = transport::transport,
+    "transport" = transport::transport,
     default = NULL
   )
 

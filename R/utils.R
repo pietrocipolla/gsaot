@@ -54,7 +54,7 @@
 #' dummy_optns <- list(distr = "rgamma", shape = 3)
 #' dummy_lb_cust <- lower_bound(y, M, bound = "dummy",
 #'                                   dummy_optns = dummy_optns,
-#'                                   solver = "wasserstein")
+#'                                   solver = "transport")
 lower_bound <- function(y,
                         M,
                         bound = "dummy",
@@ -91,7 +91,7 @@ lower_bound <- function(y,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn", "sinkhorn_log", "wasserstein"))
+  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn", "sinkhorn_log", "transport"))
 
   # RETURN THE DUMMY INDICES
   # ----------------------------------------------------------------------------

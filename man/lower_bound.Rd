@@ -46,7 +46,7 @@ options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 \item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
-\item \code{"wasserstein"}, a solver of the non regularized OT problem from \link{transport} package.
+\item \code{"transport"}, a solver of the non regularized OT problem from \link{transport} package.
 }}
 
 \item{solver_optns}{(optional) A list containing the options for the Optimal
@@ -107,5 +107,5 @@ dummy_lb <- lower_bound(y, M, bound = "dummy")
 dummy_optns <- list(distr = "rgamma", shape = 3)
 dummy_lb_cust <- lower_bound(y, M, bound = "dummy",
                                   dummy_optns = dummy_optns,
-                                  solver = "wasserstein")
+                                  solver = "transport")
 }
