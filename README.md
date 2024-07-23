@@ -32,6 +32,20 @@ You can install the development version of gsaot from
 devtools::install_github("pietrocipolla/gsaot")
 ```
 
+### Installation note
+
+Some solvers in `gsaot` greatly benefit from optimization in
+compilation. To add this option (before package installation), edit your
+`.R/Makevars` file with the desired flags. Even though different
+compilers have different options, a common flag to enable a safe level
+of optimization is
+
+    CXXFLAGS+=-O2
+
+More detailed information on how to customize the R packages compilation
+can be found in the [R
+guide](https://cran.r-project.org/doc/manuals/R-admin.html#Customizing-package-compilation).
+
 ## Example
 
 A basic application of the functions implemented in the package:
@@ -69,9 +83,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5642179 0.6255448 0.2736724 
+#> 0.6183904 0.6186592 0.2826473 
 #> 
-#> Upper bound: 89.13198
+#> Upper bound: 96.72179
 
 # Compute the sensitivity indices using the Network Simplex solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
@@ -81,9 +95,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4771722 0.5267831 0.1709329 
+#> 0.5284503 0.5176140 0.1763503 
 #> 
-#> Upper bound: 89.13198
+#> Upper bound: 96.72179
 
 # Compute the Wasserstein-Bures indices
 sensitivity_indices <- ot_indices_wb(x, y, M)
@@ -92,22 +106,22 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4561290 0.5017250 0.1238633 
+#> 0.5090182 0.4918071 0.1300279 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.2777030 0.3160325 0.1072954 
+#> 0.3078333 0.3146525 0.1123100 
 #> 
 #> Diffusive component:
 #>        X1        X2        X3 
-#> 0.1784259 0.1856925 0.0165679 
+#> 0.2011848 0.1771546 0.0177179 
 #> 
-#> Upper bound: 89.13198
+#> Upper bound: 96.72179
 
 # Compute the sensitivity map using 1-dimensional solver
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5710719 0.03378987 0.1580119
-#> [2,] 0.2833240 0.70813481 0.1332598
+#> [1,] 0.6003177 0.04780483 0.1778104
+#> [2,] 0.3348971 0.70924384 0.1288395
 ```

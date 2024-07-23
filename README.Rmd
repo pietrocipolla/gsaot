@@ -37,6 +37,16 @@ You can install the development version of gsaot from [GitHub](https://github.co
 devtools::install_github("pietrocipolla/gsaot")
 ```
 
+### Installation note
+
+The `sinkhorn` and `sinkhorn_log` solvers in `gsaot` greatly benefit from optimization in compilation. To add this option (before package installation), edit your `.R/Makevars` file with the desired flags. Even though different compilers have different options, a common flag to enable a safe level of optimization is
+
+```
+CXXFLAGS+=-O2
+```
+
+More detailed information on how to customize the R packages compilation can be found in the  [R guide](https://cran.r-project.org/doc/manuals/R-admin.html#Customizing-package-compilation).
+
 ## Example
 
 A basic application of the functions implemented in the package:
