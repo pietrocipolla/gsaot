@@ -103,7 +103,7 @@ plot_inner_stats <- function(x,
         gg_plots[[k]] <- gg_plots[[k]] +
           ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                    ymax = .data[["high_ci"]]),
-                                 width = .2)
+                                 width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
       }
 
       # If the advective and diffusive components are present, plot them
@@ -130,7 +130,7 @@ plot_inner_stats <- function(x,
           gg_plots[[K + k]] <- gg_plots[[K + k]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = .2)
+                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
 
         data_to_plot <- data.frame(
@@ -156,7 +156,7 @@ plot_inner_stats <- function(x,
           gg_plots[[2 * K + k]] <- gg_plots[[2 * K + k]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = .2)
+                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
       }
     } else {
@@ -189,7 +189,7 @@ plot_inner_stats <- function(x,
         gg_plots[[k]] <- gg_plots[[k]] +
           ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                    ymax = .data[["high_ci"]]),
-                                 width = .2)
+                                 width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
       }
 
       if (exists("adv", where = x) & wb_all) {
@@ -215,7 +215,7 @@ plot_inner_stats <- function(x,
           gg_plots[[K + k]] <- gg_plots[[K + k]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = .2)
+                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
 
         data_to_plot <- data.frame(
@@ -240,7 +240,7 @@ plot_inner_stats <- function(x,
           gg_plots[[2 * K + k]] <- gg_plots[[2 * K + k]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = .2)
+                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
       }
     }

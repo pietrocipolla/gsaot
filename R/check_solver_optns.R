@@ -8,7 +8,7 @@ check_solver_optns <- function(solver, solver_optns) {
       "sinkhorn_log" = list(numIterations = 1e3,
                         epsilon = 0.01,
                         maxErr = 1e-9),
-      "wasserstein" = list(fullreturn = TRUE)
+      "transport" = list(fullreturn = TRUE)
     )
 
     cat("Using default values for solver", solver, "\n")

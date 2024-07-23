@@ -10,13 +10,17 @@
 
 The package `gsaot` provides a set of tools to compute and plot Optimal
 Transport (OT) based sensitivity indices. The core functions of the
-package are: - `ot_indices()`: compute OT indices for multivariate
-outputs using different solvers for OT (network simplex, Sinkhorn, and
-so on). - `ot_indices_wb()`: compute OT indices for univariate or
-multivariate outputs using the Wasserstein-Bures semi-metric. -
-`ot_indices_1d()`: compute OT indices for univariate outputs using OT
-solution in one dimension. The package provides also functions to plot
-the resulting indices and the inner statistics.
+package are:
+
+- `ot_indices()`: compute OT indices for multivariate outputs using
+  different solvers for OT (network simplex, Sinkhorn, and so on).
+
+- `ot_indices_wb()`: compute OT indices for univariate or multivariate
+  outputs using the Wasserstein-Bures semi-metric.
+
+- `ot_indices_1d()`: compute OT indices for univariate outputs using OT
+  solution in one dimension. The package provides also functions to plot
+  the resulting indices and the inner statistics.
 
 ## Installation
 
@@ -65,21 +69,21 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5904896 0.6259631 0.2804490 
+#> 0.5642179 0.6255448 0.2736724 
 #> 
-#> Upper bound: 95.31012
+#> Upper bound: 89.13198
 
 # Compute the sensitivity indices using the Network Simplex solver and default parameters
-sensitivity_indices <- ot_indices(x, y, M, solver = "wasserstein")
-#> Using default values for solver wasserstein
+sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
+#> Using default values for solver transport
 sensitivity_indices
-#> Method: wasserstein 
+#> Method: transport 
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5068366 0.5323364 0.1828405 
+#> 0.4771722 0.5267831 0.1709329 
 #> 
-#> Upper bound: 95.31012
+#> Upper bound: 89.13198
 
 # Compute the Wasserstein-Bures indices
 sensitivity_indices <- ot_indices_wb(x, y, M)
@@ -88,22 +92,22 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4873015 0.5075676 0.1395621 
+#> 0.4561290 0.5017250 0.1238633 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.2967554 0.3209685 0.1213170 
+#> 0.2777030 0.3160325 0.1072954 
 #> 
 #> Diffusive component:
-#>         X1         X2         X3 
-#> 0.19054611 0.18659905 0.01824503 
+#>        X1        X2        X3 
+#> 0.1784259 0.1856925 0.0165679 
 #> 
-#> Upper bound: 95.31012
+#> Upper bound: 89.13198
 
 # Compute the sensitivity map using 1-dimensional solver
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5891068 0.04332126 0.1881632
-#> [2,] 0.3145604 0.72062949 0.1395558
+#> [1,] 0.5710719 0.03378987 0.1580119
+#> [2,] 0.2833240 0.70813481 0.1332598
 ```

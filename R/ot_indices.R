@@ -39,7 +39,7 @@
 #' @param R (default `NULL`) Positive integer, number of bootstrap replicas.
 #' @param parallel (default `"no"`) The type of parallel operation to be used
 #'   (if any). If missing, the default is taken from the option `boot.parallel`
-#'   (and if that is not set, `"no`). Only considered if `boot = TRUE`. For more
+#'   (and if that is not set, `"no"`). Only considered if `boot = TRUE`. For more
 #'   information, check the [boot::boot()] function.
 #' @param ncpus (default `1`) Positive integer: number of processes to be used
 #'   in parallel operation: typically one would chose this to the number of

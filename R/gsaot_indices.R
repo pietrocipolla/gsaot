@@ -250,7 +250,7 @@ plot.gsaot_indices <- function(x,
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
                                             ymax = .data[["high.ci"]]),
-                               position = ggplot2::position_dodge2(padding = 0.2),
+                               position = ggplot2::position_dodge2(padding = 0.5),
                                width = .7)
     }
   }

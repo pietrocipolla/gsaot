@@ -35,7 +35,7 @@ bootstrapping of the OT indices.}
 
 \item{parallel}{(default \code{"no"}) The type of parallel operation to be used
 (if any). If missing, the default is taken from the option \code{boot.parallel}
-(and if that is not set, \verb{"no}). Only considered if \code{boot = TRUE}. For more
+(and if that is not set, \code{"no"}). Only considered if \code{boot = TRUE}. For more
 information, check the \code{\link[boot:boot]{boot::boot()}} function.}
 
 \item{ncpus}{(default \code{1}) Positive integer: number of processes to be used
