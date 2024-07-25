@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 The package `gsaot` provides a set of tools to compute and plot Optimal Transport (OT) based sensitivity indices. The core functions of the package are:
@@ -37,7 +38,7 @@ You can install the development version of gsaot from [GitHub](https://github.co
 devtools::install_github("pietrocipolla/gsaot")
 ```
 
-### Installation note
+### :exclamation: :exclamation: Installation note
 
 The `sinkhorn` and `sinkhorn_log` solvers in `gsaot` greatly benefit from optimization in compilation. To add this option (before package installation), edit your `.R/Makevars` file with the desired flags. Even though different compilers have different options, a common flag to enable a safe level of optimization is
 

@@ -14,6 +14,7 @@ ot_indices(
   solver_optns = NULL,
   scaling = TRUE,
   boot = FALSE,
+  stratified_boot = FALSE,
   R = NULL,
   parallel = "no",
   ncpus = 1,

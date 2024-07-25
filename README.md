@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 The package `gsaot` provides a set of tools to compute and plot Optimal
@@ -32,13 +33,13 @@ You can install the development version of gsaot from
 devtools::install_github("pietrocipolla/gsaot")
 ```
 
-### Installation note
+### :exclamation: :exclamation: Installation note
 
-Some solvers in `gsaot` greatly benefit from optimization in
-compilation. To add this option (before package installation), edit your
-`.R/Makevars` file with the desired flags. Even though different
-compilers have different options, a common flag to enable a safe level
-of optimization is
+The `sinkhorn` and `sinkhorn_log` solvers in `gsaot` greatly benefit
+from optimization in compilation. To add this option (before package
+installation), edit your `.R/Makevars` file with the desired flags. Even
+though different compilers have different options, a common flag to
+enable a safe level of optimization is
 
     CXXFLAGS+=-O2
 
@@ -83,9 +84,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6183904 0.6186592 0.2826473 
+#> 0.6024491 0.5979907 0.2734895 
 #> 
-#> Upper bound: 96.72179
+#> Upper bound: 93.27764
 
 # Compute the sensitivity indices using the Network Simplex solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
@@ -95,9 +96,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5284503 0.5176140 0.1763503 
+#> 0.5231955 0.5104445 0.1825898 
 #> 
-#> Upper bound: 96.72179
+#> Upper bound: 93.27764
 
 # Compute the Wasserstein-Bures indices
 sensitivity_indices <- ot_indices_wb(x, y, M)
@@ -106,22 +107,22 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5090182 0.4918071 0.1300279 
+#> 0.5040783 0.4852300 0.1397265 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.3078333 0.3146525 0.1123100 
+#> 0.3050624 0.3105509 0.1221156 
 #> 
 #> Diffusive component:
-#>        X1        X2        X3 
-#> 0.2011848 0.1771546 0.0177179 
+#>         X1         X2         X3 
+#> 0.19901591 0.17467902 0.01761093 
 #> 
-#> Upper bound: 96.72179
+#> Upper bound: 93.27764
 
 # Compute the sensitivity map using 1-dimensional solver
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.6003177 0.04780483 0.1778104
-#> [2,] 0.3348971 0.70924384 0.1288395
+#> [1,] 0.6090166 0.04683973 0.1790092
+#> [2,] 0.3234579 0.70364026 0.1424398
 ```

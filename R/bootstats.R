@@ -17,12 +17,15 @@ bootstats <- function(b,
 
   # For each estimated quantity evaluate the
   for (i in 1:p) {
+    # Central estimate
+    bias <- mean(b$t[, i]) - b$t0[i]
+    tmp[i, "original"] <- b$t0[i] - bias
+
     # Confidence interval
     if (type == "norm") {
       ci <- boot::boot.ci(b, index = i, type = "norm", conf = conf)
 
       if (!is.null(ci)) {
-        tmp[i, "original"] <- ci$normal[1]
         tmp[i, "low.ci"] <- ci$normal[2]
         tmp[i, "high.ci"] <- ci$normal[3]
       }
@@ -30,7 +33,6 @@ bootstats <- function(b,
     } else if (type == "basic") {
       ci <- boot::boot.ci(b, index = i, type = "basic", conf = conf)
       if (!is.null(ci)) {
-        tmp[i, "original"] <- ci$basic[1]
         tmp[i, "low.ci"] <- ci$basic[4]
         tmp[i, "high.ci"] <- ci$basic[5]
       }
@@ -39,7 +41,6 @@ bootstats <- function(b,
       ci <- boot::boot.ci(b, index = i, type = "perc", conf = conf)
 
       if (!is.null(ci)) {
-        tmp[i, "original"] <- ci$percent[1]
         tmp[i, "low.ci"] <- ci$percent[4]
         tmp[i, "high.ci"] <- ci$percent[5]
       }
@@ -48,7 +49,6 @@ bootstats <- function(b,
       ci <- boot::boot.ci(b, index = i, type = "bca", conf = conf)
 
       if (!is.null(ci)) {
-        tmp[i, "original"] <- ci$bca[1]
         tmp[i, "low.ci"] <- ci$bca[4]
         tmp[i, "high.ci"] <- ci$bca[5]
       }

@@ -158,6 +158,7 @@ ot_indices <- function(x,
                        solver_optns = NULL,
                        scaling = TRUE,
                        boot = FALSE,
+                       stratified_boot = FALSE,
                        R = NULL,
                        parallel = "no",
                        ncpus = 1,
@@ -344,22 +345,32 @@ ot_indices <- function(x,
       W[k] <- ((Wk[1,] %*% n) / (V * N))[1, 1]
       IS[[k]] <- Wk / V
     } else {
-      # BOOTSTRAP ESTIMATION
-      dat <- cbind(partition, y)
+      # BOOTSTRAP ESTIMATION With stratification we pass the partitioned input.
+      # Otherwise, we pass the input and we partition after the resampling
+      if (stratified_boot) {
+        dat <- cbind(partition, y)
+        strata <- partition
+      }
+      else {
+        dat <- cbind(x[, k], y)
+        strata <- rep(1, N)
+      }
 
       # Do boostrap estimation stratified by the partitions
       W_boot <- boot::boot(data = dat,
                            statistic = ot_boot,
                            R = R,
-                           strata = partition,
+                           strata = strata,
                            discrete_out = discrete_out,
+                           M = M,
                            C = C,
                            y_unique = y_unique,
                            solver_fun = solver_fun,
                            solver_optns = solver_optns,
                            scaling_param = scaling_param,
                            parallel = parallel,
-                           ncpus = ncpus)
+                           ncpus = ncpus,
+                           stratified_boot = stratified_boot)
 
       # Transform the results into readable quantities
       W_stats <- bootstats(W_boot, type = type, conf = conf)
@@ -404,35 +415,43 @@ ot_indices <- function(x,
 ot_boot <- function(d,
                     i,
                     discrete_out,
+                    M,
                     C,
                     y_unique,
                     solver_fun,
                     solver_optns,
-                    scaling_param) {
+                    scaling_param,
+                    stratified_boot) {
   # According to discrete_out select the correct function
   if (discrete_out) {
-    ot_boot_discrete(d, i, C, y_unique, solver_fun, solver_optns, scaling_param)
+    ot_boot_discrete(d, i, M, C, y_unique, solver_fun, solver_optns, scaling_param, stratified_boot)
   } else {
-    ot_boot_cont(d, i, C, solver_fun, solver_optns, scaling_param)
+    ot_boot_cont(d, i, M, C, solver_fun, solver_optns, scaling_param, stratified_boot)
   }
 }
 
 # Bootstrap for discrete output
 ot_boot_discrete <- function(d,
                              indices,
+                             M,
                              C,
                              y_unique,
                              solver_fun,
                              solver_optns,
-                             scaling_param) {
+                             scaling_param,
+                             stratified_boot) {
   # Retrieve the partitions
-  partition <- d[indices, 1]
+  if (stratified_boot)
+    partition <- d[indices, 1]
+  else
+    partition <- build_partition(as.matrix(d[indices, 1]), M)
 
   # Retrieve the output
   y <- d[indices, 2:ncol(d)]
 
-  # Get the number of realizations
+  # Get the number of realizations and partitions
   N <- length(partition)
+  M <- max(partition)
 
   # Compute the unconditioned histogram
   a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
@@ -441,9 +460,6 @@ ot_boot_discrete <- function(d,
 
   # Compute the variance
   V <- higher_bound(C) * scaling_param
-
-  # Get the number of partitions
-  M <- max(partition)
 
   # Initialize the return structure
   Wk <- matrix(nrow = 1, ncol = M)
@@ -483,21 +499,24 @@ ot_boot_discrete <- function(d,
 # Bootstrap for continuous output
 ot_boot_cont <- function(d,
                          indices,
+                         M,
                          C,
                          solver_fun,
                          solver_optns,
-                         scaling_param) {
+                         scaling_param,
+                         stratified_boot) {
   # Retrieve the partitions
-  partition <- d[indices, 1]
-
-  # Retrieve the output
-  y <- d[indices, 2:ncol(d)]
+  if (stratified_boot)
+    partition <- d[indices, 1]
+  else
+    partition <- build_partition(as.matrix(d[indices, 1]), M)
 
   # Retrieve the cost matrix
   C <- C[indices, indices]
 
-  # Get the number of realizations
+  # Get the number of realizations and partitions
   N <- length(partition)
+  M <- max(partition)
 
   # Build the histogram
   a <- rep(1 / N, N)
