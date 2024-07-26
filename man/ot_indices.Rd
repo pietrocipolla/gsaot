@@ -65,12 +65,18 @@ cost matrix.}
 \item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
 bootstrapping of the OT indices.}
 
+\item{stratified_boot}{(default \code{FALSE}) Logical that sets the type of
+resampling performed. With \code{stratified_boot=FALSE}, the function resamples
+the dataset and then creates the partitions. Otherwise, first, it
+creates the partitions and then it performs stratified bootstrapping with
+strata being the partitions.}
+
 \item{R}{(default \code{NULL}) Positive integer, number of bootstrap replicas.}
 
 \item{parallel}{(default \code{"no"}) The type of parallel operation to be used
 (if any). If missing, the default is taken from the option \code{boot.parallel}
-(and if that is not set, \code{"no"}). Only considered if \code{boot = TRUE}. For more
-information, check the \code{\link[boot:boot]{boot::boot()}} function.}
+(and if that is not set, \code{"no"}). Only considered if \code{boot = TRUE}. For
+more information, check the \code{\link[boot:boot]{boot::boot()}} function.}
 
 \item{ncpus}{(default \code{1}) Positive integer: number of processes to be used
 in parallel operation: typically one would chose this to the number of

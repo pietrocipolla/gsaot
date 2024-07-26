@@ -36,11 +36,16 @@
 #'   cost matrix.
 #' @param boot (default `FALSE`) Logical that sets whether or not to perform
 #'   bootstrapping of the OT indices.
+#' @param stratified_boot (default `FALSE`) Logical that sets the type of
+#'   resampling performed. With `stratified_boot=FALSE`, the function resamples
+#'   the dataset and then creates the partitions. Otherwise, first, it
+#'   creates the partitions and then it performs stratified bootstrapping with
+#'   strata being the partitions.
 #' @param R (default `NULL`) Positive integer, number of bootstrap replicas.
 #' @param parallel (default `"no"`) The type of parallel operation to be used
 #'   (if any). If missing, the default is taken from the option `boot.parallel`
-#'   (and if that is not set, `"no"`). Only considered if `boot = TRUE`. For more
-#'   information, check the [boot::boot()] function.
+#'   (and if that is not set, `"no"`). Only considered if `boot = TRUE`. For
+#'   more information, check the [boot::boot()] function.
 #' @param ncpus (default `1`) Positive integer: number of processes to be used
 #'   in parallel operation: typically one would chose this to the number of
 #'   available CPUs. Check the `ncpus` option in the [boot::boot()] function of
