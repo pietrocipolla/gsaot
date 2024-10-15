@@ -86,7 +86,7 @@ sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
 sensitivity_indices
 
 # Compute the Wasserstein-Bures indices
-sensitivity_indices <- ot_indices_wb(x, y, M)
+sensitivity_indices <- ot_indices_wb(x, y, M, boot = TRUE, R = 100)
 sensitivity_indices
 
 # Compute the sensitivity map using 1-dimensional solver

@@ -56,6 +56,9 @@ plot_inner_stats <- function(x,
   } else
     inputs_to_plot <- seq(K)
 
+  # Reassign the number of plots to do
+  K <- length(inputs_to_plot)
+
   # Order the plots from the most important to the least one
   inputs_to_plot <- inputs_to_plot[order(x$indices[inputs_to_plot], decreasing = TRUE)]
 
@@ -65,7 +68,9 @@ plot_inner_stats <- function(x,
   # Generate the list of plots
   gg_plots <- list()
 
-  for (k in inputs_to_plot) {
+  for (input in seq_along(inputs_to_plot)) {
+    k <- inputs_to_plot[input]
+
     # Get the partition for the k-th input and its dimension
     partition <- x$partitions[, k]
     M <- max(partition)
@@ -86,7 +91,7 @@ plot_inner_stats <- function(x,
       )
 
       # Build the plot of the inner statistic
-      gg_plots[[k]] <- ggplot2::ggplot(data = data_to_plot,
+      gg_plots[[input]] <- ggplot2::ggplot(data = data_to_plot,
                                        ggplot2::aes(x = .data[["x"]],
                                                     y = .data[["y"]])) +
         ggplot2::geom_point() +
@@ -100,10 +105,10 @@ plot_inner_stats <- function(x,
         data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][1:M, ])
         colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-        gg_plots[[k]] <- gg_plots[[k]] +
+        gg_plots[[input]] <- gg_plots[[input]] +
           ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                    ymax = .data[["high_ci"]]),
-                                 width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                 width = 0.2 / M * (max(x$x[, k]) - min(x$x[, k])))
       }
 
       # If the advective and diffusive components are present, plot them
@@ -114,7 +119,7 @@ plot_inner_stats <- function(x,
           Component = x$method
         )
 
-        gg_plots[[K + k]] <- ggplot2::ggplot(data = data_to_plot,
+        gg_plots[[K + input]] <- ggplot2::ggplot(data = data_to_plot,
                                              ggplot2::aes(x = .data[["x"]],
                                                           y = .data[["y"]])) +
           ggplot2::geom_point() +
@@ -127,10 +132,10 @@ plot_inner_stats <- function(x,
           data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(M + 1):(2 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-          gg_plots[[K + k]] <- gg_plots[[K + k]] +
+          gg_plots[[K + input]] <- gg_plots[[K + input]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                   width = 0.2 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
 
         data_to_plot <- data.frame(
@@ -139,7 +144,7 @@ plot_inner_stats <- function(x,
           Component = x$method
         )
 
-        gg_plots[[2 * K + k]] <-
+        gg_plots[[2 * K + input]] <-
           ggplot2::ggplot(data = data_to_plot,
                           ggplot2::aes(x = .data[["x"]],
                                        y = .data[["y"]])) +
@@ -153,10 +158,10 @@ plot_inner_stats <- function(x,
           data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(2 * M + 1):(3 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-          gg_plots[[2 * K + k]] <- gg_plots[[2 * K + k]] +
+          gg_plots[[2 * K + input]] <- gg_plots[[2 * K + input]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                   width = 0.2 / M * (max(x$x[, k]) - min(x$x[, k])))
         }
       }
     } else {
@@ -173,7 +178,7 @@ plot_inner_stats <- function(x,
         Component = x$method
       )
 
-      gg_plots[[k]] <- ggplot2::ggplot(data = data_to_plot,
+      gg_plots[[input]] <- ggplot2::ggplot(data = data_to_plot,
                                        ggplot2::aes(x = .data[["x"]],
                                                     y = .data[["y"]])) +
         ggplot2::geom_bar(stat = "identity") +
@@ -186,10 +191,10 @@ plot_inner_stats <- function(x,
         data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][1:M, ])
         colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-        gg_plots[[k]] <- gg_plots[[k]] +
+        gg_plots[[input]] <- gg_plots[[input]] +
           ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                    ymax = .data[["high_ci"]]),
-                                 width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                 width = 0.2 / M * (length(unique(x$x[, k]))))
       }
 
       if (exists("adv", where = x) & wb_all) {
@@ -199,7 +204,7 @@ plot_inner_stats <- function(x,
           Component = x$method
         )
 
-        gg_plots[[2 * K + k]] <-
+        gg_plots[[K + input]] <-
           ggplot2::ggplot(data = data_to_plot,
                           ggplot2::aes(x = .data[["x"]],
                                        y = .data[["y"]])) +
@@ -212,10 +217,10 @@ plot_inner_stats <- function(x,
           data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(M + 1):(2 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-          gg_plots[[K + k]] <- gg_plots[[K + k]] +
+          gg_plots[[K + input]] <- gg_plots[[K + input]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                   width = 0.2 / M * (length(unique(x$x[, k]))))
         }
 
         data_to_plot <- data.frame(
@@ -224,7 +229,7 @@ plot_inner_stats <- function(x,
           Component = x$method
         )
 
-        gg_plots[[2 * K + k]] <-
+        gg_plots[[2 * K + input]] <-
           ggplot2::ggplot(data = data_to_plot,
                           ggplot2::aes(x = .data[["x"]],
                                        y = .data[["y"]])) +
@@ -237,17 +242,17 @@ plot_inner_stats <- function(x,
           data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(2 * M + 1):(3 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
-          gg_plots[[2 * K + k]] <- gg_plots[[2 * K + k]] +
+          gg_plots[[2 * K + input]] <- gg_plots[[2 * K + input]] +
             ggplot2::geom_errorbar(data = data_to_plot, ggplot2::aes(ymin = .data[["low_ci"]],
                                                                      ymax = .data[["high_ci"]]),
-                                   width = 0.5 / M * (max(x$x[, k]) - min(x$x[, k])))
+                                   width = 0.2 / M * (length(unique(x$x[, k]))))
         }
       }
     }
   }
 
-  # Order the elements in decreasing importance
-  gg_plots <- gg_plots[inputs_to_plot]
+  # # Order the elements in decreasing importance
+  # gg_plots <- gg_plots[inputs_to_plot]
 
   # Remove the NULL plots before the patchwork
   if (any(sapply(gg_plots, is.null))) {

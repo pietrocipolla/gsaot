@@ -214,7 +214,7 @@ plot.gsaot_indices <- function(x,
                                ggplot2::aes(ymin = .data[["low.ci"]],
                                             ymax = .data[["high.ci"]]),
                                position = ggplot2::position_dodge2(padding = 0.2),
-                               width = .7)
+                               width = .5)
     }
   } else {
     # Create a data.frame to store all the indices
@@ -234,7 +234,7 @@ plot.gsaot_indices <- function(x,
       ggplot2::geom_bar(
         stat = "identity",
         position = ggplot2::position_dodge2(padding = 0.2),
-        width = .7
+        width = .5
       ) +
       ggplot2::labs(
         title = paste("Indices computed using", x$method, "solver"),
@@ -251,7 +251,7 @@ plot.gsaot_indices <- function(x,
                                ggplot2::aes(ymin = .data[["low.ci"]],
                                             ymax = .data[["high.ci"]]),
                                position = ggplot2::position_dodge2(padding = 0.5),
-                               width = .7)
+                               width = .5)
     }
   }
 

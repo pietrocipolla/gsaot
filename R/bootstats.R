@@ -38,6 +38,7 @@ bootstats <- function(b,
       }
 
     } else if (type == "perc") {
+      tmp[i, "original"] <- b$t0[i]
       ci <- boot::boot.ci(b, index = i, type = "perc", conf = conf)
 
       if (!is.null(ci)) {
