@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# gsaot
+# gsaot <a href="https://pietrocipolla.github.io/gsaot/"><img src="man/figures/logo.png" align="right" height="139" alt="gsaot website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
@@ -50,18 +50,15 @@ More detailed information on how to customize the R packages compilation can be 
 
 ## Example
 
-A basic application of the functions implemented in the package:
-
+We can use a gaussian toy model with three outputs as an example:
 ```{r example}
 library(gsaot)
 
 N <- 1000
 
-# Define the inputs distribution
 mx <- c(1, 1, 1)
 Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
 
-# Sample the inputs
 x1 <- rnorm(N)
 x2 <- rnorm(N)
 x3 <- rnorm(N)
@@ -69,27 +66,30 @@ x3 <- rnorm(N)
 x <- cbind(x1, x2, x3)
 x <- mx + x %*% chol(Sigmax)
 
-# Define the (linear)  model and the output
 A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
 y <- t(A %*% t(x))
 
 x <- data.frame(x)
-
+```
+After having defined the number of partitions, we compute the sensitivity indices using different solvers. First, Sinkhorn solver and default parameters:
+```{r continuation1}
 M <- 25
 
-# Compute the sensitivity indices using Sinkhorn's solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M)
 sensitivity_indices
-
-# Compute the sensitivity indices using the Network Simplex solver and default parameters
+```
+Second, Network Simplex solver:
+```{r continuation2}
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
 sensitivity_indices
-
-# Compute the Wasserstein-Bures indices
+```
+Third, Wasserstein-Bures solver, with bootstrap:
+```{r continuation3}
 sensitivity_indices <- ot_indices_wb(x, y, M, boot = TRUE, R = 100)
 sensitivity_indices
-
-# Compute the sensitivity map using 1-dimensional solver
+```
+Fourth, we can use the package to compute the sensitivity map on the output:
+```{r continuation4}
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 ```

@@ -49,18 +49,16 @@ guide](https://cran.r-project.org/doc/manuals/R-admin.html#Customizing-package-c
 
 ## Example
 
-A basic application of the functions implemented in the package:
+We can use a gaussian toy model with three outputs as an example:
 
 ``` r
 library(gsaot)
 
 N <- 1000
 
-# Define the inputs distribution
 mx <- c(1, 1, 1)
 Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
 
-# Sample the inputs
 x1 <- rnorm(N)
 x2 <- rnorm(N)
 x3 <- rnorm(N)
@@ -68,15 +66,19 @@ x3 <- rnorm(N)
 x <- cbind(x1, x2, x3)
 x <- mx + x %*% chol(Sigmax)
 
-# Define the (linear)  model and the output
 A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
 y <- t(A %*% t(x))
 
 x <- data.frame(x)
+```
 
+After having defined the number of partitions, we compute the
+sensitivity indices using different solvers. First, Sinkhorn solver and
+default parameters:
+
+``` r
 M <- 25
 
-# Compute the sensitivity indices using Sinkhorn's solver and default parameters
 sensitivity_indices <- ot_indices(x, y, M)
 #> Using default values for solver sinkhorn
 sensitivity_indices
@@ -84,11 +86,14 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6024491 0.5979907 0.2734895 
+#> 0.5968109 0.6523353 0.2959787 
 #> 
-#> Upper bound: 93.27764
+#> Upper bound: 97.05654
+```
 
-# Compute the sensitivity indices using the Network Simplex solver and default parameters
+Second, Network Simplex solver:
+
+``` r
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
 #> Using default values for solver transport
 sensitivity_indices
@@ -96,33 +101,55 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5231955 0.5104445 0.1825898 
+#> 0.5029419 0.5455398 0.1817795 
 #> 
-#> Upper bound: 93.27764
+#> Upper bound: 97.05654
+```
 
-# Compute the Wasserstein-Bures indices
-sensitivity_indices <- ot_indices_wb(x, y, M)
+Third, Wasserstein-Bures solver, with bootstrap:
+
+``` r
+sensitivity_indices <- ot_indices_wb(x, y, M, boot = TRUE, R = 100)
 sensitivity_indices
 #> Method: wasserstein-bures 
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5040783 0.4852300 0.1397265 
+#> 0.4715790 0.5106960 0.1217466 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.3050624 0.3105509 0.1221156 
+#> 0.2898702 0.3241905 0.1129709 
 #> 
 #> Diffusive component:
-#>         X1         X2         X3 
-#> 0.19901591 0.17467902 0.01761093 
+#>          X1          X2          X3 
+#> 0.181708726 0.186505506 0.008775646 
 #> 
-#> Upper bound: 93.27764
+#> Type of confidence interval: norm 
+#> Number of replicates: 100 
+#> Confidence level: 0.95 
+#> Indices confidence intervals:
+#>   Inputs     Index      low.ci    high.ci
+#> 1     X1        WB 0.451141101 0.49201684
+#> 2     X2        WB 0.496408255 0.52498375
+#> 3     X3        WB 0.100694207 0.14279898
+#> 4     X1 Advective 0.276749928 0.30299056
+#> 5     X2 Advective 0.314497738 0.33388326
+#> 6     X3 Advective 0.094646496 0.13129540
+#> 7     X1 Diffusive 0.171963032 0.19145442
+#> 8     X2 Diffusive 0.180299983 0.19271103
+#> 9     X3 Diffusive 0.004281849 0.01326944
+#> 
+#> Upper bound: 97.17103
+```
 
-# Compute the sensitivity map using 1-dimensional solver
+Fourth, we can use the package to compute the sensitivity map on the
+output:
+
+``` r
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.6090166 0.04683973 0.1790092
-#> [2,] 0.3234579 0.70364026 0.1424398
+#> [1,] 0.5749624 0.04188444 0.1852877
+#> [2,] 0.3261860 0.72632849 0.1404875
 ```
