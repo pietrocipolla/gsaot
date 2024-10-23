@@ -28,7 +28,7 @@ Imports:
     Rdpack (>= 2.4),
     stats,
     transport (>= 0.15.0)
-URL: https://github.com/pietrocipolla/gsaot
+URL: https://github.com/pietrocipolla/gsaot, https://pietrocipolla.github.io/gsaot/
 BugReports: https://github.com/pietrocipolla/gsaot/issues
 LinkingTo: 
     Rcpp,
