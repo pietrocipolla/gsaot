@@ -2,7 +2,7 @@ Package: gsaot
 Title: Compute Global Sensitivity Analysis Indices Using Optimal Transport 
 Version: 0.0.0.9000
 Authors@R: 
-    c(person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre"),
+    c(person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0007-2491-6290")),
       person("Emanuele", "Borgonovo", role = "rev"),
       person("Elmar", "Plischke", role = "rev"),
@@ -13,7 +13,7 @@ Description: Computing Global Sensitivity Indices from given data
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     knitr,
     rmarkdown,

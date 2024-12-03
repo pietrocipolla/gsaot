@@ -31,6 +31,10 @@ The package provides also functions to plot the resulting indices and the inner 
 
 ## Installation
 
+```r
+install.packages("gsaot")
+```
+
 You can install the development version of gsaot from [GitHub](https://github.com/) with:
 
 ``` r

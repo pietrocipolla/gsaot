@@ -25,6 +25,10 @@ package are:
 
 ## Installation
 
+``` r
+install.packages("gsaot")
+```
+
 You can install the development version of gsaot from
 [GitHub](https://github.com/) with:
 
@@ -86,9 +90,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5968109 0.6523353 0.2959787 
+#> 0.5656021 0.6131907 0.2594603 
 #> 
-#> Upper bound: 97.05654
+#> Upper bound: 97.74799
 ```
 
 Second, Network Simplex solver:
@@ -101,9 +105,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5029419 0.5455398 0.1817795 
+#> 0.4878673 0.5265048 0.1709062 
 #> 
-#> Upper bound: 97.05654
+#> Upper bound: 97.74799
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -115,32 +119,32 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4715790 0.5106960 0.1217466 
+#> 0.4591200 0.4921479 0.1073590 
 #> 
 #> Advective component:
-#>        X1        X2        X3 
-#> 0.2898702 0.3241905 0.1129709 
+#>         X1         X2         X3 
+#> 0.28001929 0.31345309 0.09888083 
 #> 
 #> Diffusive component:
 #>          X1          X2          X3 
-#> 0.181708726 0.186505506 0.008775646 
+#> 0.179100703 0.178694835 0.008478178 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Indices confidence intervals:
 #>   Inputs     Index      low.ci    high.ci
-#> 1     X1        WB 0.451141101 0.49201684
-#> 2     X2        WB 0.496408255 0.52498375
-#> 3     X3        WB 0.100694207 0.14279898
-#> 4     X1 Advective 0.276749928 0.30299056
-#> 5     X2 Advective 0.314497738 0.33388326
-#> 6     X3 Advective 0.094646496 0.13129540
-#> 7     X1 Diffusive 0.171963032 0.19145442
-#> 8     X2 Diffusive 0.180299983 0.19271103
-#> 9     X3 Diffusive 0.004281849 0.01326944
+#> 1     X1        WB 0.439721916 0.47851807
+#> 2     X2        WB 0.475448734 0.50884711
+#> 3     X3        WB 0.087350066 0.12736794
+#> 4     X1 Advective 0.267679667 0.29235891
+#> 5     X2 Advective 0.303581126 0.32332505
+#> 6     X3 Advective 0.081559278 0.11620237
+#> 7     X1 Diffusive 0.170346138 0.18785527
+#> 8     X2 Diffusive 0.170261391 0.18712828
+#> 9     X3 Diffusive 0.003887014 0.01306934
 #> 
-#> Upper bound: 97.17103
+#> Upper bound: 97.85844
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -150,6 +154,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5749624 0.04188444 0.1852877
-#> [2,] 0.3261860 0.72632849 0.1404875
+#> [1,] 0.5744058 0.04464331 0.1685419
+#> [2,] 0.2909957 0.71343703 0.1274479
 ```
