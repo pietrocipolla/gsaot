@@ -8,8 +8,8 @@
 <title>Compute Global Sensitivity Analysis Indices Using Optimal Transport • gsaot</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Compute Global Sensitivity Analysis Indices Using Optimal Transport">
 <meta name="description" content="Computing Global Sensitivity Indices from given data using Optimal Transport. You provide an input sample, an output sample, decide the algorithm, and compute the indices.">
 <meta property="og:description" content="Computing Global Sensitivity Indices from given data using Optimal Transport. You provide an input sample, an output sample, decide the algorithm, and compute the indices.">
@@ -70,8 +70,10 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of gsaot from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gsaot"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version of gsaot from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"pietrocipolla/gsaot"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
@@ -79,7 +81,7 @@
 <span class="emoji" data-emoji="exclamation">❗</span> <span class="emoji" data-emoji="exclamation">❗</span> Installation note<a class="anchor" aria-label="anchor" href="#exclamation-exclamation-installation-note"></a>
 </h3>
 <p>The <code>sinkhorn</code> and <code>sinkhorn_log</code> solvers in <code>gsaot</code> greatly benefit from optimization in compilation. To add this option (before package installation), edit your <code>.R/Makevars</code> file with the desired flags. Even though different compilers have different options, a common flag to enable a safe level of optimization is</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>CXXFLAGS<span class="sc">+</span><span class="er">=</span><span class="sc">-</span>O2</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>CXXFLAGS<span class="sc">+</span><span class="er">=</span><span class="sc">-</span>O2</span></code></pre></div>
 <p>More detailed information on how to customize the R packages compilation can be found in the <a href="https://cran.r-project.org/doc/manuals/R-admin.html#Customizing-package-compilation" class="external-link">R guide</a>.</p>
 </div>
 </div>
@@ -87,7 +89,7 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>We can use a gaussian toy model with three outputs as an example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pietrocipolla/gsaot" class="external-link">gsaot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
@@ -107,7 +109,7 @@
 <span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p>After having defined the number of partitions, we compute the sensitivity indices using different solvers. First, Sinkhorn solver and default parameters:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fl">25</span></span>
 <span></span>
 <span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices.html">ot_indices</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span><span class="op">)</span></span>
@@ -117,11 +119,11 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.5968109 0.6523353 0.2959787 </span></span>
+<span><span class="co">#&gt; 0.5656021 0.6131907 0.2594603 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 97.05654</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.74799</span></span></code></pre></div>
 <p>Second, Network Simplex solver:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices.html">ot_indices</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, solver <span class="op">=</span> <span class="st">"transport"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using default values for solver transport</span></span>
 <span><span class="va">sensitivity_indices</span></span>
@@ -129,50 +131,50 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.5029419 0.5455398 0.1817795 </span></span>
+<span><span class="co">#&gt; 0.4878673 0.5265048 0.1709062 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 97.05654</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.74799</span></span></code></pre></div>
 <p>Third, Wasserstein-Bures solver, with bootstrap:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, boot <span class="op">=</span> <span class="cn">TRUE</span>, R <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">sensitivity_indices</span></span>
 <span><span class="co">#&gt; Method: wasserstein-bures </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.4715790 0.5106960 0.1217466 </span></span>
+<span><span class="co">#&gt; 0.4591200 0.4921479 0.1073590 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Advective component:</span></span>
-<span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.2898702 0.3241905 0.1129709 </span></span>
+<span><span class="co">#&gt;         X1         X2         X3 </span></span>
+<span><span class="co">#&gt; 0.28001929 0.31345309 0.09888083 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diffusive component:</span></span>
 <span><span class="co">#&gt;          X1          X2          X3 </span></span>
-<span><span class="co">#&gt; 0.181708726 0.186505506 0.008775646 </span></span>
+<span><span class="co">#&gt; 0.179100703 0.178694835 0.008478178 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type of confidence interval: norm </span></span>
 <span><span class="co">#&gt; Number of replicates: 100 </span></span>
 <span><span class="co">#&gt; Confidence level: 0.95 </span></span>
 <span><span class="co">#&gt; Indices confidence intervals:</span></span>
 <span><span class="co">#&gt;   Inputs     Index      low.ci    high.ci</span></span>
-<span><span class="co">#&gt; 1     X1        WB 0.451141101 0.49201684</span></span>
-<span><span class="co">#&gt; 2     X2        WB 0.496408255 0.52498375</span></span>
-<span><span class="co">#&gt; 3     X3        WB 0.100694207 0.14279898</span></span>
-<span><span class="co">#&gt; 4     X1 Advective 0.276749928 0.30299056</span></span>
-<span><span class="co">#&gt; 5     X2 Advective 0.314497738 0.33388326</span></span>
-<span><span class="co">#&gt; 6     X3 Advective 0.094646496 0.13129540</span></span>
-<span><span class="co">#&gt; 7     X1 Diffusive 0.171963032 0.19145442</span></span>
-<span><span class="co">#&gt; 8     X2 Diffusive 0.180299983 0.19271103</span></span>
-<span><span class="co">#&gt; 9     X3 Diffusive 0.004281849 0.01326944</span></span>
+<span><span class="co">#&gt; 1     X1        WB 0.439721916 0.47851807</span></span>
+<span><span class="co">#&gt; 2     X2        WB 0.475448734 0.50884711</span></span>
+<span><span class="co">#&gt; 3     X3        WB 0.087350066 0.12736794</span></span>
+<span><span class="co">#&gt; 4     X1 Advective 0.267679667 0.29235891</span></span>
+<span><span class="co">#&gt; 5     X2 Advective 0.303581126 0.32332505</span></span>
+<span><span class="co">#&gt; 6     X3 Advective 0.081559278 0.11620237</span></span>
+<span><span class="co">#&gt; 7     X1 Diffusive 0.170346138 0.18785527</span></span>
+<span><span class="co">#&gt; 8     X2 Diffusive 0.170261391 0.18712828</span></span>
+<span><span class="co">#&gt; 9     X3 Diffusive 0.003887014 0.01306934</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 97.17103</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.85844</span></span></code></pre></div>
 <p>Fourth, we can use the package to compute the sensitivity map on the output:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_smap.html">ot_indices_smap</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span><span class="op">)</span></span>
 <span><span class="va">sensitivity_indices</span></span>
 <span><span class="co">#&gt;             X1         X2        X3</span></span>
-<span><span class="co">#&gt; [1,] 0.5749624 0.04188444 0.1852877</span></span>
-<span><span class="co">#&gt; [2,] 0.3261860 0.72632849 0.1404875</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.5744058 0.04464331 0.1685419</span></span>
+<span><span class="co">#&gt; [2,] 0.2909957 0.71343703 0.1274479</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -202,7 +204,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Leonardo Chiani <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0007-2491-6290" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Leonardo Chiani <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0009-0007-2491-6290" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
