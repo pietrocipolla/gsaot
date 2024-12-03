@@ -29,7 +29,7 @@
 #'   options are:
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 #' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
-#' * `"transport"`, a solver of the non regularized OT problem from [transport] package.
+#' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' @param solver_optns (optional) A list containing the options for the Optimal
 #'   Transport solver. See details for allowed options and default ones.
 #' @param scaling (default `TRUE`) Logical that sets whether or not to scale the

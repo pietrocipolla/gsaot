@@ -53,7 +53,7 @@ options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 \item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
-\item \code{"transport"}, a solver of the non regularized OT problem from \link{transport} package.
+\item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
 }}
 
 \item{solver_optns}{(optional) A list containing the options for the Optimal
