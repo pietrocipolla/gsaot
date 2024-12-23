@@ -8,6 +8,7 @@ gsaot_indices <- function(method,
                           IS,
                           partitions,
                           x, y,
+                          solver_optns = NULL,
                           Adv = NULL,
                           Diff = NULL,
                           indices_ci = NULL,
@@ -23,6 +24,9 @@ gsaot_indices <- function(method,
                 inner_statistics = IS,
                 partitions = partitions,
                 boot = FALSE)
+
+  if (!is.null(solver_optns))
+    value[["solver_optns"]] = solver_optns
 
   if (!is.null(Adv)) {
     value[["adv"]] <- Adv
@@ -52,6 +56,7 @@ gsaot_indices <- function(method,
 #'   should be printed.
 #' @param ... Further arguments passed to or from other methods.
 #'
+#' @return The information contained in argument `x`
 #' @export
 #'
 #' @examples
@@ -80,6 +85,10 @@ gsaot_indices <- function(method,
 #'
 print.gsaot_indices <- function(x, data = FALSE, ...) {
   cat("Method:", x$method, "\n")
+  if (exists("solver_optns", where = x)) {
+    cat("\nSolver Options:\n")
+    print(x$solver_optns)
+  }
   cat("\nIndices:\n")
   print(x$indices)
 

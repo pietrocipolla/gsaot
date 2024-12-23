@@ -68,8 +68,6 @@ ot_indices_wb <- function(x,
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- as.matrix(y[!y_na, ])
   x <- data.frame(x[!y_na, ])
-  if (any(y_na))
-    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Compute the statistics for the unconditioned distribution if no boot
   # ----------------------------------------------------------------------------

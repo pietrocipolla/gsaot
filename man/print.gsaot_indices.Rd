@@ -15,6 +15,9 @@ should be printed.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }
+\value{
+The information contained in argument \code{x}
+}
 \description{
 Print Optimal Transport Sensitivity indices information
 }

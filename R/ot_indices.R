@@ -210,8 +210,6 @@ ot_indices <- function(x,
   col_names <- colnames(x)
   x <- data.frame(x[!y_na, ])
   colnames(x) <- col_names
-  if (any(y_na))
-    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Retrieve dimensions of the inputs
   N <- dim(x)[1]
@@ -392,6 +390,7 @@ ot_indices <- function(x,
 
   if (boot) {
     out <- gsaot_indices(method = solver,
+                         solver_optns = solver_optns,
                          indices = W,
                          bound = V,
                          IS = IS,
@@ -408,6 +407,7 @@ ot_indices <- function(x,
   }
 
   out <- gsaot_indices(method = solver,
+                       solver_optns = solver_optns,
                        indices = W,
                        bound = V,
                        IS = IS,

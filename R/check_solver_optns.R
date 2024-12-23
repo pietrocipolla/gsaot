@@ -11,8 +11,6 @@ check_solver_optns <- function(solver, solver_optns) {
       "transport" = list(fullreturn = TRUE)
     )
 
-    cat("Using default values for solver", solver, "\n")
-
     return(solver_optns)
   }
 
@@ -21,15 +19,12 @@ check_solver_optns <- function(solver, solver_optns) {
     stopifnot(all(names(solver_optns) %in% c("numIterations", "epsilon", "maxErr")))
 
     if (!exists("numIterations", solver_optns)) {
-      cat("Adding default numIterations\n")
       solver_optns[["numIterations"]] <- 1e3
     }
     if (!exists("epsilon", solver_optns)) {
-      cat("Adding default epsilon\n")
       solver_optns[["epsilon"]] <- 0.01
     }
     if (!exists("maxErr", solver_optns)) {
-      cat("Adding default maxErr\n")
       solver_optns[["maxErr"]] <- 1e-9
     }
 

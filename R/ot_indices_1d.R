@@ -53,8 +53,6 @@ ot_indices_1d <- function(x,
   y_na <- is.na(y)
   y <- y[!y_na]
   x <- as.data.frame(x[!y_na, ])
-  if (any(y_na))
-    cat("Removed", sum(y_na), "NA(s) in output\n")
 
   # Build partitions for estimator
   # ----------------------------------------------------------------------------

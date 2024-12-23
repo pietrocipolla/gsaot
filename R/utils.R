@@ -146,7 +146,6 @@ lower_bound <- function(y,
 init_dummy_optns <- function(dummy_optns) {
   if (is.null(dummy_optns)) {
     dummy_optns <- list(distr = "rnorm")
-    cat("Using `rnorm` to generate the dummy\n")
   }
 
   return(dummy_optns)

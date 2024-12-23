@@ -7,9 +7,7 @@ Authors@R:
       person("Emanuele", "Borgonovo", role = "rev"),
       person("Elmar", "Plischke", role = "rev"),
       person("Massimo", "Tavoni", role = "rev"))
-Description: Computing Global Sensitivity Indices from given data    
-    using Optimal Transport. You provide an input sample, an output sample, 
-    decide the algorithm, and compute the indices.
+Description: Computing Global Sensitivity Indices from given data using Optimal Transport, as defined in Borgonovo et al (2024) <doi:10.1287/mnsc.2023.01796>. You provide an input sample, an output sample, decide the algorithm, and compute the indices.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
