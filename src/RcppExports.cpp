@@ -27,9 +27,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sinkhorn_log
-List sinkhorn_log(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd costm, int numIterations, double epsilon, double maxErr);
-RcppExport SEXP _gsaot_sinkhorn_log(SEXP aSEXP, SEXP bSEXP, SEXP costmSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
+// sinkhorn_stable
+List sinkhorn_stable(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd costm, int numIterations, double epsilon, double maxErr, double tau);
+RcppExport SEXP _gsaot_sinkhorn_stable(SEXP aSEXP, SEXP bSEXP, SEXP costmSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP, SEXP tauSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -39,14 +39,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type numIterations(numIterationsSEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< double >::type maxErr(maxErrSEXP);
-    rcpp_result_gen = Rcpp::wrap(sinkhorn_log(a, b, costm, numIterations, epsilon, maxErr));
+    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
+    rcpp_result_gen = Rcpp::wrap(sinkhorn_stable(a, b, costm, numIterations, epsilon, maxErr, tau));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gsaot_sinkhorn", (DL_FUNC) &_gsaot_sinkhorn, 6},
-    {"_gsaot_sinkhorn_log", (DL_FUNC) &_gsaot_sinkhorn_log, 6},
+    {"_gsaot_sinkhorn_stable", (DL_FUNC) &_gsaot_sinkhorn_stable, 7},
     {NULL, NULL, 0}
 };
 

@@ -193,7 +193,7 @@ ot_indices <- function(x,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log", "transport"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable", "transport"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -270,7 +270,7 @@ ot_indices <- function(x,
   solver_fun <- switch (
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_log" = sinkhorn_log,
+    "sinkhorn_stable" = sinkhorn_stable,
     "transport" = transport::transport,
     default = NULL
   )

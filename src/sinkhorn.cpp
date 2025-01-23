@@ -66,7 +66,7 @@ List sinkhorn_cpp(Eigen::VectorXd a,
 //  Eigen::MatrixXd U(u.asDiagonal());
 //  Eigen::MatrixXd V(v.asDiagonal());
   Eigen::MatrixXd P((K.array().colwise() * u.array()).rowwise() * v.array().transpose());
-//  Rcout << P << std::endl;
+  // Rcout << P.maxCoeff() << std::endl;
 
   // Wasserstein distance
   double W22_prime = (P.transpose() * costMatrix).trace();
@@ -91,11 +91,12 @@ List sinkhorn(Eigen::VectorXd a,
   return sinkhorn_cpp(a, b, costm, numIterations, epsilon, maxErr);
 }
 
-// /***R
-// n <- 100
-// m <- 50
-// a <- rep(1 / n, n)
-// b <- rep(1 / m, m)
-// C <- as.matrix(dist(rnorm(100)))[, 1:50]
-// ret <- sinkhorn(a, b, C, 1e3, 0.1, 1e-3)
-// */
+// # /***R
+// # set.seed(1)
+// # n <- 100
+// # m <- 100
+// # a <- rep(1 / n, n)
+// # b <- rep(1 / m, m)
+// # C <- as.matrix(dist(rnorm(100)))#[, 1:50]
+// # ret <- sinkhorn(a, b, C, 1e3, 0.1, 1e-3)
+// # */

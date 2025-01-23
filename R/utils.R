@@ -210,7 +210,7 @@ entropic_lower_bound <- function(y,
   solver_fun <- switch (
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_log" = sinkhorn_log,
+    "sinkhorn_stable" = sinkhorn_stable,
     default = NULL
   )
 

@@ -5,7 +5,7 @@ sinkhorn <- function(a, b, costm, numIterations, epsilon, maxErr) {
     .Call(`_gsaot_sinkhorn`, a, b, costm, numIterations, epsilon, maxErr)
 }
 
-sinkhorn_log <- function(a, b, costm, numIterations, epsilon, maxErr) {
-    .Call(`_gsaot_sinkhorn_log`, a, b, costm, numIterations, epsilon, maxErr)
+sinkhorn_stable <- function(a, b, costm, numIterations, epsilon, maxErr, tau) {
+    .Call(`_gsaot_sinkhorn_stable`, a, b, costm, numIterations, epsilon, maxErr, tau)
 }
 
