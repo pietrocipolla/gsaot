@@ -42,8 +42,7 @@ List sinkhorn_stable_cpp(Eigen::VectorXd a,
                       int numIterations,
                       double epsilon,
                       double maxErr,
-                      double tau,
-                      double trunc_thresh) {
+                      double tau) {
   const int numRows = costMatrix.rows();
   const int numCols = costMatrix.cols();
 
