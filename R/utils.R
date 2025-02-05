@@ -2,6 +2,13 @@
 #'
 #' @inheritParams ot_indices
 #' @param y An array or a matrix containing the output values.
+#' @param solver Solver for the Optimal Transport problem. Currently supported
+#'   options are:
+#' * `"1d"`, the one-dimensional analytic solution.
+#' * `"wasserstein-bures"`, the Wasserstein-Bures solution.
+#' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
+#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' @param bound (default `"dummy"`) A string defining the type of lower bound to
 #'   compute. Should be `"dummy"` or `"entropic"`. See `details` for more
 #'   information.
@@ -14,7 +21,7 @@
 #'   `y` and then computes the indices using the algorithm specified in
 #'   `solver`. Under the hood, `lower_bound` calls the other available functions
 #'   in the package:
-#' * [ot_indices_1d()] (for `solver="1d`)
+#' * [ot_indices_1d()] (for `solver="1d"`)
 #' * [ot_indices_wb()] (for `solver="wasserstein-bures"`)
 #' * [ot_indices()] (for `solver %in% c("sinkhorn", "sinkhorn_log", "wasserstein")`)
 #'   The user can choose the distribution of the dummy variable using the

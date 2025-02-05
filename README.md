@@ -7,6 +7,8 @@
 
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/gsaot)](https://CRAN.R-project.org/package=gsaot)
 <!-- badges: end -->
 
 The package `gsaot` provides a set of tools to compute and plot Optimal
@@ -84,30 +86,44 @@ default parameters:
 M <- 25
 
 sensitivity_indices <- ot_indices(x, y, M)
-#> Using default values for solver sinkhorn
 sensitivity_indices
 #> Method: sinkhorn 
 #> 
+#> Solver Options:
+#> $numIterations
+#> [1] 1000
+#> 
+#> $epsilon
+#> [1] 0.01
+#> 
+#> $maxErr
+#> [1] 1e-09
+#> 
+#> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5656021 0.6131907 0.2594603 
+#> 0.5921956 0.6361059 0.2896426 
 #> 
-#> Upper bound: 97.74799
+#> Upper bound: 93.68423
 ```
 
 Second, Network Simplex solver:
 
 ``` r
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
-#> Using default values for solver transport
 sensitivity_indices
 #> Method: transport 
 #> 
+#> Solver Options:
+#> $fullreturn
+#> [1] TRUE
+#> 
+#> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4878673 0.5265048 0.1709062 
+#> 0.5070913 0.5402425 0.1888146 
 #> 
-#> Upper bound: 97.74799
+#> Upper bound: 93.68423
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -119,32 +135,32 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4591200 0.4921479 0.1073590 
+#> 0.4762357 0.5060195 0.1260812 
 #> 
 #> Advective component:
-#>         X1         X2         X3 
-#> 0.28001929 0.31345309 0.09888083 
+#>        X1        X2        X3 
+#> 0.2886873 0.3198006 0.1149821 
 #> 
 #> Diffusive component:
-#>          X1          X2          X3 
-#> 0.179100703 0.178694835 0.008478178 
+#>         X1         X2         X3 
+#> 0.18754839 0.18621891 0.01109912 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Indices confidence intervals:
 #>   Inputs     Index      low.ci    high.ci
-#> 1     X1        WB 0.439721916 0.47851807
-#> 2     X2        WB 0.475448734 0.50884711
-#> 3     X3        WB 0.087350066 0.12736794
-#> 4     X1 Advective 0.267679667 0.29235891
-#> 5     X2 Advective 0.303581126 0.32332505
-#> 6     X3 Advective 0.081559278 0.11620237
-#> 7     X1 Diffusive 0.170346138 0.18785527
-#> 8     X2 Diffusive 0.170261391 0.18712828
-#> 9     X3 Diffusive 0.003887014 0.01306934
+#> 1     X1        WB 0.458354687 0.49411672
+#> 2     X2        WB 0.489574375 0.52246464
+#> 3     X3        WB 0.104332704 0.14782972
+#> 4     X1 Advective 0.276044671 0.30132996
+#> 5     X2 Advective 0.309620215 0.32998098
+#> 6     X3 Advective 0.095967873 0.13399630
+#> 7     X1 Diffusive 0.179785566 0.19531121
+#> 8     X2 Diffusive 0.178874908 0.19356291
+#> 9     X3 Diffusive 0.006317555 0.01588069
 #> 
-#> Upper bound: 97.85844
+#> Upper bound: 93.6336
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -154,6 +170,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5744058 0.04464331 0.1685419
-#> [2,] 0.2909957 0.71343703 0.1274479
+#> [1,] 0.5769613 0.05140922 0.2142022
+#> [2,] 0.3119494 0.73023174 0.1353518
 ```

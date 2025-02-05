@@ -44,6 +44,8 @@ dimension of the cost matrix.}
 \item{solver}{Solver for the Optimal Transport problem. Currently supported
 options are:
 \itemize{
+\item \code{"1d"}, the one-dimensional analytic solution.
+\item \code{"wasserstein-bures"}, the Wasserstein-Bures solution.
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 \item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 \item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
@@ -70,7 +72,7 @@ With \code{bound="dummy"}, the function samples from a distribution defined in
 \code{solver}. Under the hood, \code{lower_bound} calls the other available functions
 in the package:
 \itemize{
-\item \code{\link[=ot_indices_1d]{ot_indices_1d()}} (for \verb{solver="1d})
+\item \code{\link[=ot_indices_1d]{ot_indices_1d()}} (for \code{solver="1d"})
 \item \code{\link[=ot_indices_wb]{ot_indices_wb()}} (for \code{solver="wasserstein-bures"})
 \item \code{\link[=ot_indices]{ot_indices()}} (for \code{solver \%in\% c("sinkhorn", "sinkhorn_log", "wasserstein")})
 The user can choose the distribution of the dummy variable using the
