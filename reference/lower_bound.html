@@ -97,7 +97,9 @@ dimension of the cost matrix.</p></dd>
 
 <dt id="arg-solver">solver<a class="anchor" aria-label="anchor" href="#arg-solver"></a></dt>
 <dd><p>Solver for the Optimal Transport problem. Currently supported
-options are:</p><ul><li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver cuturi2013sinkhorngsaot.</p></li>
+options are:</p><ul><li><p><code>"1d"</code>, the one-dimensional analytic solution.</p></li>
+<li><p><code>"wasserstein-bures"</code>, the Wasserstein-Bures solution.</p></li>
+<li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver cuturi2013sinkhorngsaot.</p></li>
 <li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale peyre2019computationalgsaot.</p></li>
 <li><p><code>"transport"</code>, a solver of the non regularized OT problem using <code><a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport()</a></code>.</p></li>
 </ul></dd>
@@ -125,7 +127,7 @@ With <code>bound="dummy"</code>, the function samples from a distribution define
 <code>dummy_optns</code> (by default a standard normal), independent from the output
 <code>y</code> and then computes the indices using the algorithm specified in
 <code>solver</code>. Under the hood, <code>lower_bound</code> calls the other available functions
-in the package:</p><ul><li><p><code><a href="ot_indices_1d.html">ot_indices_1d()</a></code> (for <code>solver="1d</code>)</p></li>
+in the package:</p><ul><li><p><code><a href="ot_indices_1d.html">ot_indices_1d()</a></code> (for <code>solver="1d"</code>)</p></li>
 <li><p><code><a href="ot_indices_wb.html">ot_indices_wb()</a></code> (for <code>solver="wasserstein-bures"</code>)</p></li>
 <li><p><code><a href="ot_indices.html">ot_indices()</a></code> (for <code>solver %in% c("sinkhorn", "sinkhorn_log", "wasserstein")</code>)
 The user can choose the distribution of the dummy variable using the
