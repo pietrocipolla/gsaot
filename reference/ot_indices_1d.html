@@ -46,6 +46,7 @@
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">y</span>,</span>
 <span>  <span class="va">M</span>,</span>
+<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  boot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  R <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="st">"no"</span>,</span>
@@ -74,6 +75,11 @@ strings, factors), the number of partitioning sets is data-driven.</p></dd>
 <dt id="arg-m">M<a class="anchor" aria-label="anchor" href="#arg-m"></a></dt>
 <dd><p>A scalar representing the number of partitions for continuous
 inputs.</p></dd>
+
+
+<dt id="arg-p">p<a class="anchor" aria-label="anchor" href="#arg-p"></a></dt>
+<dd><p>A numeric representing the p-norm Lp used as ground cost in the
+Optimal Transport problem.</p></dd>
 
 
 <dt id="arg-boot">boot<a class="anchor" aria-label="anchor" href="#arg-boot"></a></dt>
@@ -148,8 +154,8 @@ as arguments.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method: 1-dimensional </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indices:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x[!y_na, ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.9426842 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.9426842 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Upper bound: 195.9114 </span>
 </code></pre></div>
