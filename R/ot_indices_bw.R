@@ -67,7 +67,9 @@ ot_indices_wb <- function(x,
   # ----------------------------------------------------------------------------
   y_na <- apply(y, 1, function(row) any(is.na(row)))
   y <- as.matrix(y[!y_na, ])
+  col_names <- colnames(x)
   x <- data.frame(x[!y_na, ])
+  colnames(x) <- col_names
 
   # Compute the statistics for the unconditioned distribution if no boot
   # ----------------------------------------------------------------------------
@@ -105,7 +107,7 @@ ot_indices_wb <- function(x,
     W_ci <- data.frame(matrix(nrow = K * 3,
                               ncol = 4,
                               dimnames = list(NULL,
-                                              c("Inputs", "Index", "low.ci", "high.ci"))))
+                                              c("input", "index", "low.ci", "high.ci"))))
     W_ci$Inputs <- rep(names(W), times = 3)
     W_ci$Index <- rep(c("WB", "Advective", "Diffusive"), each = K)
 

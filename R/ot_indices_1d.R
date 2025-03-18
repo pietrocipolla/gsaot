@@ -2,6 +2,8 @@
 #'
 #' @inheritParams ot_indices
 #' @param y An array containing the output values.
+#' @param p A numeric representing the p-norm Lp used as ground cost in the
+#'   Optimal Transport problem.
 #'
 #' @inherit ot_indices return
 #' @export
@@ -15,6 +17,7 @@
 ot_indices_1d <- function(x,
                           y,
                           M,
+                          p = 2,
                           boot = FALSE,
                           R = NULL,
                           parallel = "no",
@@ -40,6 +43,10 @@ ot_indices_1d <- function(x,
   if (nrow(x) <= M)
     stop("The number of partitions should be lower than the number of samples")
 
+  # Check the value of the input p-norm
+  if (!is.numeric(p) || p < 1)
+    stop("The argument `p` should be a numeric value greater or equal than 1")
+
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
     stop("Bootstrapping requires boot = TRUE and an integer in R")
@@ -52,7 +59,9 @@ ot_indices_1d <- function(x,
   # ----------------------------------------------------------------------------
   y_na <- is.na(y)
   y <- y[!y_na]
-  x <- as.data.frame(x[!y_na, ])
+  col_names <- colnames(x)
+  x <- data.frame(x[!y_na, ])
+  colnames(x) <- col_names
 
   # Build partitions for estimator
   # ----------------------------------------------------------------------------
@@ -68,7 +77,12 @@ ot_indices_1d <- function(x,
     # Sort y
     y_sort <- sort(y)
     # Evaluate upper bound
-    V <- 2 * stats::var(y)
+    if (p == 2) {
+      V <- 2 * stats::var(y)
+    } else {
+      V <- as.matrix(stats::dist(y, method = "minkowski", p = p)) ** p
+      V <- higher_bound(V)
+    }
   }
 
   # BUILD THE RETURN STRUCTURE
@@ -81,7 +95,7 @@ ot_indices_1d <- function(x,
     W_ci <- data.frame(matrix(nrow = K,
                               ncol = 3,
                               dimnames = list(NULL,
-                                              c("Inputs", "low.ci", "high.ci"))))
+                                              c("input", "low.ci", "high.ci"))))
     W_ci$Inputs <- names(W)
     IS_ci <- list()
     V_ci <- list()
@@ -107,7 +121,7 @@ ot_indices_1d <- function(x,
         yc <- sort(y[partition_element])
 
         # Compute the OT distance in each partition
-        Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc)
+        Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc, p)
         n[m] <- length(partition_element)
       }
 
@@ -123,6 +137,7 @@ ot_indices_1d <- function(x,
                            statistic = ot_1d_boot,
                            R = R,
                            strata = partition,
+                           p = p,
                            parallel = parallel,
                            ncpus = ncpus)
 
@@ -168,7 +183,8 @@ ot_indices_1d <- function(x,
 
 # Function generating bootstrap statistics
 ot_1d_boot <- function(d,
-                       indices) {
+                       indices,
+                       p) {
   # Retrieve the partitions
   partition <- d[indices, 1]
 
@@ -182,7 +198,12 @@ ot_1d_boot <- function(d,
   y_sort <- sort(y)
 
   # Evaluate upper bound
-  V <- 2 * stats::var(y)
+  if (p == 2) {
+    V <- 2 * stats::var(y)
+  } else {
+    V <- as.matrix(stats::dist(y, method = "minkowski", p = p)) ** p
+    V <- higher_bound(V)
+  }
 
   # Get the number of partitions
   M <- max(partition)
@@ -197,7 +218,7 @@ ot_1d_boot <- function(d,
     yc <- sort(y[partition_element])
 
     # Compute the OT distance in each partition
-    Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc)
+    Wk[1, m] <- optimal_transport_1d(partition_element, y_sort, yc, p)
     n[m] <- length(partition_element)
   }
 
@@ -208,7 +229,7 @@ ot_1d_boot <- function(d,
 }
 
 # Function for computing OT using L2 cost between two numerical vectors
-optimal_transport_1d <- function(partition, y_sort, yc) {
+optimal_transport_1d <- function(partition, y_sort, yc, p) {
   # Set the scaling parameters
   N <- length(y_sort)
   Nc <- length(yc)
@@ -217,7 +238,7 @@ optimal_transport_1d <- function(partition, y_sort, yc) {
   yc <- yc[floor(seq(1 / Nc, 1, length.out = N) * Nc + 0.5)]
 
   # Evaluate the L2 norm of the empirical CDF
-  W <- mean((y_sort - yc)^2)
+  W <- mean(abs(y_sort - yc)^p)
 
   return(W)
 }

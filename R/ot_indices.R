@@ -288,7 +288,7 @@ ot_indices <- function(x,
     W_ci <- data.frame(matrix(nrow = K,
                               ncol = 3,
                               dimnames = list(NULL,
-                                              c("Inputs", "low.ci", "high.ci"))))
+                                              c("input", "low.ci", "high.ci"))))
     W_ci$Inputs <- names(W)
     IS_ci <- list()
     V_ci <- list()

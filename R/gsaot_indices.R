@@ -266,7 +266,7 @@ plot.gsaot_indices <- function(x,
 
   if (!is.null(dummy))
     p <- p +
-      ggplot2::geom_hline(yintercept = dummy, linetype = 2, color = "red")
+      ggplot2::geom_hline(yintercept = dummy, linetype = 2)
 
   return(p)
 }

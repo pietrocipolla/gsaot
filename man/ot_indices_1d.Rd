@@ -8,6 +8,7 @@ ot_indices_1d(
   x,
   y,
   M,
+  p = 2,
   boot = FALSE,
   R = NULL,
   parallel = "no",
@@ -27,6 +28,9 @@ strings, factors), the number of partitioning sets is data-driven.}
 
 \item{M}{A scalar representing the number of partitions for continuous
 inputs.}
+
+\item{p}{A numeric representing the p-norm Lp used as ground cost in the
+Optimal Transport problem.}
 
 \item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
 bootstrapping of the OT indices.}
