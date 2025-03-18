@@ -102,9 +102,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5921956 0.6361059 0.2896426 
+#> 0.5774381 0.6170742 0.2532476 
 #> 
-#> Upper bound: 93.68423
+#> Upper bound: 97.84373
 ```
 
 Second, Network Simplex solver:
@@ -121,9 +121,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5070913 0.5402425 0.1888146 
+#> 0.5003723 0.5318571 0.1652095 
 #> 
-#> Upper bound: 93.68423
+#> Upper bound: 97.84373
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -135,32 +135,32 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4762357 0.5060195 0.1260812 
+#> 0.4699628 0.4978146 0.1038411 
 #> 
 #> Advective component:
-#>        X1        X2        X3 
-#> 0.2886873 0.3198006 0.1149821 
+#>         X1         X2         X3 
+#> 0.28890167 0.31629505 0.09761414 
 #> 
 #> Diffusive component:
-#>         X1         X2         X3 
-#> 0.18754839 0.18621891 0.01109912 
+#>          X1          X2          X3 
+#> 0.181061103 0.181519501 0.006226975 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
-#> Indices confidence intervals:
-#>   Inputs     Index      low.ci    high.ci
-#> 1     X1        WB 0.458354687 0.49411672
-#> 2     X2        WB 0.489574375 0.52246464
-#> 3     X3        WB 0.104332704 0.14782972
-#> 4     X1 Advective 0.276044671 0.30132996
-#> 5     X2 Advective 0.309620215 0.32998098
-#> 6     X3 Advective 0.095967873 0.13399630
-#> 7     X1 Diffusive 0.179785566 0.19531121
-#> 8     X2 Diffusive 0.178874908 0.19356291
-#> 9     X3 Diffusive 0.006317555 0.01588069
+#> Bootstrap statistics:
+#>   input component   original        bias      low.ci    high.ci
+#> 1    X1        WB 0.48149959 0.011536815 0.452453163 0.48747238
+#> 2    X2        WB 0.50688549 0.009070932 0.479675009 0.51595410
+#> 3    X3        WB 0.12256998 0.018728865 0.085576022 0.12210620
+#> 4    X1 Advective 0.29474371 0.005842038 0.277287964 0.30051537
+#> 5    X2 Advective 0.32033923 0.004044179 0.305323253 0.32726685
+#> 6    X3 Advective 0.10785107 0.010236933 0.082351205 0.11287707
+#> 7    X1 Diffusive 0.18675588 0.005694777 0.172723336 0.18939887
+#> 8    X2 Diffusive 0.18654625 0.005026753 0.173173777 0.18986522
+#> 9    X3 Diffusive 0.01471891 0.008491932 0.001555473 0.01089848
 #> 
-#> Upper bound: 93.6336
+#> Upper bound: 97.71638
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -170,6 +170,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5769613 0.05140922 0.2142022
-#> [2,] 0.3119494 0.73023174 0.1353518
+#> [1,] 0.5800530 0.04109744 0.1571959
+#> [2,] 0.3145364 0.71390309 0.1282103
 ```

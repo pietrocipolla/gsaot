@@ -1,5 +1,5 @@
 ---
-title: "GSA of a simple Gaussian model"
+title: "Global Sensitivity Analysis of a simple Gaussian model"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{gaussian-model-sensitivity}

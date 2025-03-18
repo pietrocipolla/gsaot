@@ -214,10 +214,11 @@ plot.gsaot_indices <- function(x,
       ggplot2::guides(fill = "none")
 
     if (x$boot) {
-      ci_data <- merge(x$indices_ci, x_indices, by = "Inputs")
+      ci_data <- merge(x_indices, x$indices_ci,
+                       by.x = "Inputs", by.y = "input")
       # Remove unnecessary components from the data to plot
-      if (exists("Index", where = ci_data))
-        ci_data <- ci_data[!(ci_data$Index %in% c("Advective", "Diffusive")), ]
+      if (exists("component", where = ci_data))
+        ci_data <- ci_data[!(ci_data$component %in% c("Advective", "Diffusive")), ]
       p <- p +
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
@@ -254,7 +255,7 @@ plot.gsaot_indices <- function(x,
     if (x$boot) {
       ci_data <- merge(x_indices, x$indices_ci,
                        by.x = c("Inputs", "Component"),
-                       by.y = c("Inputs", "Index"))
+                       by.y = c("input", "component"))
       p <- p +
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
