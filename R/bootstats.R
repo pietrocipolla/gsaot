@@ -8,7 +8,7 @@ bootstats <- function(b,
   p <- length(b$t0)
 
   # Define the labels of the output
-  lab <- c("original", "low.ci", "high.ci")
+  lab <- c("index", "original", "bias", "low.ci", "high.ci")
 
   # Initialize the output structure
   tmp <- as.data.frame(matrix(nrow = p,
@@ -19,7 +19,9 @@ bootstats <- function(b,
   for (i in 1:p) {
     # Central estimate
     bias <- mean(b$t[, i]) - b$t0[i]
-    tmp[i, "original"] <- b$t0[i] - bias
+    tmp[i, "index"] <- b$t0[i] - bias
+    tmp[i, "original"] <- b$t0[i]
+    tmp[i, "bias"] <- bias
 
     # Confidence interval
     if (type == "norm") {
@@ -32,13 +34,14 @@ bootstats <- function(b,
 
     } else if (type == "basic") {
       ci <- boot::boot.ci(b, index = i, type = "basic", conf = conf)
+
       if (!is.null(ci)) {
         tmp[i, "low.ci"] <- ci$basic[4]
         tmp[i, "high.ci"] <- ci$basic[5]
       }
 
     } else if (type == "perc") {
-      tmp[i, "original"] <- b$t0[i]
+      tmp[i, "index"] <- b$t0[i]
       ci <- boot::boot.ci(b, index = i, type = "perc", conf = conf)
 
       if (!is.null(ci)) {

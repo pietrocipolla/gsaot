@@ -107,7 +107,7 @@ print.gsaot_indices <- function(x, data = FALSE, ...) {
     cat("\nType of confidence interval:", x$type, "\n")
     cat("Number of replicates:", x$R, "\n")
     cat("Confidence level:", x$conf, "\n")
-    cat("Indices confidence intervals:\n")
+    cat("Bootstrap statistics:\n")
     print(x$indices_ci)
 
     cat("\nUpper bound:", mean(x$bound), "\n")

@@ -93,10 +93,11 @@ ot_indices_1d <- function(x,
   if (boot) {
     V <- array(dim = K)
     W_ci <- data.frame(matrix(nrow = K,
-                              ncol = 3,
+                              ncol = 5,
                               dimnames = list(NULL,
-                                              c("input", "low.ci", "high.ci"))))
-    W_ci$Inputs <- names(W)
+                                              c("input", "original", "bias",
+                                                "low.ci", "high.ci"))))
+    W_ci$input <- names(W)
     IS_ci <- list()
     V_ci <- list()
   }
@@ -145,10 +146,11 @@ ot_indices_1d <- function(x,
       W_stats <- bootstats(W_boot, type = type, conf = conf)
 
       # Save the results
-      W[k] <- W_stats$original[1]
-      IS[[k]] <- matrix(W_stats$original[2:(M + 1)], nrow = 1)
-      V[k] <- W_stats$original[M + 2]
-      W_ci[k, 2:3] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
+      W[k] <- W_stats$index[1]
+      IS[[k]] <- matrix(W_stats$index[2:(M + 1)], nrow = 1)
+      V[k] <- W_stats$index[M + 2]
+      W_ci[k, 2:5] <- c(W_stats$original[1], W_stats$bias[1],
+                        W_stats$low.ci[1], W_stats$high.ci[1])
       IS_ci[[k]] <- cbind(W_stats$low.ci[2:(M + 1)], W_stats$high.ci[2:(M + 1)])
       V_ci[[k]] <- cbind(W_stats$low.ci[M + 2], W_stats$high.ci[M + 2])
     }

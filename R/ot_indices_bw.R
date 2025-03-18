@@ -105,11 +105,13 @@ ot_indices_wb <- function(x,
   if (boot) {
     V <- array(dim = K)
     W_ci <- data.frame(matrix(nrow = K * 3,
-                              ncol = 4,
+                              ncol = 6,
                               dimnames = list(NULL,
-                                              c("input", "index", "low.ci", "high.ci"))))
-    W_ci$Inputs <- rep(names(W), times = 3)
-    W_ci$Index <- rep(c("WB", "Advective", "Diffusive"), each = K)
+                                              c("input", "component",
+                                                "original", "bias",
+                                                "low.ci", "high.ci"))))
+    W_ci$input <- rep(names(W), times = 3)
+    W_ci$component <- rep(c("WB", "Advective", "Diffusive"), each = K)
 
     IS_ci <- list()
     V_ci <- list()
@@ -160,20 +162,23 @@ ot_indices_wb <- function(x,
       # It is a bit of a mess in this case, but it is all because everything is
       # replicated three times
       # As in the base case
-      W[k] <- W_stats$original[1]
-      Adv[k] <- W_stats$original[2]
-      Diff[k] <- W_stats$original[3]
-      IS[[k]] <- rbind(W_stats$original[4:(M + 3)],
-                       W_stats$original[(M + 4):(2 * M + 3)],
-                       W_stats$original[(2 * M + 4):(3 * M + 3)])
+      W[k] <- W_stats$index[1]
+      Adv[k] <- W_stats$index[2]
+      Diff[k] <- W_stats$index[3]
+      IS[[k]] <- rbind(W_stats$index[4:(M + 3)],
+                       W_stats$index[(M + 4):(2 * M + 3)],
+                       W_stats$index[(2 * M + 4):(3 * M + 3)])
 
       # Bootstrap estimate of the variance
-      V[k] <- W_stats$original[3 * M + 4]
+      V[k] <- W_stats$index[3 * M + 4]
 
       # Boostrap estimates of the indices
-      W_ci[k, 3:4] <- c(W_stats$low.ci[1], W_stats$high.ci[1])
-      W_ci[K + k, 3:4] <- c(W_stats$low.ci[2], W_stats$high.ci[2])
-      W_ci[2 * K + k, 3:4] <- c(W_stats$low.ci[3], W_stats$high.ci[3])
+      W_ci[k, 3:6] <- c(W_stats$original[1], W_stats$bias[1],
+                        W_stats$low.ci[1], W_stats$high.ci[1])
+      W_ci[K + k, 3:6] <- c(W_stats$original[2], W_stats$bias[2],
+                            W_stats$low.ci[2], W_stats$high.ci[2])
+      W_ci[2 * K + k, 3:6] <- c(W_stats$original[3], W_stats$bias[3],
+                                W_stats$low.ci[3], W_stats$high.ci[3])
 
       # Bootstrap estimates of the inner statistics
       IS_ci[[k]] <- rbind(cbind(W_stats$low.ci[4:(M + 3)],
