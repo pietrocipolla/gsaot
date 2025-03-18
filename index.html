@@ -36,7 +36,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/gaussian-model-sensitivity.html">GSA of a simple Gaussian model</a></li>
+<li><a class="dropdown-item" href="articles/gaussian-model-sensitivity.html">Global Sensitivity Analysis of a simple Gaussian model</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -129,9 +129,9 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.5921956 0.6361059 0.2896426 </span></span>
+<span><span class="co">#&gt; 0.5774381 0.6170742 0.2532476 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 93.68423</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.84373</span></span></code></pre></div>
 <p>Second, Network Simplex solver:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices.html">ot_indices</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, solver <span class="op">=</span> <span class="st">"transport"</span><span class="op">)</span></span>
@@ -145,9 +145,9 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.5070913 0.5402425 0.1888146 </span></span>
+<span><span class="co">#&gt; 0.5003723 0.5318571 0.1652095 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 93.68423</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.84373</span></span></code></pre></div>
 <p>Third, Wasserstein-Bures solver, with bootstrap:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, boot <span class="op">=</span> <span class="cn">TRUE</span>, R <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -156,39 +156,39 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.4762357 0.5060195 0.1260812 </span></span>
+<span><span class="co">#&gt; 0.4699628 0.4978146 0.1038411 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Advective component:</span></span>
-<span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.2886873 0.3198006 0.1149821 </span></span>
+<span><span class="co">#&gt;         X1         X2         X3 </span></span>
+<span><span class="co">#&gt; 0.28890167 0.31629505 0.09761414 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diffusive component:</span></span>
-<span><span class="co">#&gt;         X1         X2         X3 </span></span>
-<span><span class="co">#&gt; 0.18754839 0.18621891 0.01109912 </span></span>
+<span><span class="co">#&gt;          X1          X2          X3 </span></span>
+<span><span class="co">#&gt; 0.181061103 0.181519501 0.006226975 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type of confidence interval: norm </span></span>
 <span><span class="co">#&gt; Number of replicates: 100 </span></span>
 <span><span class="co">#&gt; Confidence level: 0.95 </span></span>
-<span><span class="co">#&gt; Indices confidence intervals:</span></span>
-<span><span class="co">#&gt;   Inputs     Index      low.ci    high.ci</span></span>
-<span><span class="co">#&gt; 1     X1        WB 0.458354687 0.49411672</span></span>
-<span><span class="co">#&gt; 2     X2        WB 0.489574375 0.52246464</span></span>
-<span><span class="co">#&gt; 3     X3        WB 0.104332704 0.14782972</span></span>
-<span><span class="co">#&gt; 4     X1 Advective 0.276044671 0.30132996</span></span>
-<span><span class="co">#&gt; 5     X2 Advective 0.309620215 0.32998098</span></span>
-<span><span class="co">#&gt; 6     X3 Advective 0.095967873 0.13399630</span></span>
-<span><span class="co">#&gt; 7     X1 Diffusive 0.179785566 0.19531121</span></span>
-<span><span class="co">#&gt; 8     X2 Diffusive 0.178874908 0.19356291</span></span>
-<span><span class="co">#&gt; 9     X3 Diffusive 0.006317555 0.01588069</span></span>
+<span><span class="co">#&gt; Bootstrap statistics:</span></span>
+<span><span class="co">#&gt;   input component   original        bias      low.ci    high.ci</span></span>
+<span><span class="co">#&gt; 1    X1        WB 0.48149959 0.011536815 0.452453163 0.48747238</span></span>
+<span><span class="co">#&gt; 2    X2        WB 0.50688549 0.009070932 0.479675009 0.51595410</span></span>
+<span><span class="co">#&gt; 3    X3        WB 0.12256998 0.018728865 0.085576022 0.12210620</span></span>
+<span><span class="co">#&gt; 4    X1 Advective 0.29474371 0.005842038 0.277287964 0.30051537</span></span>
+<span><span class="co">#&gt; 5    X2 Advective 0.32033923 0.004044179 0.305323253 0.32726685</span></span>
+<span><span class="co">#&gt; 6    X3 Advective 0.10785107 0.010236933 0.082351205 0.11287707</span></span>
+<span><span class="co">#&gt; 7    X1 Diffusive 0.18675588 0.005694777 0.172723336 0.18939887</span></span>
+<span><span class="co">#&gt; 8    X2 Diffusive 0.18654625 0.005026753 0.173173777 0.18986522</span></span>
+<span><span class="co">#&gt; 9    X3 Diffusive 0.01471891 0.008491932 0.001555473 0.01089848</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Upper bound: 93.6336</span></span></code></pre></div>
+<span><span class="co">#&gt; Upper bound: 97.71638</span></span></code></pre></div>
 <p>Fourth, we can use the package to compute the sensitivity map on the output:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_smap.html">ot_indices_smap</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span><span class="op">)</span></span>
 <span><span class="va">sensitivity_indices</span></span>
 <span><span class="co">#&gt;             X1         X2        X3</span></span>
-<span><span class="co">#&gt; [1,] 0.5769613 0.05140922 0.2142022</span></span>
-<span><span class="co">#&gt; [2,] 0.3119494 0.73023174 0.1353518</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.5800530 0.04109744 0.1571959</span></span>
+<span><span class="co">#&gt; [2,] 0.3145364 0.71390309 0.1282103</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
