@@ -1,6 +1,6 @@
-#' Plot Optimal Transport inner statistics
+#' Plot Optimal Transport separation measures
 #'
-#' Plot Optimal Transport based inner statistics for each partition using
+#' Plot Optimal Transport based separation measures for each partition using
 #' `ggplot2` package. If provided, it plots also the uncertainty estimates.
 #'
 #' @inheritParams plot.gsaot_indices
@@ -30,9 +30,9 @@
 #'
 #' # Get sensitivity indices
 #' sensitivity_indices <- ot_indices(x, y, M)
-#' plot_inner_stats(sensitivity_indices)
+#' plot_separations(sensitivity_indices)
 #'
-plot_inner_stats <- function(x,
+plot_separations <- function(x,
                              ranking = NULL,
                              wb_all = FALSE, ...) {
   # Get the number of inputs
@@ -86,7 +86,7 @@ plot_inner_stats <- function(x,
       # Build the plotting structure
       data_to_plot <- data.frame(
         x = x_means,
-        y = x$inner_statistics[[k]][1,],
+        y = x$separation_measures[[k]][1,],
         Component = x$method
       )
 
@@ -97,12 +97,12 @@ plot_inner_stats <- function(x,
         ggplot2::geom_point() +
         ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
         ggplot2::labs(x = input_names[k],
-                      y = "Inner statistics")  +
+                      y = "Separation Measures")  +
         ggplot2::guides(color = "none")
 
       # If the bootstrap estimates are present, plot them
       if (x$boot) {
-        data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][1:M, ])
+        data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][1:M, ])
         colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
         gg_plots[[input]] <- gg_plots[[input]] +
@@ -115,7 +115,7 @@ plot_inner_stats <- function(x,
       if (exists("adv", where = x) & wb_all) {
         data_to_plot <- data.frame(
           x = x_means,
-          y = x$inner_statistics[[k]][2,],
+          y = x$separation_measures[[k]][2,],
           Component = x$method
         )
 
@@ -125,11 +125,11 @@ plot_inner_stats <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Inner statistics (Advective)")  +
+                        y = "Separation Measures (Advective)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
-          data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(M + 1):(2 * M), ])
+          data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][(M + 1):(2 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
           gg_plots[[K + input]] <- gg_plots[[K + input]] +
@@ -140,7 +140,7 @@ plot_inner_stats <- function(x,
 
         data_to_plot <- data.frame(
           x = x_means,
-          y = x$inner_statistics[[k]][3,],
+          y = x$separation_measures[[k]][3,],
           Component = x$method
         )
 
@@ -151,11 +151,11 @@ plot_inner_stats <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Inner statistics (Diffusive)")  +
+                        y = "Separation Measures (Diffusive)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
-          data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(2 * M + 1):(3 * M), ])
+          data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][(2 * M + 1):(3 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
           gg_plots[[2 * K + input]] <- gg_plots[[2 * K + input]] +
@@ -174,7 +174,7 @@ plot_inner_stats <- function(x,
 
       data_to_plot <- data.frame(
         x = x_means,
-        y = x$inner_statistics[[k]][1,],
+        y = x$separation_measures[[k]][1,],
         Component = x$method
       )
 
@@ -183,12 +183,12 @@ plot_inner_stats <- function(x,
                                                     y = .data[["y"]])) +
         ggplot2::geom_bar(stat = "identity") +
         ggplot2::labs(x = input_names[k],
-                      y = "Inner statistics")  +
+                      y = "Separation Measures")  +
         ggplot2::guides(fill = "none")
 
       # If the bootstrap estimates are present, plot them
       if (x$boot) {
-        data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][1:M, ])
+        data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][1:M, ])
         colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
         gg_plots[[input]] <- gg_plots[[input]] +
@@ -200,7 +200,7 @@ plot_inner_stats <- function(x,
       if (exists("adv", where = x) & wb_all) {
         data_to_plot <- data.frame(
           x = x_means,
-          y = x$inner_statistics[[k]][2,],
+          y = x$separation_measures[[k]][2,],
           Component = x$method
         )
 
@@ -210,11 +210,11 @@ plot_inner_stats <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Inner statistics (Advective)")  +
+                        y = "Separation Measures (Advective)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {
-          data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(M + 1):(2 * M), ])
+          data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][(M + 1):(2 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
           gg_plots[[K + input]] <- gg_plots[[K + input]] +
@@ -225,7 +225,7 @@ plot_inner_stats <- function(x,
 
         data_to_plot <- data.frame(
           x = x_means,
-          y = x$inner_statistics[[k]][3,],
+          y = x$separation_measures[[k]][3,],
           Component = x$method
         )
 
@@ -235,11 +235,11 @@ plot_inner_stats <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Inner statistics (Diffusive)")  +
+                        y = "Separation Measures (Diffusive)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {
-          data_to_plot <- cbind(data_to_plot, x$inner_statistics_ci[[k]][(2 * M + 1):(3 * M), ])
+          data_to_plot <- cbind(data_to_plot, x$separation_measures_ci[[k]][(2 * M + 1):(3 * M), ])
           colnames(data_to_plot)[4:5] <- c("low_ci", "high_ci")
 
           gg_plots[[2 * K + input]] <- gg_plots[[2 * K + input]] +
@@ -260,7 +260,7 @@ plot_inner_stats <- function(x,
     gg_plots <- gg_plots[-null_indices]
   }
 
-  # Plot the inner statistics according to the grid
+  # Plot the Separation Measures according to the grid
   patchwork::wrap_plots(
     gg_plots,
     nrow = length(inputs_to_plot),

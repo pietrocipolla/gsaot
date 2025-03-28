@@ -21,7 +21,7 @@ gsaot_indices <- function(method,
                 indices = indices,
                 bound = bound,
                 x = x, y = y,
-                inner_statistics = IS,
+                separation_measures = IS,
                 partitions = partitions,
                 boot = FALSE)
 
@@ -36,7 +36,7 @@ gsaot_indices <- function(method,
   if (!is.null(indices_ci)) {
     value[["boot"]] <- TRUE
     value[["indices_ci"]] <- indices_ci
-    value[["inner_statistics_ci"]] <- IS_ci
+    value[["separation_measures_ci"]] <- IS_ci
     value[["bound_ci"]] <- bound_ci
     value[["R"]] <- R
     value[["type"]] <- type
