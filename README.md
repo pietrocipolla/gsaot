@@ -22,8 +22,10 @@ package are:
   outputs using the Wasserstein-Bures semi-metric.
 
 - `ot_indices_1d()`: compute OT indices for univariate outputs using OT
-  solution in one dimension. The package provides also functions to plot
-  the resulting indices and the inner statistics.
+  solution in one dimension.
+
+The package also provides functions to plot the resulting indices and
+the separation measures.
 
 ## Installation
 
@@ -35,8 +37,8 @@ You can install the development version of gsaot from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("pietrocipolla/gsaot")
+# install.packages("remotes")
+remotes::install_github("pietrocipolla/gsaot")
 ```
 
 ### :exclamation: :exclamation: Installation note
@@ -102,9 +104,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5774381 0.6170742 0.2532476 
+#> 0.6117995 0.6195840 0.2792416 
 #> 
-#> Upper bound: 97.84373
+#> Upper bound: 90.61294
 ```
 
 Second, Network Simplex solver:
@@ -121,9 +123,9 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5003723 0.5318571 0.1652095 
+#> 0.5205944 0.5171832 0.1701659 
 #> 
-#> Upper bound: 97.84373
+#> Upper bound: 90.61294
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -135,32 +137,32 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4699628 0.4978146 0.1038411 
+#> 0.4907486 0.4820302 0.1067025 
 #> 
 #> Advective component:
-#>         X1         X2         X3 
-#> 0.28890167 0.31629505 0.09761414 
+#>        X1        X2        X3 
+#> 0.2973732 0.3077923 0.1006815 
 #> 
 #> Diffusive component:
 #>          X1          X2          X3 
-#> 0.181061103 0.181519501 0.006226975 
+#> 0.193375338 0.174237863 0.006020998 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Bootstrap statistics:
-#>   input component   original        bias      low.ci    high.ci
-#> 1    X1        WB 0.48149959 0.011536815 0.452453163 0.48747238
-#> 2    X2        WB 0.50688549 0.009070932 0.479675009 0.51595410
-#> 3    X3        WB 0.12256998 0.018728865 0.085576022 0.12210620
-#> 4    X1 Advective 0.29474371 0.005842038 0.277287964 0.30051537
-#> 5    X2 Advective 0.32033923 0.004044179 0.305323253 0.32726685
-#> 6    X3 Advective 0.10785107 0.010236933 0.082351205 0.11287707
-#> 7    X1 Diffusive 0.18675588 0.005694777 0.172723336 0.18939887
-#> 8    X2 Diffusive 0.18654625 0.005026753 0.173173777 0.18986522
-#> 9    X3 Diffusive 0.01471891 0.008491932 0.001555473 0.01089848
+#>   input component   original        bias     low.ci    high.ci
+#> 1    X1        WB 0.50130745 0.010558874 0.47205915 0.50943799
+#> 2    X2        WB 0.49158608 0.009555888 0.46464462 0.49941578
+#> 3    X3        WB 0.12584905 0.019146555 0.08836225 0.12504274
+#> 4    X1 Advective 0.30313340 0.005760165 0.28592711 0.30881936
+#> 5    X2 Advective 0.31226320 0.004470863 0.29666440 0.31892026
+#> 6    X3 Advective 0.11089625 0.010214758 0.08537492 0.11598808
+#> 7    X1 Diffusive 0.19817405 0.004798709 0.18461781 0.20213287
+#> 8    X2 Diffusive 0.17932289 0.005085025 0.16640655 0.18206918
+#> 9    X3 Diffusive 0.01495279 0.008931797 0.00109468 0.01094731
 #> 
-#> Upper bound: 97.71638
+#> Upper bound: 90.31479
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -170,6 +172,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5800530 0.04109744 0.1571959
-#> [2,] 0.3145364 0.71390309 0.1282103
+#> [1,] 0.5975251 0.04299889 0.1842869
+#> [2,] 0.3201639 0.71046059 0.1222535
 ```

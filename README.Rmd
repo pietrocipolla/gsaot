@@ -28,7 +28,8 @@ The package `gsaot` provides a set of tools to compute and plot Optimal Transpor
 - `ot_indices_wb()`: compute OT indices for univariate or multivariate outputs using the Wasserstein-Bures semi-metric.
 
 - `ot_indices_1d()`: compute OT indices for univariate outputs using OT solution in one dimension.
-The package provides also functions to plot the resulting indices and the inner statistics.
+
+The package also provides functions to plot the resulting indices and the separation measures.
 
 ## Installation
 
@@ -39,8 +40,8 @@ install.packages("gsaot")
 You can install the development version of gsaot from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("pietrocipolla/gsaot")
+# install.packages("remotes")
+remotes::install_github("pietrocipolla/gsaot")
 ```
 
 ### :exclamation: :exclamation: Installation note
