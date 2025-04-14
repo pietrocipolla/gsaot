@@ -36,7 +36,7 @@
 #'   cost matrix.
 #' @param boot (default `FALSE`) Logical that sets whether or not to perform
 #'   bootstrapping of the OT indices.
-#' @param stratified_boot (default `FALSE`) Logical that sets the type of
+#' @param stratified_boot (default `TRUE`) Logical that sets the type of
 #'   resampling performed. With `stratified_boot=FALSE`, the function resamples
 #'   the dataset and then creates the partitions. Otherwise, first, it
 #'   creates the partitions and then it performs stratified bootstrapping with
