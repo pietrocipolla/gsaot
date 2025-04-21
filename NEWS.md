@@ -7,7 +7,7 @@
 
 * In `ot_indices()`, improved solver `sinkhorn_log`.
 
-* `lower_bound()` now has an improved documentation.
+* `lower_bound()` has an improved documentation.
 
 * `ot_indices_1d()` now allows the use of different L_p^p norms.
 

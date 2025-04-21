@@ -65,7 +65,7 @@ cost matrix.}
 \item{boot}{(default \code{FALSE}) Logical that sets whether or not to perform
 bootstrapping of the OT indices.}
 
-\item{stratified_boot}{(default \code{FALSE}) Logical that sets the type of
+\item{stratified_boot}{(default \code{TRUE}) Logical that sets the type of
 resampling performed. With \code{stratified_boot=FALSE}, the function resamples
 the dataset and then creates the partitions. Otherwise, first, it
 creates the partitions and then it performs stratified bootstrapping with
