@@ -111,8 +111,10 @@ dimension of the cost matrix.</p></dd>
 
 <dt id="arg-solver">solver<a class="anchor" aria-label="anchor" href="#arg-solver"></a></dt>
 <dd><p>Solver for the Optimal Transport problem. Currently supported
-options are:</p><ul><li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver cuturi2013sinkhorngsaot.</p></li>
-<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale peyre2019computationalgsaot.</p></li>
+options are:</p><ul><li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver (Cuturi 2013)
+.</p></li>
+<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
+.</p></li>
 <li><p><code>"transport"</code>, a solver of the non regularized OT problem using <code><a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport()</a></code>.</p></li>
 </ul></dd>
 
@@ -203,9 +205,11 @@ as arguments.</p></li>
 
 <p>OT is a widely studied topic in Operational Research and Calculus. The
 reference for the OT solvers in this package is
-peyre2019computational;textualgsaot. The default solver is
+Peyré et al. (2019)
+. The default solver is
 <code>"sinkhorn"</code>, the Sinkhorn's solver introduced in
-cuturi2013sinkhorn;textualgsaot. It solves the
+Cuturi (2013)
+. It solves the
 entropic-regularized version of the OT problem. The <code>"sinkhorn_log"</code> solves
 the same OT problem but in log scale. It is more stable for low values of
 the regularization parameter but slower to converge. The option
@@ -245,7 +249,11 @@ page.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p></p>
+    <p>Cuturi M (2013).
+“Sinkhorn distances: Lightspeed computation of optimal transport.”
+<em>Advances in neural information processing systems</em>, <b>26</b>.<br><br> Peyré G, Cuturi M, others (2019).
+“Computational optimal transport: With applications to data science.”
+<em>Foundations and Trends® in Machine Learning</em>, <b>11</b>(5-6), 355–607.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -306,7 +314,7 @@ page.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>

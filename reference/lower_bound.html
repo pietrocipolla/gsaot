@@ -99,8 +99,10 @@ dimension of the cost matrix.</p></dd>
 <dd><p>Solver for the Optimal Transport problem. Currently supported
 options are:</p><ul><li><p><code>"1d"</code>, the one-dimensional analytic solution.</p></li>
 <li><p><code>"wasserstein-bures"</code>, the Wasserstein-Bures solution.</p></li>
-<li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver cuturi2013sinkhorngsaot.</p></li>
-<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale peyre2019computationalgsaot.</p></li>
+<li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver (Cuturi 2013)
+.</p></li>
+<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
+.</p></li>
 <li><p><code>"transport"</code>, a solver of the non regularized OT problem using <code><a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport()</a></code>.</p></li>
 </ul></dd>
 
@@ -177,7 +179,7 @@ indices. In this case, <code>solver</code> should be either <code>"sinkhorn"</co
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
