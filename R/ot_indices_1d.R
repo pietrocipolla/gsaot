@@ -109,7 +109,7 @@ ot_indices_1d <- function(x,
     partition <- partitions[, k]
 
     # Set the number of partition elements
-    M <- max(partition)
+    M <- max(partition, na.rm = T)
 
     # Initialize the return structure
     Wk <- matrix(nrow = 1, ncol = M)
@@ -208,7 +208,7 @@ ot_1d_boot <- function(d,
   }
 
   # Get the number of partitions
-  M <- max(partition)
+  M <- max(partition, na.rm = T)
 
   # Initialize the return structure
   Wk <- matrix(nrow = 1, ncol = M)

@@ -308,7 +308,7 @@ ot_indices <- function(x,
     partition <- partitions[, k]
 
     # Set the number of partition elements
-    M <- max(partition)
+    M <- max(partition, na.rm = T)
 
     # NO BOOTSTRAP ESTIMATION
     if (!boot) {
@@ -458,7 +458,7 @@ ot_boot_discrete <- function(d,
 
   # Get the number of realizations and partitions
   N <- length(partition)
-  M <- max(partition)
+  M <- max(partition, na.rm = T)
 
   # Compute the unconditioned histogram
   a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
@@ -523,16 +523,13 @@ ot_boot_cont <- function(d,
 
   # Get the number of realizations and partitions
   N <- length(partition)
-  M <- max(partition)
+  M <- max(partition, na.rm = T)
 
   # Build the histogram
   a <- rep(1 / N, N)
 
   # Compute the variance
   V <- higher_bound(C) * scaling_param
-
-  # Get the number of partitions
-  M <- max(partition)
 
   # Initialize the return structure
   Wk <- matrix(nrow = 1, ncol = M)

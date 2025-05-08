@@ -124,7 +124,7 @@ ot_indices_wb <- function(x,
     partition <- partitions[, k]
 
     # Set the number of partition elements
-    M <- max(partition)
+    M <- max(partition, na.rm = T)
 
     # NO BOOTSTRAP ESTIMATION
     if (!boot) {
@@ -246,7 +246,7 @@ ot_wb_boot <- function(d,
   V <- 2 * traceCy
 
   # Get the number of partitions
-  M <- max(partition)
+  M <- max(partition, na.rm = T)
 
   # Initialize the return structure
   Wk <- matrix(nrow = 3, ncol = M)

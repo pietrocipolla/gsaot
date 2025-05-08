@@ -1,3 +1,5 @@
+* `ot_indices()`, `ot_indices_1d()`, and `ot_indices_wb()` now work correctly with NAs in input
+
 # gsaot 0.2.0
 
 * In `ot_indices()`, improved solver `sinkhorn_log`.
