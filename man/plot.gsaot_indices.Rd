@@ -15,7 +15,7 @@ of inputs. If positive, select the first \code{ranking} inputs per importance.
 If negative, select the last \code{ranking} inputs per importance.}
 
 \item{wb_all}{(default \code{FALSE}) Logical that defines whether or not to plot
-the Advective and Diffusive components of the Wasserstein-Bures indices}
+the Advective and Diffusive components of the Wasserstein-Bures indices.}
 
 \item{dummy}{(default \code{NULL}) A double or and object of class \code{gsaot_indices}
 that represents a lower bound.}

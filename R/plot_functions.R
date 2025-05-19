@@ -269,3 +269,125 @@ plot_separations <- function(x,
   ) +
     patchwork::plot_layout(axis_titles = "collect_y")
 }
+
+#' Compare sensitivity indices across methods
+#'
+#' This function takes a list of `gsaot_indices` objects
+#' and generates a bar plot comparing the sensitivity indices across different methods.
+#'
+#' @param x_list A list of S3 objects of class `"gsaot_indices"`, each representing
+#'   sensitivity analysis results for a different solver.
+#' @param wb_all (default `FALSE`) Logical that defines whether or not to plot
+#'   the Advective and Diffusive components of the Wasserstein-Bures indices.
+#'
+#' @return A `ggplot` object representing the bar plot of sensitivity indices
+#'   grouped by input and colored by method.
+#' @export
+#'
+#' @examples
+#' N <- 1000
+#'
+#' mx <- c(1, 1, 1)
+#' Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
+#'
+#' x1 <- rnorm(N)
+#' x2 <- rnorm(N)
+#' x3 <- rnorm(N)
+#'
+#' x <- cbind(x1, x2, x3)
+#' x <- mx + x %*% chol(Sigmax)
+#'
+#' A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
+#' y <- t(A %*% t(x))
+#'
+#' x <- data.frame(x)
+#'
+#' M <- 25
+#'
+#' # Calculate sensitivity indices
+#' ind_wb <- ot_indices_wb(x, y, M)
+#' ind_sink <- ot_indices(x, y, M)
+#'
+#' plot_comparison(list(ind_wb, ind_sink))
+#'
+plot_comparison <- function(x_list,
+                            wb_all = FALSE) {
+  all_data <- list()
+
+  # Plot all the inputs
+  K <- nrow(x_list[[1]]$indices)
+  inputs_to_plot <- seq(K)
+
+  for (i in seq_along(x_list)) {
+    obj <- x_list[[i]]
+
+    # Read the method name for plotting
+    method_name <- obj$method
+
+    # Format method name with epsilon if method is "sinkhorn" or "sinkhorn_log"
+    if (method_name %in% c("sinkhorn", "sinkhorn_log")) {
+      epsilon_val <- format(obj$solver_optns$epsilon, scientific = FALSE)
+      method_name <- paste0(method_name, " (eps=", epsilon_val, ")")
+    }
+
+    if (method_name == "transport") {
+      method_name <- if (!is.null(obj$solver_optns$method)) {
+        obj$solver_optns$method
+      } else {
+        "networksimplex"
+      }
+    }
+
+    if (!exists("adv", where = obj) | !wb_all) {
+      inputs <- names(obj$indices[order(obj$indices, decreasing = TRUE)])[inputs_to_plot]
+      indices <- unname(obj$indices[order(obj$indices, decreasing = TRUE)])[inputs_to_plot]
+
+      df <- data.frame(
+        Method = method_name,
+        Inputs = factor(inputs, levels = unique(inputs)),
+        Indices = indices
+      )
+    } else {
+      # Add advective and diffusive parts if required
+      ordered <- order(obj$indices, decreasing = TRUE)
+      inputs <- names(obj$indices[ordered])[inputs_to_plot]
+
+      df <- data.frame(
+        Method = rep(c("wasserstein-bures", "advective", "diffusive"), each = length(inputs_to_plot)),
+        Inputs = factor(rep(inputs, times = 3), levels = unique(inputs)),
+        Indices = c(
+          obj$indices[ordered][inputs_to_plot],
+          obj$adv[ordered][inputs_to_plot],
+          obj$diff[ordered][inputs_to_plot]
+        )
+      )
+    }
+
+    all_data[[i]] <- df
+  }
+
+  # Aggregate all the data in a single data.frame
+  final_data <- do.call(rbind, all_data)
+
+  # Define shared dodge object
+  dodge <- ggplot2::position_dodge2(width = 0.6, padding = 0.2)
+
+  # Plot the comparison
+  p <- ggplot2::ggplot(final_data,
+                       ggplot2::aes(x = .data[["Inputs"]],
+                                    y = .data[["Indices"]],
+                                    fill = .data[["Method"]],
+                                    group = .data[["Method"]])) +
+    ggplot2::geom_bar(stat = "identity",
+                      position = dodge,
+                      width = 0.6) +
+    ggplot2::labs(
+      title = "Sensitivity Indices by Method",
+      x = "Inputs",
+      y = "Indices"
+    )
+
+  return(p)
+}
+
+

@@ -173,7 +173,7 @@ ot_indices_1d <- function(x,
     return(out)
   }
 
-  out <- gsaot_indices(method = "1-dimensional",
+  out <- gsaot_indices(method = paste0("1-dimensional (p=", p, ")"),
                        indices = W,
                        bound = V,
                        IS = IS,
