@@ -111,7 +111,7 @@ ot_indices_wb <- function(x,
                                                 "original", "bias",
                                                 "low.ci", "high.ci"))))
     W_ci$input <- rep(names(W), times = 3)
-    W_ci$component <- rep(c("WB", "Advective", "Diffusive"), each = K)
+    W_ci$component <- rep(c("wass-bures", "advective", "diffusive"), each = K)
 
     IS_ci <- list()
     V_ci <- list()
@@ -194,7 +194,7 @@ ot_indices_wb <- function(x,
   }
 
   if (boot) {
-    out <- gsaot_indices(method = "wasserstein-bures",
+    out <- gsaot_indices(method = "wass-bures",
                          indices = W,
                          bound = V,
                          IS = IS,

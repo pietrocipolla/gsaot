@@ -1,3 +1,7 @@
+* In `ot_indices_bw()`, changed names of the indices
+
+* In `ot_indices()`, removed checks on `y` is `cost!="L2"`
+
 * Added `plot_comparison()` to graphically compare different indices
 
 * `print.gsaot_indices()` output simplified 

@@ -353,7 +353,7 @@ plot_comparison <- function(x_list,
       inputs <- names(obj$indices[ordered])[inputs_to_plot]
 
       df <- data.frame(
-        Method = rep(c("wasserstein-bures", "advective", "diffusive"), each = length(inputs_to_plot)),
+        Method = rep(c("wass-bures", "advective", "diffusive"), each = length(inputs_to_plot)),
         Inputs = factor(rep(inputs, times = 3), levels = unique(inputs)),
         Indices = c(
           obj$indices[ordered][inputs_to_plot],
@@ -382,7 +382,6 @@ plot_comparison <- function(x_list,
                       position = dodge,
                       width = 0.6) +
     ggplot2::labs(
-      title = "Sensitivity Indices by Method",
       x = "Inputs",
       y = "Indices"
     )

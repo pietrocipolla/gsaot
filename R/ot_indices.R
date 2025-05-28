@@ -175,12 +175,6 @@ ot_indices <- function(x,
   if (!(is.data.frame(x) | is.matrix(x))) stop("`x` must be a matrix or a data.frame!")
   x <- as.data.frame(x)
 
-  # Check if the output is a numerical
-  if (!is.numeric(y) | !is.matrix(y)) stop("`y` must be a matrix of numerical values!")
-
-  # Check if the dimensions match
-  if (!(nrow(x) == nrow(y))) stop("The number of samples in `x` and `y` should be the same")
-
   # Check if the number of partitions is lower than the number of samples
   if (nrow(x) <= M) stop("The number of partitions should be lower than the number of samples")
 
@@ -188,12 +182,20 @@ ot_indices <- function(x,
   cost_type <- identical(cost, "L2")
   if (!cost_type & !is.function(cost)) stop("`cost` should be \"L2\" or a function")
 
+  # Check if the output is a numerical
+  if (cost_type & (!is.numeric(y) | !is.matrix(y)))
+    stop("`y` must be a matrix of numerical values!")
+
+  # Check if the dimensions match
+  if (!(nrow(x) == nrow(y)))
+    stop("The number of samples in `x` and `y` should be the same")
+
   # Check the logical values
   if (!is.logical(discrete_out)) stop("`discrete_out` should be logical")
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_stable", "transport"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_log", "transport"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -270,7 +272,7 @@ ot_indices <- function(x,
   solver_fun <- switch (
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_stable" = sinkhorn_stable,
+    "sinkhorn_log" = sinkhorn_stable,
     "transport" = transport::transport,
     default = NULL
   )

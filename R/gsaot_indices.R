@@ -207,7 +207,7 @@ plot.gsaot_indices <- function(x,
                        by.x = "Inputs", by.y = "input")
       # Remove unnecessary components from the data to plot
       if (exists("component", where = ci_data))
-        ci_data <- ci_data[!(ci_data$component %in% c("Advective", "Diffusive")), ]
+        ci_data <- ci_data[!(ci_data$component %in% c("advective", "diffusive")), ]
       p <- p +
         ggplot2::geom_errorbar(data = ci_data,
                                ggplot2::aes(ymin = .data[["low.ci"]],
@@ -218,7 +218,7 @@ plot.gsaot_indices <- function(x,
   } else {
     # Create a data.frame to store all the indices
     x_indices <-data.frame(Inputs = rep(names(x$indices[order(x$indices, decreasing = TRUE)])[inputs_to_plot], times = 3),
-                           Component = rep(c("WB", "Advective", "Diffusive"), each = length(inputs_to_plot)),
+                           Component = rep(c("wass-bures", "advective", "diffusive"), each = length(inputs_to_plot)),
                            Indices = c(unname(x$indices[order(x$indices, decreasing = TRUE)])[inputs_to_plot],
                                        unname(x$adv[order(x$indices, decreasing = TRUE)])[inputs_to_plot],
                                        unname(x$diff[order(x$indices, decreasing = TRUE)])[inputs_to_plot]))
