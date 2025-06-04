@@ -97,7 +97,7 @@ plot_separations <- function(x,
         ggplot2::geom_point() +
         ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
         ggplot2::labs(x = input_names[k],
-                      y = "Separation Measures")  +
+                      y = "Separation Measurements")  +
         ggplot2::guides(color = "none")
 
       # If the bootstrap estimates are present, plot them
@@ -125,7 +125,7 @@ plot_separations <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measures (Advective)")  +
+                        y = "Separation Measurements (Advective)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
@@ -151,7 +151,7 @@ plot_separations <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measures (Diffusive)")  +
+                        y = "Separation Measurements (Diffusive)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
@@ -183,7 +183,7 @@ plot_separations <- function(x,
                                                     y = .data[["y"]])) +
         ggplot2::geom_bar(stat = "identity") +
         ggplot2::labs(x = input_names[k],
-                      y = "Separation Measures")  +
+                      y = "Separation Measurements")  +
         ggplot2::guides(fill = "none")
 
       # If the bootstrap estimates are present, plot them
@@ -210,7 +210,7 @@ plot_separations <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measures (Advective)")  +
+                        y = "Separation Measurements (Advective)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {
@@ -235,7 +235,7 @@ plot_separations <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measures (Diffusive)")  +
+                        y = "Separation Measurements (Diffusive)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {

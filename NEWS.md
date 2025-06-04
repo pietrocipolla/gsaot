@@ -1,3 +1,10 @@
+* Split `lower_bound()` into `entropic_bound()` and `irrelevance_threshold()` for 
+  the two use cases previously identified by `"bound"`.
+
+* In `plot_separations()`, changed the label on the y-axis to `"Separation Measurements"`
+
+* In `print.gsaot_indices()`, removed the upper bound from display
+
 * In `ot_indices_bw()`, changed names of the indices
 
 * In `ot_indices()`, removed checks on `y` is `cost!="L2"`
