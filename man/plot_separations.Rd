@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{plot_separations}
 \alias{plot_separations}
-\title{Plot Optimal Transport separation measures}
+\title{Plot Optimal Transport local separations}
 \usage{
 plot_separations(x, ranking = NULL, wb_all = FALSE, ...)
 }
@@ -23,7 +23,7 @@ the Advective and Diffusive components of the Wasserstein-Bures indices.}
 A \code{patchwork} object that, if called, will print.
 }
 \description{
-Plot Optimal Transport based separation measures for each partition using
+Plot Optimal Transport based local separations for each partition using
 \code{ggplot2} package. If provided, it plots also the uncertainty estimates.
 }
 \examples{

@@ -1,3 +1,5 @@
+* In `plot_functions()`, changed the y axis label for consistency with theory
+
 * Split `lower_bound()` into `entropic_bound()` and `irrelevance_threshold()` for 
   the two use cases previously identified by `"bound"`.
 

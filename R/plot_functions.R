@@ -1,6 +1,6 @@
-#' Plot Optimal Transport separation measures
+#' Plot Optimal Transport local separations
 #'
-#' Plot Optimal Transport based separation measures for each partition using
+#' Plot Optimal Transport based local separations for each partition using
 #' `ggplot2` package. If provided, it plots also the uncertainty estimates.
 #'
 #' @inheritParams plot.gsaot_indices
@@ -97,7 +97,7 @@ plot_separations <- function(x,
         ggplot2::geom_point() +
         ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
         ggplot2::labs(x = input_names[k],
-                      y = "Separation Measurements")  +
+                      y = "Local Separations")  +
         ggplot2::guides(color = "none")
 
       # If the bootstrap estimates are present, plot them
@@ -125,7 +125,7 @@ plot_separations <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measurements (Advective)")  +
+                        y = "Local Separations (Advective)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
@@ -151,7 +151,7 @@ plot_separations <- function(x,
           ggplot2::geom_point() +
           ggplot2::geom_line(linetype = 2, linewidth = 0.1) +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measurements (Diffusive)")  +
+                        y = "Local Separations (Diffusive)")  +
           ggplot2::guides(color = "none")
 
         if (x$boot) {
@@ -183,7 +183,7 @@ plot_separations <- function(x,
                                                     y = .data[["y"]])) +
         ggplot2::geom_bar(stat = "identity") +
         ggplot2::labs(x = input_names[k],
-                      y = "Separation Measurements")  +
+                      y = "Local Separations")  +
         ggplot2::guides(fill = "none")
 
       # If the bootstrap estimates are present, plot them
@@ -210,7 +210,7 @@ plot_separations <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measurements (Advective)")  +
+                        y = "Local Separations (Advective)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {
@@ -235,7 +235,7 @@ plot_separations <- function(x,
                                        y = .data[["y"]])) +
           ggplot2::geom_bar(stat = "identity") +
           ggplot2::labs(x = input_names[k],
-                        y = "Separation Measurements (Diffusive)")  +
+                        y = "Local Separations (Diffusive)")  +
           ggplot2::guides(fill = "none")
 
         if (x$boot) {

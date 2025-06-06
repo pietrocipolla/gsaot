@@ -212,7 +212,7 @@ ot_indices_wb <- function(x,
     return(out)
   }
 
-  out <- gsaot_indices(method = "wasserstein-bures",
+  out <- gsaot_indices(method = "wass-bures",
                        indices = W,
                        bound = V,
                        IS = IS,
