@@ -91,22 +91,9 @@ sensitivity_indices <- ot_indices(x, y, M)
 sensitivity_indices
 #> Method: sinkhorn 
 #> 
-#> Solver Options:
-#> $numIterations
-#> [1] 1000
-#> 
-#> $epsilon
-#> [1] 0.01
-#> 
-#> $maxErr
-#> [1] 1e-09
-#> 
-#> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5856179 0.6321027 0.2833714 
-#> 
-#> Upper bound: 93.27558
+#> 0.6031932 0.6393549 0.2909608
 ```
 
 Second, Network Simplex solver:
@@ -116,16 +103,9 @@ sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
 sensitivity_indices
 #> Method: transport 
 #> 
-#> Solver Options:
-#> $fullreturn
-#> [1] TRUE
-#> 
-#> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4867229 0.5197051 0.1618929 
-#> 
-#> Upper bound: 93.27558
+#> 0.5162013 0.5415555 0.1877354
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -133,36 +113,34 @@ Third, Wasserstein-Bures solver, with bootstrap:
 ``` r
 sensitivity_indices <- ot_indices_wb(x, y, M, boot = TRUE, R = 100)
 sensitivity_indices
-#> Method: wasserstein-bures 
+#> Method: wass-bures 
 #> 
 #> Indices:
-#>         X1         X2         X3 
-#> 0.45682255 0.48218997 0.09602267 
+#>        X1        X2        X3 
+#> 0.4885120 0.5054757 0.1229026 
 #> 
 #> Advective component:
-#>         X1         X2         X3 
-#> 0.27698647 0.30531330 0.09049933 
+#>        X1        X2        X3 
+#> 0.3009818 0.3219897 0.1140059 
 #> 
 #> Diffusive component:
 #>          X1          X2          X3 
-#> 0.179836078 0.176876664 0.005523346 
+#> 0.187530164 0.183486027 0.008896719 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Bootstrap statistics:
-#>   input component   original        bias       low.ci    high.ci
-#> 1    X1        WB 0.46632977 0.009507222 0.4386714616 0.47497364
-#> 2    X2        WB 0.49360786 0.011417898 0.4647262667 0.49965367
-#> 3    X3        WB 0.11565245 0.019629776 0.0772420360 0.11480331
-#> 4    X1 Advective 0.28174446 0.004757991 0.2651150430 0.28885790
-#> 5    X2 Advective 0.31059858 0.005285280 0.2941242206 0.31650239
-#> 6    X3 Advective 0.10105252 0.010553192 0.0744003614 0.10659829
-#> 7    X1 Diffusive 0.18458531 0.004749231 0.1717065389 0.18796562
-#> 8    X2 Diffusive 0.18300928 0.006132618 0.1690000331 0.18475330
-#> 9    X3 Diffusive 0.01459993 0.009076584 0.0009580535 0.01008864
-#> 
-#> Upper bound: 93.16529
+#>   input  component   original        bias      low.ci    high.ci
+#> 1    X1 wass-bures 0.49667580 0.008163843 0.468723594 0.50830032
+#> 2    X2 wass-bures 0.51587698 0.010401260 0.488833470 0.52211796
+#> 3    X3 wass-bures 0.14051178 0.017609164 0.100609467 0.14519576
+#> 4    X1  advective 0.30528762 0.004305824 0.287574863 0.31438872
+#> 5    X2  advective 0.32623677 0.004247080 0.311596522 0.33238286
+#> 6    X3  advective 0.12288466 0.008878763 0.096443965 0.13156783
+#> 7    X1  diffusive 0.19138818 0.003858020 0.179239540 0.19582079
+#> 8    X2  diffusive 0.18964021 0.006154180 0.175642996 0.19132906
+#> 9    X3  diffusive 0.01762712 0.008730402 0.002568677 0.01522476
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -172,6 +150,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1        X2        X3
-#> [1,] 0.5897603 0.0426077 0.1493735
-#> [2,] 0.2822771 0.7039011 0.1233232
+#> [1,] 0.5875288 0.0502585 0.1888214
+#> [2,] 0.3329492 0.7251396 0.1465783
 ```
