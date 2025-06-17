@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gsaot</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,18 @@
       <small>Source: <a href="https://github.com/pietrocipolla/gsaot/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.0" id="gsaot-100">gsaot 1.0.0<a class="anchor" aria-label="anchor" href="#gsaot-100"></a></h2>
+<ul><li><p>In <code>plot_functions()</code>, changed the y axis label for consistency with theory</p></li>
+<li><p>Split <code>lower_bound()</code> into <code><a href="../reference/entropic_bound.html">entropic_bound()</a></code> and <code><a href="../reference/irrelevance_threshold.html">irrelevance_threshold()</a></code> for the two use cases previously identified by <code>"bound"</code>.</p></li>
+<li><p>In <code><a href="../reference/plot_separations.html">plot_separations()</a></code>, changed the label on the y-axis to <code>"Separation Measurements"</code></p></li>
+<li><p>In <code><a href="../reference/print.gsaot_indices.html">print.gsaot_indices()</a></code>, removed the upper bound from display</p></li>
+<li><p>In <code>ot_indices_bw()</code>, changed names of the indices</p></li>
+<li><p>In <code><a href="../reference/ot_indices.html">ot_indices()</a></code>, removed checks on <code>y</code> is <code>cost!="L2"</code></p></li>
+<li><p>Added <code><a href="../reference/plot_comparison.html">plot_comparison()</a></code> to graphically compare different indices</p></li>
+<li><p><code><a href="../reference/print.gsaot_indices.html">print.gsaot_indices()</a></code> output simplified</p></li>
+<li><p><code><a href="../reference/ot_indices.html">ot_indices()</a></code>, <code><a href="../reference/ot_indices_1d.html">ot_indices_1d()</a></code>, and <code><a href="../reference/ot_indices_wb.html">ot_indices_wb()</a></code> now work correctly with NAs in input</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="gsaot-020">gsaot 0.2.0<a class="anchor" aria-label="anchor" href="#gsaot-020"></a></h2><p class="text-muted">CRAN release: 2025-04-21</p>
 <ul><li><p>In <code><a href="../reference/ot_indices.html">ot_indices()</a></code>, improved solver <code>sinkhorn_log</code>.</p></li>
