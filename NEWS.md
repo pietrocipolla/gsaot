@@ -1,3 +1,5 @@
+# gsaot 1.0.0
+
 * In `plot_functions()`, changed the y axis label for consistency with theory
 
 * Split `lower_bound()` into `entropic_bound()` and `irrelevance_threshold()` for 
