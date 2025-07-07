@@ -1,3 +1,9 @@
+* Added a `summary()` method for class `gsaot_indices`
+
+* In `plot_comparison()`, added checks for inputs
+
+* All titles in title style
+
 # gsaot 1.0.0
 
 * In `plot_functions()`, changed the y axis label for consistency with theory
