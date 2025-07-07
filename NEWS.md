@@ -1,3 +1,5 @@
+# gsaot 1.0.1
+
 * Added a `summary()` method for class `gsaot_indices`
 
 * In `plot_comparison()`, added checks for inputs

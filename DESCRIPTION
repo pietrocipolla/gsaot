@@ -1,6 +1,6 @@
 Package: gsaot
 Title: Compute Global Sensitivity Analysis Indices Using Optimal Transport 
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     c(person("Leonardo", "Chiani", , "leonardo.chiani@polimi.it", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0007-2491-6290")),
