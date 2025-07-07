@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_functions.R
 \name{sobol_fun}
 \alias{sobol_fun}
-\title{Sobol G Function Evaluation}
+\title{Sobol G function evaluation}
 \usage{
 sobol_fun(N, a = c(0, 1, 4.5, 9, 99, 99, 99, 99))
 }

@@ -1,4 +1,4 @@
-#' Calculate Optimal Transport sensitivity indices for multivariate y
+#' Estimate optimal transport sensitivity indices for generic outputs
 #'
 #' @description `ot_indices` calculates sensitivity indices using Optimal
 #'   Transport (OT) for a multivariate output sample `y` with respect to input

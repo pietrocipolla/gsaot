@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices.R
 \name{ot_indices}
 \alias{ot_indices}
-\title{Calculate Optimal Transport sensitivity indices for multivariate y}
+\title{Calculate optimal transport sensitivity indices for generic outputs}
 \usage{
 ot_indices(
   x,

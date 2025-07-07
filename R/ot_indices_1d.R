@@ -1,4 +1,4 @@
-#' Evaluate Optimal Transport indices on one dimensional outputs
+#' Estimate optimal transport indices on one dimensional outputs
 #'
 #' @inheritParams ot_indices
 #' @param y An array containing the output values.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{plot_separations}
 \alias{plot_separations}
-\title{Plot Optimal Transport local separations}
+\title{Plot optimal transport local separations}
 \usage{
 plot_separations(x, ranking = NULL, wb_all = FALSE, ...)
 }

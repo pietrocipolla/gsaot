@@ -1,4 +1,4 @@
-#' Evaluate Wasserstein-Bures approximation of the Optimal Transport solution
+#' Estimate Wasserstein-Bures approximation of the optimal transport solution
 #'
 #' @inheritParams ot_indices
 #'

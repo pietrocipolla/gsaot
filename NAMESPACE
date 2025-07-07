@@ -2,6 +2,7 @@
 
 S3method(plot,gsaot_indices)
 S3method(print,gsaot_indices)
+S3method(summary,gsaot_indices)
 export(entropic_bound)
 export(gaussian_fun)
 export(irrelevance_threshold)

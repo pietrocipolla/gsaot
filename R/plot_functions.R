@@ -1,4 +1,4 @@
-#' Plot Optimal Transport local separations
+#' Plot optimal transport local separations
 #'
 #' Plot Optimal Transport based local separations for each partition using
 #' `ggplot2` package. If provided, it plots also the uncertainty estimates.
@@ -312,6 +312,22 @@ plot_separations <- function(x,
 #'
 plot_comparison <- function(x_list,
                             wb_all = FALSE) {
+  # INPUT CHECKS
+  # ----------------------------------------------------------------------------
+  if (!is.list(x_list) || length(x_list) == 0) {
+    stop("`x_list` must be a non-empty list.")
+  }
+
+  if (!all(sapply(x_list, inherits, what = "gsaot_indices"))) {
+    stop("All elements in `x_list` must be of class 'gsaot_indices'.")
+  }
+
+  if (!is.logical(wb_all) || length(wb_all) != 1) {
+    stop("`wb_all` must be a single logical value (TRUE or FALSE).")
+  }
+
+  # FUNCTION IMPLEMENTATION
+  # ----------------------------------------------------------------------------
   all_data <- list()
 
   # Plot all the inputs

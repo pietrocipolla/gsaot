@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{entropic_bound}
 \alias{entropic_bound}
-\title{Entropic lower bounds for entropic Optimal Transport sensitivity indices}
+\title{Entropic lower bounds for entropic optimal transport sensitivity indices}
 \usage{
 entropic_bound(
   y,

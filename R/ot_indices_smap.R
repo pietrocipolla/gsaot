@@ -1,4 +1,4 @@
-#' Evaluate sensitivity maps using Optimal Transport indices
+#' Estimate sensitivity maps using optimal transport indices
 #'
 #' @inheritParams ot_indices_1d
 #' @param y A matrix containing the output values. Each column is interpreted as

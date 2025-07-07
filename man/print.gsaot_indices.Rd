@@ -2,7 +2,7 @@
 % Please edit documentation in R/gsaot_indices.R
 \name{print.gsaot_indices}
 \alias{print.gsaot_indices}
-\title{Print Optimal Transport Sensitivity indices information}
+\title{Print optimal transport sensitivity indices information}
 \usage{
 \method{print}{gsaot_indices}(x, ...)
 }
@@ -16,7 +16,7 @@
 The information contained in argument \code{x}
 }
 \description{
-Print Optimal Transport Sensitivity indices information
+Print optimal transport sensitivity indices information
 }
 \examples{
 N <- 1000

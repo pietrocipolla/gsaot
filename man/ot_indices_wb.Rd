@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices_bw.R
 \name{ot_indices_wb}
 \alias{ot_indices_wb}
-\title{Evaluate Wasserstein-Bures approximation of the Optimal Transport solution}
+\title{Evaluate Wasserstein-Bures approximation of the optimal transport solution}
 \usage{
 ot_indices_wb(
   x,
@@ -80,7 +80,7 @@ as arguments.
 }
 }
 \description{
-Evaluate Wasserstein-Bures approximation of the Optimal Transport solution
+Evaluate Wasserstein-Bures approximation of the optimal transport solution
 }
 \examples{
 N <- 1000

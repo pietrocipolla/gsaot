@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{irrelevance_threshold}
 \alias{irrelevance_threshold}
-\title{Irrelevance threshold for Optimal Transport sensitivity indices}
+\title{Irrelevance threshold for optimal transport sensitivity indices}
 \usage{
 irrelevance_threshold(
   y,

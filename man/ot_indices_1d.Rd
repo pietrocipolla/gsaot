@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices_1d.R
 \name{ot_indices_1d}
 \alias{ot_indices_1d}
-\title{Evaluate Optimal Transport indices on one dimensional outputs}
+\title{Evaluate optimal transport indices on one dimensional outputs}
 \usage{
 ot_indices_1d(
   x,
@@ -82,7 +82,7 @@ as arguments.
 }
 }
 \description{
-Evaluate Optimal Transport indices on one dimensional outputs
+Evaluate optimal transport indices on one dimensional outputs
 }
 \examples{
 x <- rnorm(1000)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_functions.R
 \name{ishi_homma_fun}
 \alias{ishi_homma_fun}
-\title{Ishigami-Homma Function Evaluation}
+\title{Ishigami-Homma function evaluation}
 \usage{
 ishi_homma_fun(N, A = 2, B = 1)
 }

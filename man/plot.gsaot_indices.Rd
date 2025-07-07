@@ -2,7 +2,7 @@
 % Please edit documentation in R/gsaot_indices.R
 \name{plot.gsaot_indices}
 \alias{plot.gsaot_indices}
-\title{Plot Optimal Transport sensitivity indices}
+\title{Plot optimal transport sensitivity indices}
 \usage{
 \method{plot}{gsaot_indices}(x, ranking = NULL, wb_all = FALSE, threshold = NULL, ...)
 }

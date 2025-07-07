@@ -1,4 +1,4 @@
-#' Sobol G Function Evaluation
+#' Sobol G function evaluation
 #'
 #' This function evaluates the Sobol G function on a set of input samples
 #' generated via crude Monte Carlos. It returns both the sampled
@@ -64,7 +64,7 @@ sobol_fun_model <- function(x, a) {
   return(y)
 }
 
-#' Ishigami-Homma Function Evaluation
+#' Ishigami-Homma function evaluation
 #'
 #' Evaluates the Ishigami-Homma function.
 #' Input samples are drawn from a uniform distribution over \eqn{[-\pi, \pi]^3}

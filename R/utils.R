@@ -1,4 +1,4 @@
-#' Entropic lower bounds for entropic Optimal Transport sensitivity indices
+#' Entropic lower bounds for entropic optimal transport sensitivity indices
 #'
 #' Calculate entropic lower bounds for entropic Optimal Transport sensitivity indices
 #'
@@ -151,7 +151,7 @@ entropic_lower_bound <- function(y,
   return(sink_ind)
 }
 
-#' Irrelevance threshold for Optimal Transport sensitivity indices
+#' Irrelevance threshold for optimal transport sensitivity indices
 #'
 #' Calculate irrelevance threshold using dummy variable for Optimal Transport sensitivity indices
 #'
