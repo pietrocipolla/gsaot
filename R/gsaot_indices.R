@@ -16,7 +16,8 @@ gsaot_indices <- function(method,
                           IS_ci = NULL,
                           R = NULL,
                           type = NULL,
-                          conf = NULL) {
+                          conf = NULL,
+                          W_boot = NULL) {
   value <- list(method = method,
                 indices = indices,
                 bound = bound,
@@ -41,6 +42,7 @@ gsaot_indices <- function(method,
     value[["R"]] <- R
     value[["type"]] <- type
     value[["conf"]] <- conf
+    value[["W_boot"]] <- W_boot
   }
 
   attr(value, "class") <- "gsaot_indices"
@@ -347,4 +349,149 @@ summary.gsaot_indices <- function(object, digits = 3, ranking = NULL, ...) {
                                      type = object$type) else NULL,
     wb          = has_wb
   ))
+}
+
+#' Compute confidence intervals for sensitivity indices
+#'
+#' Computes confidence intervals for a \code{gsaot_indices} object using
+#' bootstrap results.
+#'
+#' @param object An object of class \code{gsaot_indices}, with bootstrap results
+#'   included.
+#' @param parm A specification of which parameters are to be given confidence
+#'   intervals, either a vector of numbers or a vector of names. If missing, all
+#'   parameters are considered.
+#' @param level (default is 0.95) Confidence level for the interval.
+#' @param type (default is \code{"norm"}) Method to compute the confidence interval.
+#'   For more information, check the `type` option of [boot::boot.ci()].
+#' @param ... Additional arguments (currently unused).
+#'
+#' @return A data frame with the following columns:
+#'   * `input`: Name of the input variable.
+#'   * `component`: The index component for Wasserstein-Bures.
+#'   * `index`: Estimated indices
+#'   * `original`: Original estimates.
+#'   * `bias`: Bootstrap bias estimate.
+#'   * `low.ci`: Lower bound of the confidence interval.
+#'   * `high.ci`: Upper bound of the confidence interval.
+#'
+#' @examples
+#' N <- 1000
+#'
+#' mx <- c(1, 1, 1)
+#' Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
+#'
+#' x1 <- rnorm(N)
+#' x2 <- rnorm(N)
+#' x3 <- rnorm(N)
+#'
+#' x <- cbind(x1, x2, x3)
+#' x <- mx + x %*% chol(Sigmax)
+#'
+#' A <- matrix(data = c(4, -2, 1, 2, 5, -1), nrow = 2, byrow = TRUE)
+#' y <- t(A %*% t(x))
+#'
+#' x <- data.frame(x)
+#' y <- y
+#'
+#' res <- ot_indices_wb(x, y, 10, boot = TRUE, R = 1000)
+#' confint(res, parm = c(1,3), level = 0.9)
+#'
+#' @export
+confint.gsaot_indices <- function(object,
+                                  parm = NULL,
+                                  level = 0.95,
+                                  type = "norm", ...) {
+  # INPUT CHECKS
+  # ----------------------------------------------------------------------------
+  if (!object$boot)
+    stop("The 'gsaot_indices' object has no bootstrap")
+
+  if (!(is.numeric(parm) | is.character(parm) | is.null(parm)))
+    stop("'parm' should be a vector of numbers or of names")
+
+  # Identify the parameters for CI computation
+  # ----------------------------------------------------------------------------
+  if (is.null(parm)) {
+    parm <- seq(length(object$indices))
+  }
+  if (is.character(parm)) {
+    parm <- match(parm, names(object$indices))
+  }
+
+  K <- length(parm)
+  is_wb <- all(c("adv", "diff") %in% names(object))
+
+  # Initialize the return matrices
+  # ----------------------------------------------------------------------------
+  W <- array(dim = K)
+  names(W) <- names(object$indices)[parm]
+  V <- array(dim = K)
+
+  if (is_wb) {
+    Adv <- array(dim = K)
+    names(Adv) <- names(object$indices)[parm]
+    Diff <- array(dim = K)
+    names(Diff) <- names(object$indices)[parm]
+
+    W_ci <- data.frame(matrix(nrow = K * 3,
+                              ncol = 6,
+                              dimnames = list(NULL,
+                                              c("input", "component",
+                                                "original", "bias",
+                                                "low.ci", "high.ci"))))
+    W_ci$input <- rep(names(W), times = 3)
+    W_ci$component <- rep(c("wass-bures", "advective", "diffusive"), each = K)
+  } else {
+    V <- array(dim = K)
+    W_ci <- data.frame(matrix(nrow = K,
+                              ncol = 5,
+                              dimnames = list(NULL,
+                                              c("input", "original", "bias",
+                                                "low.ci", "high.ci"))))
+    W_ci$input <- names(W)
+  }
+
+  V_ci <- list()
+
+  # Compute the statistics
+  # ----------------------------------------------------------------------------
+  for (k in seq_along(parm)) {
+    parm_index <- parm[k]
+    M <- ncol(object$separation_measures[[parm_index]])
+
+    W_stats <- bootstats(object$W_boot[[parm_index]], type = type, conf = level)
+
+    # Save indices
+    W[k] <- W_stats$index[1]
+
+    if (is_wb) {
+      # Save indices decomposition
+      Adv[k] <- W_stats$index[2]
+      Diff[k] <- W_stats$index[3]
+
+      # Boostrap estimates of the indices
+      W_ci[k, 3:6] <- c(W_stats$original[1], W_stats$bias[1],
+                        W_stats$low.ci[1], W_stats$high.ci[1])
+      W_ci[K + k, 3:6] <- c(W_stats$original[2], W_stats$bias[2],
+                            W_stats$low.ci[2], W_stats$high.ci[2])
+      W_ci[2 * K + k, 3:6] <- c(W_stats$original[3], W_stats$bias[3],
+                                W_stats$low.ci[3], W_stats$high.ci[3])
+    } else {
+      W_ci[k, 2:5] <- c(W_stats$original[1], W_stats$bias[1],
+                        W_stats$low.ci[1], W_stats$high.ci[1])
+    }
+  }
+
+  # Save indices along with the rest of the statistics
+  # ----------------------------------------------------------------------------
+  if (is_wb) {
+    W_ci$index <- c(W, Adv, Diff)
+    W_ci <- W_ci[, c(1, 2, 7, 3:6)]
+  } else {
+    W_ci$index <- W
+    W_ci <- W_ci[, c(1, 6, 2:5)]
+  }
+
+  return(W_ci)
 }

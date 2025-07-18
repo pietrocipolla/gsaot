@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices.R
 \name{ot_indices}
 \alias{ot_indices}
-\title{Calculate optimal transport sensitivity indices for generic outputs}
+\title{Estimate optimal transport sensitivity indices for generic outputs}
 \usage{
 ot_indices(
   x,
@@ -84,11 +84,14 @@ available CPUs. Check the \code{ncpus} option in the \code{\link[boot:boot]{boot
 the boot package.}
 
 \item{conf}{(default \code{0.95}) Number between \code{0} and \code{1} representing the
-confidence level. Only considered if \code{boot = TRUE}.}
+default confidence level. Only considered if \code{boot = TRUE}. Different
+confidence levels can be computed as a postprocessing using
+\code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 
-\item{type}{(default \code{"norm"}) Method to compute the confidence interval.
-Only considered if \code{boot = TRUE}. For more information, check the \code{type}
-option of \code{\link[boot:boot.ci]{boot::boot.ci()}}.}
+\item{type}{(default \code{"norm"}) Method to compute the default confidence
+interval. Only considered if \code{boot = TRUE}. For more information, check the
+\code{type} option of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
+computed as a postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 }
 \value{
 A \code{gsaot_indices} object containing:

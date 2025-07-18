@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices_1d.R
 \name{ot_indices_1d}
 \alias{ot_indices_1d}
-\title{Evaluate optimal transport indices on one dimensional outputs}
+\title{Estimate optimal transport indices on one dimensional outputs}
 \usage{
 ot_indices_1d(
   x,
@@ -48,11 +48,14 @@ available CPUs. Check the \code{ncpus} option in the \code{\link[boot:boot]{boot
 the boot package.}
 
 \item{conf}{(default \code{0.95}) Number between \code{0} and \code{1} representing the
-confidence level. Only considered if \code{boot = TRUE}.}
+default confidence level. Only considered if \code{boot = TRUE}. Different
+confidence levels can be computed as a postprocessing using
+\code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 
-\item{type}{(default \code{"norm"}) Method to compute the confidence interval.
-Only considered if \code{boot = TRUE}. For more information, check the \code{type}
-option of \code{\link[boot:boot.ci]{boot::boot.ci()}}.}
+\item{type}{(default \code{"norm"}) Method to compute the default confidence
+interval. Only considered if \code{boot = TRUE}. For more information, check the
+\code{type} option of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
+computed as a postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 }
 \value{
 A \code{gsaot_indices} object containing:
@@ -82,12 +85,12 @@ as arguments.
 }
 }
 \description{
-Evaluate optimal transport indices on one dimensional outputs
+Estimate optimal transport indices on one dimensional outputs
 }
 \examples{
 x <- rnorm(1000)
 y <- 10 * x
-ot_indices_1d(data.frame(x), y, 30)
+ot_indices_1d(data.frame(x), y, 10)
 }
 \seealso{
 \code{\link[=ot_indices]{ot_indices()}}, \code{\link[=ot_indices_wb]{ot_indices_wb()}}

@@ -13,7 +13,7 @@
 #' @examples
 #' x <- rnorm(1000)
 #' y <- 10 * x
-#' ot_indices_1d(data.frame(x), y, 30)
+#' ot_indices_1d(data.frame(x), y, 10)
 ot_indices_1d <- function(x,
                           y,
                           M,
@@ -100,6 +100,8 @@ ot_indices_1d <- function(x,
     W_ci$input <- names(W)
     IS_ci <- list()
     V_ci <- list()
+
+    W_boot <- list()
   }
 
   # ESTIMATE THE INDICES FOR EACH PARTITION
@@ -134,16 +136,16 @@ ot_indices_1d <- function(x,
       dat <- cbind(partition, y)
 
       # Do boostrap estimation stratified by the partitions
-      W_boot <- boot::boot(data = dat,
-                           statistic = ot_1d_boot,
-                           R = R,
-                           strata = partition,
-                           p = p,
-                           parallel = parallel,
-                           ncpus = ncpus)
+      W_boot[[k]] <- boot::boot(data = dat,
+                                statistic = ot_1d_boot,
+                                R = R,
+                                strata = partition,
+                                p = p,
+                                parallel = parallel,
+                                ncpus = ncpus)
 
       # Transform the results into readable quantities
-      W_stats <- bootstats(W_boot, type = type, conf = conf)
+      W_stats <- bootstats(W_boot[[k]], type = type, conf = conf)
 
       # Save the results
       W[k] <- W_stats$index[1]
@@ -168,7 +170,8 @@ ot_indices_1d <- function(x,
                          IS_ci = IS_ci,
                          R = R,
                          conf = conf,
-                         type = type)
+                         type = type,
+                         W_boot = W_boot)
 
     return(out)
   }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ot_indices_smap.R
 \name{ot_indices_smap}
 \alias{ot_indices_smap}
-\title{Evaluate sensitivity maps using optimal transport indices}
+\title{Estimate sensitivity maps using optimal transport indices}
 \usage{
 ot_indices_smap(x, y, M)
 }
@@ -25,7 +25,7 @@ represents an output. The values are indices between 0 and 1 computed using
 \code{\link[=ot_indices_1d]{ot_indices_1d()}}.
 }
 \description{
-Evaluate sensitivity maps using optimal transport indices
+Estimate sensitivity maps using optimal transport indices
 }
 \examples{
 N <- 1000

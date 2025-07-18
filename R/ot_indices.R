@@ -51,10 +51,13 @@
 #'   available CPUs. Check the `ncpus` option in the [boot::boot()] function of
 #'   the boot package.
 #' @param conf (default `0.95`) Number between `0` and `1` representing the
-#'   confidence level. Only considered if `boot = TRUE`.
-#' @param type (default `"norm"`) Method to compute the confidence interval.
-#'   Only considered if `boot = TRUE`. For more information, check the `type`
-#'   option of [boot::boot.ci()].
+#'   default confidence level. Only considered if `boot = TRUE`. Different
+#'   confidence levels can be computed as a postprocessing using
+#'   [confint.gsaot_indices()].
+#' @param type (default `"norm"`) Method to compute the default confidence
+#'   interval. Only considered if `boot = TRUE`. For more information, check the
+#'   `type` argument of [boot::boot.ci()]. Different confidence intervals can be
+#'   computed as a postprocessing using [confint.gsaot_indices()].
 #'
 #' @details ## Solvers
 #'
@@ -295,6 +298,8 @@ ot_indices <- function(x,
     W_ci$input <- names(W)
     IS_ci <- list()
     V_ci <- list()
+
+    W_boot <- list()
   }
 
   # Evaluate the upper bound of the indices (if no boot), otherwise it is
@@ -363,23 +368,23 @@ ot_indices <- function(x,
       }
 
       # Do boostrap estimation stratified by the partitions
-      W_boot <- boot::boot(data = dat,
-                           statistic = ot_boot,
-                           R = R,
-                           strata = strata,
-                           discrete_out = discrete_out,
-                           M = M,
-                           C = C,
-                           y_unique = y_unique,
-                           solver_fun = solver_fun,
-                           solver_optns = solver_optns,
-                           scaling_param = scaling_param,
-                           parallel = parallel,
-                           ncpus = ncpus,
-                           stratified_boot = stratified_boot)
+      W_boot[[k]] <- boot::boot(data = dat,
+                                statistic = ot_boot,
+                                R = R,
+                                strata = strata,
+                                discrete_out = discrete_out,
+                                M = M,
+                                C = C,
+                                y_unique = y_unique,
+                                solver_fun = solver_fun,
+                                solver_optns = solver_optns,
+                                scaling_param = scaling_param,
+                                parallel = parallel,
+                                ncpus = ncpus,
+                                stratified_boot = stratified_boot)
 
       # Transform the results into readable quantities
-      W_stats <- bootstats(W_boot, type = type, conf = conf)
+      W_stats <- bootstats(W_boot[[k]], type = type, conf = conf)
 
       # Save the results
       W[k] <- W_stats$index[1]
@@ -405,7 +410,8 @@ ot_indices <- function(x,
                          IS_ci = IS_ci,
                          R = R,
                          conf = conf,
-                         type = type)
+                         type = type,
+                         W_boot = W_boot)
 
     return(out)
   }
