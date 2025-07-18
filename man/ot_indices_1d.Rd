@@ -54,7 +54,7 @@ confidence levels can be computed as a postprocessing using
 
 \item{type}{(default \code{"norm"}) Method to compute the default confidence
 interval. Only considered if \code{boot = TRUE}. For more information, check the
-\code{type} option of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
+\code{type} argument of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
 computed as a postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 }
 \value{
@@ -73,7 +73,11 @@ statistics for the partitions defined by \code{partitions}. If \code{method = wa
 Wasserstein-Bures indices, the Advective, and the Diffusive components.
 \item \code{partitions}: a matrix containing the partitions built to calculate the
 sensitivity indices. Each column contains the partition associated to the
-same column in \code{x}. If \code{boot = TRUE}, the object contains also:
+same column in \code{x}.
+}
+
+If \code{boot = TRUE}, the object contains also:
+\itemize{
 \item \code{indices_ci}: a \code{data.frame} with first column the input, second and third
 columns the lower and upper bound of the confidence interval.
 \item \code{inner_statistic_ci}: a list of matrices. Each element of the list contains
@@ -82,6 +86,7 @@ the lower and upper confidence bounds for the partition defined by the row.
 intervals of the separation measure bound.
 \item \code{type}, \code{conf}: type of confidence interval and confidence level, provided
 as arguments.
+\item \code{W_boot}: list of bootstrap objects, one for each input.
 }
 }
 \description{

@@ -117,7 +117,9 @@
 #'   Wasserstein-Bures indices, the Advective, and the Diffusive components.
 #' * `partitions`: a matrix containing the partitions built to calculate the
 #'   sensitivity indices. Each column contains the partition associated to the
-#'   same column in `x`. If `boot = TRUE`, the object contains also:
+#'   same column in `x`.
+#'
+#' If `boot = TRUE`, the object contains also:
 #' * `indices_ci`: a `data.frame` with first column the input, second and third
 #'   columns the lower and upper bound of the confidence interval.
 #' * `inner_statistic_ci`: a list of matrices. Each element of the list contains
@@ -126,6 +128,7 @@
 #'   intervals of the separation measure bound.
 #' * `type`, `conf`: type of confidence interval and confidence level, provided
 #'   as arguments.
+#' * `W_boot`: list of bootstrap objects, one for each input.
 #'
 #' @seealso [ot_indices_1d()], [ot_indices_wb()]
 #'
