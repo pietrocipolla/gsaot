@@ -1,3 +1,5 @@
+# gsaot 1.1.0
+
 * Added a `confint()` method for class `gsaot_indices`
 
 * Added bootstrap data to `gsaot_indices` objects
