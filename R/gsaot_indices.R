@@ -394,7 +394,7 @@ summary.gsaot_indices <- function(object, digits = 3, ranking = NULL, ...) {
 #' x <- data.frame(x)
 #' y <- y
 #'
-#' res <- ot_indices_wb(x, y, 10, boot = TRUE, R = 1000)
+#' res <- ot_indices_wb(x, y, 10, boot = TRUE, R = 100)
 #' confint(res, parm = c(1,3), level = 0.9)
 #'
 #' @export
