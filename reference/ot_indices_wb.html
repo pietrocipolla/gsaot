@@ -111,7 +111,7 @@ confidence levels can be computed as a postprocessing using
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>(default <code>"norm"</code>) Method to compute the default confidence
 interval. Only considered if <code>boot = TRUE</code>. For more information, check the
-<code>type</code> option of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. Different confidence intervals can be
+<code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. Different confidence intervals can be
 computed as a postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
 
 </dl></div>
@@ -130,8 +130,8 @@ statistics for the partitions defined by <code>partitions</code>. If <code>metho
 Wasserstein-Bures indices, the Advective, and the Diffusive components.</p></li>
 <li><p><code>partitions</code>: a matrix containing the partitions built to calculate the
 sensitivity indices. Each column contains the partition associated to the
-same column in <code>x</code>. If <code>boot = TRUE</code>, the object contains also:</p></li>
-<li><p><code>indices_ci</code>: a <code>data.frame</code> with first column the input, second and third
+same column in <code>x</code>.</p></li>
+</ul><p>If <code>boot = TRUE</code>, the object contains also:</p><ul><li><p><code>indices_ci</code>: a <code>data.frame</code> with first column the input, second and third
 columns the lower and upper bound of the confidence interval.</p></li>
 <li><p><code>inner_statistic_ci</code>: a list of matrices. Each element of the list contains
 the lower and upper confidence bounds for the partition defined by the row.</p></li>
@@ -139,6 +139,7 @@ the lower and upper confidence bounds for the partition defined by the row.</p><
 intervals of the separation measure bound.</p></li>
 <li><p><code>type</code>, <code>conf</code>: type of confidence interval and confidence level, provided
 as arguments.</p></li>
+<li><p><code>W_boot</code>: list of bootstrap objects, one for each input.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
