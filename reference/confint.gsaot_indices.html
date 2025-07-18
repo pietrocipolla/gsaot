@@ -108,15 +108,15 @@ For more information, check the <code>type</code> option of <code><a href="https
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">y</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="fl">10</span>, boot <span class="op">=</span> <span class="cn">TRUE</span>, R <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="fl">10</span>, boot <span class="op">=</span> <span class="cn">TRUE</span>, R <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">res</span>, parm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, level <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input  component      index   original        bias      low.ci   high.ci</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    X1 wass-bures 0.46835173 0.47235449 0.004002761 0.453210817 0.4834926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    X3 wass-bures 0.12634157 0.13312687 0.006785299 0.109245611 0.1434375</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    X1  advective 0.29501187 0.29692734 0.001915474 0.285555655 0.3044681</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    X3  advective 0.11566000 0.11918158 0.003521584 0.101724230 0.1295958</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    X1  diffusive 0.17333986 0.17542715 0.002087287 0.166513995 0.1801657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    X3  diffusive 0.01068157 0.01394529 0.003263715 0.007006048 0.0143571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input  component      index   original        bias      low.ci    high.ci</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    X1 wass-bures 0.46803249 0.47235449 0.004322000 0.451622222 0.48444276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    X3 wass-bures 0.12763890 0.13312687 0.005487971 0.111800402 0.14347739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    X1  advective 0.29475421 0.29692734 0.002173134 0.284747866 0.30476055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    X3  advective 0.11653311 0.11918158 0.002648473 0.103259254 0.12980696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    X1  diffusive 0.17327828 0.17542715 0.002148866 0.165883971 0.18067259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    X3  diffusive 0.01110579 0.01394529 0.002839498 0.007949459 0.01426212</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
