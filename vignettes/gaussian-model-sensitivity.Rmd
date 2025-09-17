@@ -34,7 +34,6 @@ $$
 $$
 To perform an uncertainty quantification of the model, under the assumed distribution for the inputs, we can use a simple Monte Carlo simulation. We generate the input sample (`x`), and we estimate the model output (`y`) for each input. 
 We can define the model and simulate it in R using the following code block.
-
 ```{r}
 # Define the input distribution parameters
 mx <- c(1, 1, 1)
@@ -72,8 +71,7 @@ theme_set(theme_minimal())
 
 # Prepare the marginal and the 2D density plots
 p1 <- ggplot(as.data.frame(y), aes(x = y1, y = y2)) +
-  geom_point(color = "black") +
-  geom_density_2d()
+  geom_point(color = "black")
 p2 <- ggplot(as.data.frame(y), aes(x = y1)) +
   geom_density()
 p3 <- ggplot(as.data.frame(y), aes(x = y2)) +

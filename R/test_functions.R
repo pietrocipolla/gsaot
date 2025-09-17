@@ -103,7 +103,7 @@ ishi_homma_fun <- function(N, A = 2, B = 1) {
 # Function to generate input samples using Latin Hypercube Sampling
 ishi_homma_input <- function(N) {
   # Generate N samples from a uniform distribution over [-pi, pi]^3
-  x <- matrix(stats::runif(N * 8, min = -pi, max = pi), ncol = 3)
+  x <- matrix(stats::runif(N * 3, min = -pi, max = pi), ncol = 3)
 
   # Assign column names
   colnames(x) <- paste0("X", 1:3)

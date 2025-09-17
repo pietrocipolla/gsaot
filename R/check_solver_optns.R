@@ -5,7 +5,7 @@ check_solver_optns <- function(solver, solver_optns) {
       "sinkhorn" = list(numIterations = 1e3,
                         epsilon = 0.01,
                         maxErr = 1e-9),
-      "sinkhorn_stable" = list(numIterations = 1e3,
+      "sinkhorn_log" = list(numIterations = 1e3,
                         epsilon = 0.01,
                         maxErr = 1e-9,
                         tau = 1e4),
@@ -16,7 +16,7 @@ check_solver_optns <- function(solver, solver_optns) {
   }
 
   # If options are provided, check correctness for sinkhorn solvers
-  if (solver == "sinkhorn" || solver == "sinkhorn_stable") {
+  if (solver == "sinkhorn" || solver == "sinkhorn_log") {
     stopifnot(all(names(solver_optns) %in% c("numIterations", "epsilon", "maxErr", "tau")))
 
     if (!exists("numIterations", solver_optns)) {
@@ -28,7 +28,7 @@ check_solver_optns <- function(solver, solver_optns) {
     if (!exists("maxErr", solver_optns)) {
       solver_optns[["maxErr"]] <- 1e-9
     }
-    if (!exists("tau", solver_optns) && solver == "sinkhorn_stable") {
+    if (!exists("tau", solver_optns) && solver == "sinkhorn_log") {
       solver_optns[["tau"]] <- 1e5
     }
 

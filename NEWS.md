@@ -1,3 +1,9 @@
+# gsaot (development version)
+
+* Solved compatibility issue with `ggplot2` 4.0.0
+
+* Solved a bug for `solver="sinkhorn_log"`
+
 # gsaot 1.1.0
 
 * Added a `confint()` method for class `gsaot_indices`
