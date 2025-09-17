@@ -1,4 +1,4 @@
-# gsaot (development version)
+# gsaot 1.1.1
 
 * Solved compatibility issue with `ggplot2` 4.0.0
 
