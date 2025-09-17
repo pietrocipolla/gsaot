@@ -119,7 +119,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.5925141 0.6584782 0.2949564</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.6040598 0.6304113 0.2817856</span></span></code></pre></div>
 <p>Second, Network Simplex solver:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices.html">ot_indices</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, solver <span class="op">=</span> <span class="st">"transport"</span><span class="op">)</span></span>
@@ -128,7 +128,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.4999788 0.5534392 0.1829258</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.5135492 0.5274847 0.1734944</span></span></code></pre></div>
 <p>Third, Wasserstein-Bures solver, with bootstrap:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, boot <span class="op">=</span> <span class="cn">TRUE</span>, R <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -137,37 +137,37 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Indices:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.4697990 0.5198658 0.1207588 </span></span>
+<span><span class="co">#&gt; 0.4833691 0.4940299 0.1097725 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Advective component:</span></span>
 <span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.2902096 0.3296279 0.1091971 </span></span>
+<span><span class="co">#&gt; 0.2943062 0.3174669 0.1018953 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diffusive component:</span></span>
-<span><span class="co">#&gt;        X1        X2        X3 </span></span>
-<span><span class="co">#&gt; 0.1795894 0.1902379 0.0115617 </span></span>
+<span><span class="co">#&gt;          X1          X2          X3 </span></span>
+<span><span class="co">#&gt; 0.189062870 0.176562994 0.007877195 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type of confidence interval: norm </span></span>
 <span><span class="co">#&gt; Number of replicates: 100 </span></span>
 <span><span class="co">#&gt; Confidence level: 0.95 </span></span>
 <span><span class="co">#&gt; Bootstrap statistics:</span></span>
 <span><span class="co">#&gt;   input  component   original        bias      low.ci    high.ci</span></span>
-<span><span class="co">#&gt; 1    X1 wass-bures 0.47978725 0.009988218 0.450824897 0.48877316</span></span>
-<span><span class="co">#&gt; 2    X2 wass-bures 0.52917218 0.009306359 0.504610876 0.53512076</span></span>
-<span><span class="co">#&gt; 3    X3 wass-bures 0.13698299 0.016224178 0.100790712 0.14072692</span></span>
-<span><span class="co">#&gt; 4    X1  advective 0.29535740 0.005147760 0.276749775 0.30366951</span></span>
-<span><span class="co">#&gt; 5    X2  advective 0.33352122 0.003893343 0.320432301 0.33882346</span></span>
-<span><span class="co">#&gt; 6    X3  advective 0.11759222 0.008395100 0.092129728 0.12626451</span></span>
-<span><span class="co">#&gt; 7    X1  diffusive 0.18442984 0.004840458 0.172016597 0.18716217</span></span>
-<span><span class="co">#&gt; 8    X2  diffusive 0.19565095 0.005413016 0.182888068 0.19758781</span></span>
-<span><span class="co">#&gt; 9    X3  diffusive 0.01939077 0.007829078 0.006402971 0.01672042</span></span></code></pre></div>
+<span><span class="co">#&gt; 1    X1 wass-bures 0.49284730 0.009478185 0.465069799 0.50166843</span></span>
+<span><span class="co">#&gt; 2    X2 wass-bures 0.50378617 0.009756254 0.479159970 0.50889985</span></span>
+<span><span class="co">#&gt; 3    X3 wass-bures 0.12863517 0.018862723 0.087497514 0.13204739</span></span>
+<span><span class="co">#&gt; 4    X1  advective 0.29925643 0.004950185 0.282197530 0.30641496</span></span>
+<span><span class="co">#&gt; 5    X2  advective 0.32163503 0.004168111 0.308057464 0.32687637</span></span>
+<span><span class="co">#&gt; 6    X3  advective 0.11239018 0.010494927 0.083363925 0.12042659</span></span>
+<span><span class="co">#&gt; 7    X1  diffusive 0.19359087 0.004528000 0.181197928 0.19692781</span></span>
+<span><span class="co">#&gt; 8    X2  diffusive 0.18215114 0.005588143 0.169509166 0.18361682</span></span>
+<span><span class="co">#&gt; 9    X3  diffusive 0.01624499 0.008367797 0.002543453 0.01321094</span></span></code></pre></div>
 <p>Fourth, we can use the package to compute the sensitivity map on the output:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ot_indices_smap.html">ot_indices_smap</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span><span class="op">)</span></span>
 <span><span class="va">sensitivity_indices</span></span>
 <span><span class="co">#&gt;             X1         X2        X3</span></span>
-<span><span class="co">#&gt; [1,] 0.5726212 0.04864452 0.1703333</span></span>
-<span><span class="co">#&gt; [2,] 0.3249486 0.72732618 0.1464068</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.5865925 0.04945865 0.2004293</span></span>
+<span><span class="co">#&gt; [2,] 0.3221281 0.71433091 0.1206923</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
