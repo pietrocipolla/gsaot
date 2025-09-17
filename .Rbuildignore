@@ -12,3 +12,4 @@
 ^CRAN-SUBMISSION$
 ^vignettes/Pick_a_solver.Rmd
 ^R/ot_indices_divergence.R
+^tests

@@ -1,0 +1,7 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "gsaot: an R package for Optimal Transport-based sensitivity analysis",
+  author   = "Chiani, Leonardo and Borgonovo, Emanuele and Plischke, Elmar and Tavoni, Massimo",
+  journal  = "arXiv preprint arXiv:2507.18588",
+  year     = "2025",
+)
