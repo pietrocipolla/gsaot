@@ -34,6 +34,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/gaussian-model-sensitivity.html">Global Sensitivity Analysis of a simple Gaussian model</a></li>
+    <li><a class="dropdown-item" href="../articles/Pick_a_solver.html">Pick an OT solver</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -146,7 +147,7 @@ in R using the following code block.</p>
 <span></span>
 <span><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="va">p1</span> <span class="op">+</span> <span class="va">p3</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">2</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>, axes <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-3-1.png" width="384"></p>
+<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="384"></p>
 </div>
 <div class="section level2">
 <h2 id="sensitivity-analysis">Sensitivity analysis<a class="anchor" aria-label="anchor" href="#sensitivity-analysis"></a>
@@ -185,7 +186,7 @@ input data, <code>M</code>. We set this value to 25 since we only have
 indices.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">indices_wb</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
+<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="576"></p>
 <p>To estimate the uncertainty of the indices, we can use bootstrapping.
 This is implemented in the function <code>ot_indices_wb</code> through
 the option <code>boot = TRUE</code>. In this case, we also have to set
@@ -204,7 +205,7 @@ the number of replicas (<code>R</code>).</p>
 <span><span class="va">indices_wb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ot_indices_wb.html">ot_indices_wb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">M</span>, </span>
 <span>                            boot <span class="op">=</span> <span class="va">boot</span>, R <span class="op">=</span> <span class="va">R</span>, conf <span class="op">=</span> <span class="va">conf</span>, type <span class="op">=</span> <span class="va">type</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">indices_wb</span><span class="op">)</span></span></code></pre></div>
-<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
+<p><img src="gaussian-model-sensitivity_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="576"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -217,7 +218,7 @@ the number of replicas (<code>R</code>).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
