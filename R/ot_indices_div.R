@@ -180,7 +180,7 @@ ot_indices_div <- function(x,
 
   # DEFINE THE OT SOLVER
   # ----------------------------------------------------------------------------
-  solver_fun <- switch (
+  solver_fun <- switch(
     solver,
     "sinkhorn" = sinkhorn,
     "sinkhorn_log" = sinkhorn_stable,
