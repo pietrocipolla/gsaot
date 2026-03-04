@@ -1,3 +1,7 @@
+* Added tests
+
+* Added new vignette on picking a solver
+
 # gsaot 1.1.1
 
 * Solved compatibility issue with `ggplot2` 4.0.0

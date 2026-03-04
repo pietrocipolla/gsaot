@@ -7,8 +7,11 @@
 
 [![R-CMD-check](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/pietrocipolla/gsaot/actions/workflows/test-coverage.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/pietrocipolla/gsaot/graph/badge.svg)](https://app.codecov.io/gh/pietrocipolla/gsaot)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/gsaot)](https://CRAN.R-project.org/package=gsaot)
+[![](https://cranlogs.r-pkg.org/badges/gsaot)](https://cran.r-project.org/package=gsaot)
 <!-- badges: end -->
 
 The package `gsaot` provides a set of tools to compute and plot Optimal
@@ -93,7 +96,7 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6040598 0.6304113 0.2817856
+#> 0.6061460 0.6337609 0.2922763
 ```
 
 Second, Network Simplex solver:
@@ -105,7 +108,7 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5135492 0.5274847 0.1734944
+#> 0.5049639 0.5188542 0.1682235
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -117,30 +120,30 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4833691 0.4940299 0.1097725 
+#> 0.4751984 0.4826512 0.1044734 
 #> 
 #> Advective component:
-#>        X1        X2        X3 
-#> 0.2943062 0.3174669 0.1018953 
+#>         X1         X2         X3 
+#> 0.28905226 0.30849658 0.09739885 
 #> 
 #> Diffusive component:
-#>          X1          X2          X3 
-#> 0.189062870 0.176562994 0.007877195 
+#>         X1         X2         X3 
+#> 0.18614614 0.17415462 0.00707455 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Bootstrap statistics:
 #>   input  component   original        bias      low.ci    high.ci
-#> 1    X1 wass-bures 0.49284730 0.009478185 0.465069799 0.50166843
-#> 2    X2 wass-bures 0.50378617 0.009756254 0.479159970 0.50889985
-#> 3    X3 wass-bures 0.12863517 0.018862723 0.087497514 0.13204739
-#> 4    X1  advective 0.29925643 0.004950185 0.282197530 0.30641496
-#> 5    X2  advective 0.32163503 0.004168111 0.308057464 0.32687637
-#> 6    X3  advective 0.11239018 0.010494927 0.083363925 0.12042659
-#> 7    X1  diffusive 0.19359087 0.004528000 0.181197928 0.19692781
-#> 8    X2  diffusive 0.18215114 0.005588143 0.169509166 0.18361682
-#> 9    X3  diffusive 0.01624499 0.008367797 0.002543453 0.01321094
+#> 1    X1 wass-bures 0.48387515 0.008676749 0.458657687 0.49173911
+#> 2    X2 wass-bures 0.49374040 0.011089198 0.466735426 0.49856697
+#> 3    X3 wass-bures 0.12212017 0.017646775 0.083725558 0.12522124
+#> 4    X1  advective 0.29324822 0.004195965 0.278010956 0.30009356
+#> 5    X2  advective 0.31343443 0.004937852 0.298375896 0.31861727
+#> 6    X3  advective 0.10624660 0.008847758 0.080308465 0.11448923
+#> 7    X1  diffusive 0.19062692 0.004480784 0.178795145 0.19349713
+#> 8    X2  diffusive 0.18030596 0.006151346 0.166726877 0.18158236
+#> 9    X3  diffusive 0.01587357 0.008799018 0.001765732 0.01238337
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -150,6 +153,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5865925 0.04945865 0.2004293
-#> [2,] 0.3221281 0.71433091 0.1206923
+#> [1,] 0.5898173 0.03863799 0.1744461
+#> [2,] 0.3094364 0.70845462 0.1216729
 ```
