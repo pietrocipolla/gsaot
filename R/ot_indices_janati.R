@@ -284,10 +284,6 @@ ot_indices_janati <- function(x,
                          conf = conf,
                          type = type,
                          W_boot = W_boot)
-    
-    # Store traceCy bound information
-    out$traceCy <- traceCy
-    out$traceCy_ci <- traceCy_ci
 
     return(out)
   }
@@ -299,9 +295,6 @@ ot_indices_janati <- function(x,
                        partitions = partitions,
                        x = x, y = y,
                        Sobol = Sobol)
-  
-  # Store traceCy bound information
-  out$traceCy <- traceCy
 
   return(out)
 }
