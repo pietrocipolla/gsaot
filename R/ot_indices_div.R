@@ -317,7 +317,7 @@ ot_indices_div <- function(x,
   }
 
   if (boot) {
-    out <- gsaot_indices(method = solver,
+    out <- gsaot_indices(method = paste(solver, "divergence"),
                          solver_optns = solver_optns,
                          indices = W,
                          bound = V,
@@ -335,7 +335,7 @@ ot_indices_div <- function(x,
     return(out)
   }
 
-  out <- gsaot_indices(method = solver,
+  out <- gsaot_indices(method = paste(solver, "divergence"),
                        solver_optns = solver_optns,
                        indices = W,
                        bound = V,

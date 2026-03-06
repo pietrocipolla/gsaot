@@ -164,8 +164,10 @@ entropic_lower_bound <- function(y,
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
 #' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
+#' * `"sinkhorn_div"`, the Sinkhorn's solver for the divergence-based indices.
 #' @param dummy_optns (default `NULL`) A list containing the options on the
 #'   distribution of the dummy variable. See `details` for more information.
+#' @param R_irr (default 10) The number of repetitions for the sampling of the dummy variable.
 #'
 #' @details The function allows the computation of irrelevance threshold.
 #'   The function samples from a distribution defined in
@@ -216,7 +218,8 @@ irrelevance_threshold <- function(y,
                                   discrete_out = FALSE,
                                   solver = "sinkhorn",
                                   solver_optns = NULL,
-                                  scaling = TRUE) {
+                                  scaling = TRUE,
+                                  R_irr = 10) {
   # INPUT CHECKS
   # ----------------------------------------------------------------------------
   # Check if the output is a numerical
@@ -237,46 +240,63 @@ irrelevance_threshold <- function(y,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn", "sinkhorn_log", "transport"))
+  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn",
+                      "sinkhorn_log", "transport", "sinkhorn_div"))
 
   # RETURN THE DUMMY INDICES
   # ----------------------------------------------------------------------------
   dummy_optns <- init_dummy_optns(dummy_optns)
 
   N <- nrow(as.matrix(y))
-  x <- do.call(dummy_optns[["distr"]], c(n = N, within(dummy_optns, rm("distr"))))
-  x <- as.data.frame(x)
-  colnames(x) <- dummy_optns[["distr"]]
+  ind_iter <- array(dim = R)
 
-  dummy_ind <- switch(solver,
-                      "1d" = ot_indices_1d(x, y, M),
-                      "wasserstein-bures" = ot_indices_wb(x, y, M),
-                      "sinkhorn" = ot_indices(x,
-                                              y,
-                                              M,
-                                              cost,
-                                              discrete_out,
-                                              solver,
-                                              solver_optns,
-                                              scaling),
-                      "sinkhorn_log" = ot_indices(x,
-                                                  y,
-                                                  M,
-                                                  cost,
-                                                  discrete_out,
-                                                  solver,
-                                                  solver_optns,
-                                                  scaling),
-                      "transport" = ot_indices(x,
-                                               y,
-                                               M,
-                                               cost,
-                                               discrete_out,
-                                               solver,
-                                               solver_optns,
-                                               scaling),
-                      default = NULL
-  )
+  for (r in seq(R_irr)) {
+    x <- do.call(dummy_optns[["distr"]], c(n = N, within(dummy_optns, rm("distr"))))
+    x <- as.data.frame(x)
+    colnames(x) <- dummy_optns[["distr"]]
+
+    dummy_ind <- switch(solver,
+                        "1d" = ot_indices_1d(x, y, M),
+                        "wasserstein-bures" = ot_indices_wb(x, y, M),
+                        "sinkhorn" = ot_indices(x,
+                                                y,
+                                                M,
+                                                cost,
+                                                discrete_out,
+                                                solver,
+                                                solver_optns,
+                                                scaling),
+                        "sinkhorn_log" = ot_indices(x,
+                                                    y,
+                                                    M,
+                                                    cost,
+                                                    discrete_out,
+                                                    solver,
+                                                    solver_optns,
+                                                    scaling),
+                        "transport" = ot_indices(x,
+                                                 y,
+                                                 M,
+                                                 cost,
+                                                 discrete_out,
+                                                 solver,
+                                                 solver_optns,
+                                                 scaling),
+                        "sinkhorn_div" = ot_indices_div(x,
+                                                        y,
+                                                        M,
+                                                        cost,
+                                                        discrete_out,
+                                                        "sinkhorn",
+                                                        solver_optns,
+                                                        scaling),
+                        default = NULL
+    )
+
+    ind_iter[r] <- dummy_ind$indices
+  }
+
+  dummy_ind <- mean(ind_iter)
 
   return(dummy_ind)
 }

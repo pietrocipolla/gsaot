@@ -44,10 +44,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sinkhorn_symmetric
+List sinkhorn_symmetric(Eigen::VectorXd a, Eigen::MatrixXd costm, int numIterations, double epsilon, double maxErr);
+RcppExport SEXP _gsaot_sinkhorn_symmetric(SEXP aSEXP, SEXP costmSEXP, SEXP numIterationsSEXP, SEXP epsilonSEXP, SEXP maxErrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type a(aSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type costm(costmSEXP);
+    Rcpp::traits::input_parameter< int >::type numIterations(numIterationsSEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< double >::type maxErr(maxErrSEXP);
+    rcpp_result_gen = Rcpp::wrap(sinkhorn_symmetric(a, costm, numIterations, epsilon, maxErr));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gsaot_sinkhorn", (DL_FUNC) &_gsaot_sinkhorn, 6},
     {"_gsaot_sinkhorn_stable", (DL_FUNC) &_gsaot_sinkhorn_stable, 7},
+    {"_gsaot_sinkhorn_symmetric", (DL_FUNC) &_gsaot_sinkhorn_symmetric, 5},
     {NULL, NULL, 0}
 };
 

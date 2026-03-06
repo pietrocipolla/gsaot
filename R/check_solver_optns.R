@@ -29,7 +29,7 @@ check_solver_optns <- function(solver, solver_optns) {
       solver_optns[["maxErr"]] <- 1e-9
     }
     if (!exists("tau", solver_optns) && solver == "sinkhorn_log") {
-      solver_optns[["tau"]] <- 1e5
+      solver_optns[["tau"]] <- 1e4
     }
 
     return(solver_optns)

@@ -9,3 +9,7 @@ sinkhorn_stable <- function(a, b, costm, numIterations, epsilon, maxErr, tau) {
     .Call(`_gsaot_sinkhorn_stable`, a, b, costm, numIterations, epsilon, maxErr, tau)
 }
 
+sinkhorn_symmetric <- function(a, costm, numIterations, epsilon, maxErr) {
+    .Call(`_gsaot_sinkhorn_symmetric`, a, costm, numIterations, epsilon, maxErr)
+}
+
