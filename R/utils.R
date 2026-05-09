@@ -248,7 +248,7 @@ irrelevance_threshold <- function(y,
   dummy_optns <- init_dummy_optns(dummy_optns)
 
   N <- nrow(as.matrix(y))
-  ind_iter <- array(dim = R)
+  ind_iter <- array(dim = R_irr)
 
   for (r in seq(R_irr)) {
     x <- do.call(dummy_optns[["distr"]], c(n = N, within(dummy_optns, rm("distr"))))
