@@ -14,7 +14,8 @@ irrelevance_threshold(
   discrete_out = FALSE,
   solver = "sinkhorn",
   solver_optns = NULL,
-  scaling = TRUE
+  scaling = TRUE,
+  R_irr = 10
 )
 ```
 
@@ -75,6 +76,11 @@ irrelevance_threshold(
 
   (default `TRUE`) Logical that sets whether or not to scale the cost
   matrix.
+
+- R_irr:
+
+  (default 10) The number of repetitions for the sampling of the dummy
+  variable.
 
 ## Value
 

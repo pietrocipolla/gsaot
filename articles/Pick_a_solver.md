@@ -9,6 +9,7 @@ users who are new to OT-based sensitivity analysis and want a clear
 starting point for their analyses.
 
 ``` r
+
 library(gsaot)
 ```
 
@@ -19,11 +20,12 @@ Use the following three dimensions to guide your choice:
 1.  **Output dimensionality**
     - If the output is one-dimensional, use
       [`ot_indices_1d()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices_1d.md)
-      or
-      [`ot_indices_wb()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices_wb.md).
+      and/or
+      [`ot_indices_wb()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices_wb.md)
+      regardless of the data size.
     - If the output is multi-dimensional, use
       [`ot_indices()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices.md)
-      or
+      and/or
       [`ot_indices_wb()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices_wb.md).
 2.  **Data size and bootstrapping**
     - For small to medium data sets (roughly up to a few thousand
@@ -48,6 +50,7 @@ is specialized and faster. It avoids building large cost matrices and is
 the recommended default for scalar outputs.
 
 ``` r
+
 set.seed(1)
 N <- 800
 
@@ -73,6 +76,7 @@ for the standard OT indices or
 if you need the Wasserstein-Bures information.
 
 ``` r
+
 Y <- cbind(y1, 0.5 * x$x1 + rnorm(N))
 
 res_md <- ot_indices(x, Y, M = 20)
@@ -102,6 +106,7 @@ supports three solvers:
 ### Small to medium data: `solver = "transport"`
 
 ``` r
+
 res_transport <- ot_indices(
   x, Y, M = 20,
   solver = "transport",
@@ -121,6 +126,7 @@ For big experiments or bootstrap confidence intervals,
 `solver = "sinkhorn"` is usually the best trade-off.
 
 ``` r
+
 res_sinkhorn <- ot_indices(
   x, Y, M = 20,
   solver = "sinkhorn",
@@ -156,6 +162,7 @@ You can explore this trade-off by running the same problem with
 different `epsilon` values.
 
 ``` r
+
 res_eps_fast <- ot_indices(
   x, Y, M = 20,
   solver = "sinkhorn",
@@ -192,6 +199,7 @@ understanding how the output distribution changes. The function is
 defined for any output dimensionality.
 
 ``` r
+
 res_wb <- ot_indices_wb(x, Y, M = 20)
 res_wb
 #> Method: wass-bures 

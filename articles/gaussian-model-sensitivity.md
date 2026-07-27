@@ -5,26 +5,34 @@
 Global Sensitivity Analysis has the goal of breaking a mathematical
 model’s tough rind, allowing us to look inside. Let’s assume that we are
 modeling a problem where two quantities of interest,
-$\mathbf{Y} = \{ Y_{1},Y_{2}\}$, are defined as a function of three
-variables, $\mathbf{X} = \left( X_{1},X_{2},X_{3} \right)$. We express
-this dependence through a linear transformation
-$\mathbf{Y} = A\mathbf{X}$, where $$A = \begin{bmatrix}
-4 & 2 & 3 \\
-2 & 5 & {- 1}
-\end{bmatrix}.$$ We assume that the inputs are uncertain and that this
-uncertainty can be modeled using a multivariate normal distribution,
-$\mathbf{X} \sim \mathcal{N}({\mathbf{μ}},\Sigma)$, with $\mu = (1,1,1)$
-and $$\Sigma = \begin{bmatrix}
-1 & 0.5 & 0.5 \\
-0.5 & 1 & 0.5 \\
-0.5 & 0.5 & 1
-\end{bmatrix}.$$ To perform an uncertainty quantification of the model,
-under the assumed distribution for the inputs, we can use a simple Monte
-Carlo simulation. We generate the input sample (`x`), and we estimate
-the model output (`y`) for each input. We can define the model and
-simulate it in R using the following code block.
+$`\mathbf{Y} = \{Y_1, Y_2\}`$, are defined as a function of three
+variables, $`\mathbf{X} = (X_1, X_2, X_3)`$. We express this dependence
+through a linear transformation $`\mathbf{Y} = A\mathbf{X}`$, where
+``` math
+A = \begin{bmatrix}
+      4 & 2 & 3 \\
+      2 & 5 & -1 
+    \end{bmatrix}.
+```
+We assume that the inputs are uncertain and that this uncertainty can be
+modeled using a multivariate normal distribution,
+$`\mathbf{X} \sim \mathcal{N}(\mathbf{\mu}, \Sigma)`$, with
+$`\mu = (1,1,1)`$ and
+``` math
+\Sigma = \begin{bmatrix}
+            1 & 0.5 & 0.5 \\
+            0.5 & 1 & 0.5 \\
+            0.5 & 0.5 & 1
+          \end{bmatrix}.
+```
+To perform an uncertainty quantification of the model, under the assumed
+distribution for the inputs, we can use a simple Monte Carlo simulation.
+We generate the input sample (`x`), and we estimate the model output
+(`y`) for each input. We can define the model and simulate it in R using
+the following code block.
 
 ``` r
+
 # Define the input distribution parameters
 mx <- c(1, 1, 1)
 Sigmax <- matrix(data = c(1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 1), nrow = 3)
@@ -55,6 +63,7 @@ colnames(y) <- c("y1", "y2")
 We can plot the distribution of the output using the `ggplot2` package.
 
 ``` r
+
 library(ggplot2)
 library(patchwork)
 
@@ -90,6 +99,7 @@ this case is the number of partitions for the input data, `M`. We set
 this value to 25 since we only have 1000 data points.
 
 ``` r
+
 library(gsaot)
 
 M <- 25
@@ -114,6 +124,7 @@ We can also use the package functions to create the plots for the
 indices.
 
 ``` r
+
 plot(indices_wb)
 ```
 
@@ -125,6 +136,7 @@ This is implemented in the function `ot_indices_wb` through the option
 (`R`).
 
 ``` r
+
 # Enable bootstrap
 boot <- TRUE
 # Set the number of replicas

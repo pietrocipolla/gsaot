@@ -12,6 +12,9 @@
 - [`gaussian_fun()`](https://pietrocipolla.github.io/gsaot/reference/gaussian_fun.md)
   : Multivariate Gaussian linear model evaluation
 
+- [`higher_order_terms()`](https://pietrocipolla.github.io/gsaot/reference/higher_order_terms.md)
+  : Higher order terms for optimal transport sensitivity indices
+
 - [`irrelevance_threshold()`](https://pietrocipolla.github.io/gsaot/reference/irrelevance_threshold.md)
   : Irrelevance threshold for optimal transport sensitivity indices
 

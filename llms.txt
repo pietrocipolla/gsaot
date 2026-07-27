@@ -22,6 +22,7 @@ the separation measures.
 ## Installation
 
 ``` r
+
 install.packages("gsaot")
 ```
 
@@ -29,6 +30,7 @@ You can install the development version of gsaot from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("pietrocipolla/gsaot")
 ```
@@ -54,6 +56,7 @@ guide](https://cran.r-project.org/doc/manuals/R-admin.html#Customizing-package-c
 We can use a gaussian toy model with three outputs as an example:
 
 ``` r
+
 library(gsaot)
 
 N <- 1000
@@ -79,6 +82,7 @@ sensitivity indices using different solvers. First, Sinkhorn solver and
 default parameters:
 
 ``` r
+
 M <- 25
 
 sensitivity_indices <- ot_indices(x, y, M)
@@ -93,6 +97,7 @@ sensitivity_indices
 Second, Network Simplex solver:
 
 ``` r
+
 sensitivity_indices <- ot_indices(x, y, M, solver = "transport")
 sensitivity_indices
 #> Method: transport 
@@ -105,6 +110,7 @@ sensitivity_indices
 Third, Wasserstein-Bures solver, with bootstrap:
 
 ``` r
+
 sensitivity_indices <- ot_indices_wb(x, y, M, boot = TRUE, R = 100)
 sensitivity_indices
 #> Method: wass-bures 
@@ -141,6 +147,7 @@ Fourth, we can use the package to compute the sensitivity map on the
 output:
 
 ``` r
+
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
@@ -161,6 +168,9 @@ sensitivity_indices
 
 - [`gaussian_fun()`](https://pietrocipolla.github.io/gsaot/reference/gaussian_fun.md)
   : Multivariate Gaussian linear model evaluation
+
+- [`higher_order_terms()`](https://pietrocipolla.github.io/gsaot/reference/higher_order_terms.md)
+  : Higher order terms for optimal transport sensitivity indices
 
 - [`irrelevance_threshold()`](https://pietrocipolla.github.io/gsaot/reference/irrelevance_threshold.md)
   : Irrelevance threshold for optimal transport sensitivity indices
