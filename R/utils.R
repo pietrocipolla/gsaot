@@ -151,6 +151,67 @@ entropic_lower_bound <- function(y,
   return(sink_ind)
 }
 
+#' Higher order terms for optimal transport sensitivity indices
+#'
+#' Compute the higher order terms as the difference between the output of
+#' [ot_indices()] and the output of [ot_indices_wb()] computed on the same
+#' sample.
+#'
+#' @param ot_result An object returned by [ot_indices()].
+#' @param wb_result An object returned by [ot_indices_wb()].
+#'
+#' @details The helper only computes the point estimate difference between two
+#'   already computed results. The function does not check that the ground cost
+#'   used for the `ot_result` object is the squared Euclidean one (default). The
+#'   user should therefore pay attention to this aspect when using the function.
+#'
+#' @return An object of class `gsaot_indices` containing the higher order terms
+#'   of the Wasserstein-Bures decomposition.
+#' @export
+#'
+#' @examples
+#' dat <- gaussian_fun(1000)
+#' ot_result <- ot_indices(dat$x, dat$y, 10)
+#' wb_result <- ot_indices_wb(dat$x, dat$y, 10)
+#' higher_order_terms(ot_result, wb_result)
+#'
+higher_order_terms <- function(ot_result, wb_result) {
+  if (!inherits(ot_result, "gsaot_indices"))
+    stop("`ot_result` must be an object returned by `ot_indices()`")
+
+  if (!inherits(wb_result, "gsaot_indices"))
+    stop("`wb_result` must be an object returned by `ot_indices_wb()`")
+
+  if (is.null(ot_result$indices) || is.null(wb_result$indices))
+    stop("Both results must contain `indices`")
+
+  if (length(ot_result$indices) != length(wb_result$indices))
+    stop("`ot_result` and `wb_result` must have the same number of inputs")
+
+  higher_terms <- ot_result$indices - wb_result$indices
+  names(higher_terms) <- names(ot_result$indices)
+
+  higher_separation_measures <- lapply(seq_along(higher_terms), function(k) {
+    ot_sep <- ot_result$separation_measures[[k]]
+    wb_sep <- wb_result$separation_measures[[k]]
+
+    if (is.null(ot_sep) || is.null(wb_sep))
+      return(NULL)
+
+    ot_sep - wb_sep[1, , drop = FALSE]
+  })
+
+  out <- gsaot_indices(method = "higher order terms",
+                       indices = higher_terms,
+                       bound = ot_result$bound,
+                       IS = higher_separation_measures,
+                       partitions = ot_result$partitions,
+                       x = ot_result$x,
+                       y = ot_result$y)
+
+  return(out)
+}
+
 #' Irrelevance threshold for optimal transport sensitivity indices
 #'
 #' Calculate irrelevance threshold using dummy variable for Optimal Transport sensitivity indices
@@ -166,6 +227,7 @@ entropic_lower_bound <- function(y,
 #' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' @param dummy_optns (default `NULL`) A list containing the options on the
 #'   distribution of the dummy variable. See `details` for more information.
+#' @param R_irr (default 10) The number of repetitions for the sampling of the dummy variable.
 #'
 #' @details The function allows the computation of irrelevance threshold.
 #'   The function samples from a distribution defined in
@@ -216,7 +278,8 @@ irrelevance_threshold <- function(y,
                                   discrete_out = FALSE,
                                   solver = "sinkhorn",
                                   solver_optns = NULL,
-                                  scaling = TRUE) {
+                                  scaling = TRUE,
+                                  R_irr = 10) {
   # INPUT CHECKS
   # ----------------------------------------------------------------------------
   # Check if the output is a numerical
@@ -237,46 +300,55 @@ irrelevance_threshold <- function(y,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn", "sinkhorn_log", "transport"))
+  match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn",
+                      "sinkhorn_log", "transport", "sinkhorn_div"))
 
   # RETURN THE DUMMY INDICES
   # ----------------------------------------------------------------------------
   dummy_optns <- init_dummy_optns(dummy_optns)
 
   N <- nrow(as.matrix(y))
-  x <- do.call(dummy_optns[["distr"]], c(n = N, within(dummy_optns, rm("distr"))))
-  x <- as.data.frame(x)
-  colnames(x) <- dummy_optns[["distr"]]
+  ind_iter <- array(dim = R_irr)
 
-  dummy_ind <- switch(solver,
-                      "1d" = ot_indices_1d(x, y, M),
-                      "wasserstein-bures" = ot_indices_wb(x, y, M),
-                      "sinkhorn" = ot_indices(x,
-                                              y,
-                                              M,
-                                              cost,
-                                              discrete_out,
-                                              solver,
-                                              solver_optns,
-                                              scaling),
-                      "sinkhorn_log" = ot_indices(x,
-                                                  y,
-                                                  M,
-                                                  cost,
-                                                  discrete_out,
-                                                  solver,
-                                                  solver_optns,
-                                                  scaling),
-                      "transport" = ot_indices(x,
-                                               y,
-                                               M,
-                                               cost,
-                                               discrete_out,
-                                               solver,
-                                               solver_optns,
-                                               scaling),
-                      default = NULL
-  )
+  for (r in seq(R_irr)) {
+    x <- do.call(dummy_optns[["distr"]], c(n = N, within(dummy_optns, rm("distr"))))
+    x <- as.data.frame(x)
+    colnames(x) <- dummy_optns[["distr"]]
+
+    dummy_ind <- switch(solver,
+                        "1d" = ot_indices_1d(x, y, M),
+                        "wasserstein-bures" = ot_indices_wb(x, y, M),
+                        "sinkhorn" = ot_indices(x,
+                                                y,
+                                                M,
+                                                cost,
+                                                discrete_out,
+                                                solver,
+                                                solver_optns,
+                                                scaling),
+                        "sinkhorn_log" = ot_indices(x,
+                                                    y,
+                                                    M,
+                                                    cost,
+                                                    discrete_out,
+                                                    solver,
+                                                    solver_optns,
+                                                    scaling),
+                        "transport" = ot_indices(x,
+                                                 y,
+                                                 M,
+                                                 cost,
+                                                 discrete_out,
+                                                 solver,
+                                                 solver_optns,
+                                                 scaling),
+                        default = NULL
+    )
+
+    ind_iter[r] <- dummy_ind$indices
+  }
+
+  dummy_ind <- mean(ind_iter)
 
   return(dummy_ind)
 }
@@ -290,92 +362,3 @@ init_dummy_optns <- function(dummy_optns) {
   return(dummy_optns)
 }
 
-# Compute the sinkhorn lower bound
-entropic_lower_bound <- function(y,
-                                 cost,
-                                 solver,
-                                 solver_optns,
-                                 discrete_out,
-                                 scaling) {
-  # Initialize useful values
-  N <- nrow(as.matrix(y))
-  cost_type <- identical(cost, "L2")
-
-  # BUILD AN HISTOGRAM IF REQUESTED (otherwise assume equal weights)
-  # ----------------------------------------------------------------------------
-  # Default values for continuous output
-  a <- rep(1 / N, N)
-  y_unique <- NULL
-
-  if (discrete_out) {
-    # y_unique is always needed, in order to avoid mismatches between the
-    # pre-computed cost matrix and the resampled outputs
-    y_unique <- unique(y)
-
-    # Function to build the histogram (maybe we can put this outside to make it
-    # easier to change?)
-    a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
-      apply(y, 1, FUN = function(row) all(row == u)))) / N
-  }
-
-  if (identical(a, rep(1 / N, N)) & discrete_out)
-    warning("The output is continuous, consider using `discrete_out=FALSE`\n")
-
-  # BUILD COST MATRIX
-  # ----------------------------------------------------------------------------
-  if (discrete_out) {
-    if (cost_type) {
-      C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
-    } else {
-      C <- cost(y_unique)
-    }
-  } else {
-    if (cost_type) {
-      C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
-    } else {
-      C <- cost(y)
-    }
-  }
-
-  # If the scaling is requested, scale the cost matrix by the highest value
-  scaling_param <- 1
-  if (scaling) {
-    scaling_param <- max(C)
-    C <- C / scaling_param
-  }
-
-  # DEFINE THE OT SOLVER
-  # ----------------------------------------------------------------------------
-  solver_fun <- switch (
-    solver,
-    "sinkhorn" = sinkhorn,
-    "sinkhorn_stable" = sinkhorn_stable,
-    default = NULL
-  )
-
-  # Check the consistency of the options provided
-  solver_optns <- check_solver_optns(solver, solver_optns)
-
-  # Evaluate the upper bound of the indices
-  # ----------------------------------------------------------------------------
-  V <- higher_bound(C) * scaling_param
-
-  # COMPUTE THE LOWER BOUND
-  # ----------------------------------------------------------------------------
-  ret <- do.call(solver_fun,
-                 c(list(a = a, b = a, costm = C),
-                   solver_optns))
-
-  sink_ind <- ret$cost * scaling_param / V
-
-  return(sink_ind)
-}
-
-# Check that the bound_optns contain the required components, otherwise initialize them
-init_dummy_optns <- function(dummy_optns) {
-  if (is.null(dummy_optns)) {
-    dummy_optns <- list(distr = "rnorm")
-  }
-
-  return(dummy_optns)
-}

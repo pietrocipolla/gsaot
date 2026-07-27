@@ -12,7 +12,8 @@ irrelevance_threshold(
   discrete_out = FALSE,
   solver = "sinkhorn",
   solver_optns = NULL,
-  scaling = TRUE
+  scaling = TRUE,
+  R_irr = 10
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ Transport solver. See details for allowed options and default ones.}
 
 \item{scaling}{(default \code{TRUE}) Logical that sets whether or not to scale the
 cost matrix.}
+
+\item{R_irr}{(default 10) The number of repetitions for the sampling of the dummy variable.}
 }
 \value{
 An object of class \code{gsaot_indices}.

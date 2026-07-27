@@ -23,8 +23,9 @@ library(gsaot)
 Use the following three dimensions to guide your choice:
 
 1. **Output dimensionality**
-   - If the output is one-dimensional, use `ot_indices_1d()` or `ot_indices_wb()`.
-   - If the output is multi-dimensional, use `ot_indices()` or `ot_indices_wb()`.
+   - If the output is one-dimensional, use `ot_indices_1d()` and/or `ot_indices_wb()` 
+   regardless of the data size.
+   - If the output is multi-dimensional, use `ot_indices()` and/or `ot_indices_wb()`.
 
 2. **Data size and bootstrapping**
    - For small to medium data sets (roughly up to a few thousand points), `ot_indices()` with `solver = "transport"` is a safe and accurate choice.

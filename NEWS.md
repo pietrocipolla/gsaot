@@ -1,3 +1,9 @@
+* Added function `higher_order_terms()` to compute the higher-order terms of 
+the Wasserstein-Bures decomposition
+
+* Improved `irrelevance_threshold`. Now it computes the threshold as an average 
+of many draws
+
 * Added tests
 
 * Added new vignette on picking a solver
