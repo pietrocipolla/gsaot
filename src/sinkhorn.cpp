@@ -13,43 +13,43 @@ List sinkhorn_cpp(Eigen::VectorXd a,
   int numCols = costMatrix.cols();
 
   // Initialize the K matrix
-  Eigen::MatrixXd K(- costMatrix / epsilon);
+  Eigen::MatrixXd K(-costMatrix / epsilon);
   K = K.array().exp();
 
-  // Rcout << "K " << K << std::endl;
-  // Rcout << "a " << a << std::endl;
-  // Rcout << "b " << b << std::endl;
-
-  // Initialize all the dual variables to vectors of 1
+  // Initialize the Sinkhorn scaling vectors
+  //
+  // u = exp(f / epsilon)
+  // v = exp(g / epsilon)
   Eigen::VectorXd u(numRows);
   Eigen::VectorXd v(numCols);
 
   u.setOnes();
 
-  // Initialize the marginal weights and the other useful variables
+  // Initialize the marginal weights and other useful variables
   Eigen::VectorXd estimated_marginal;
 
-  // Initialize algorithms values
+  // Initialize algorithm values
   int iter = 1;
   double err = std::numeric_limits<double>::infinity();
 
-  while (iter == 1 || (iter <= numIterations &&
-         err > maxErr && err < std::numeric_limits<double>::infinity())) {
-    // Compute v updates
+  while (iter == 1 ||
+         (iter <= numIterations &&
+         err > maxErr &&
+         err < std::numeric_limits<double>::infinity())) {
+
+    // Update v
     v = K.transpose() * u;
     v = b.array() * v.array().inverse();
 
-    // Rcout << "v " << v << std::endl;
-
-    // Compute u updates
+    // Update u
     u = K * v;
     u = a.array() * u.array().inverse();
 
-    // Rcout << "u " << u << std::endl;
-
     // Update error
     if (iter % 10 == 0 || iter == 1) {
-      estimated_marginal = v.array() * (K.transpose() * u).array();
+      estimated_marginal =
+        v.array() * (K.transpose() * u).array();
+
       err = (estimated_marginal - b).cwiseAbs().sum();
     }
 
@@ -59,23 +59,38 @@ List sinkhorn_cpp(Eigen::VectorXd a,
 
   if (iter >= numIterations) {
     Rcerr << "Increase number of iterations" << std::endl;
-    return List::create(Named("Error") = "Increase number of iterations");
+
+    return List::create(
+      Named("Error") = "Increase number of iterations"
+    );
   }
 
-  // Optimal coupling
-//  Eigen::MatrixXd U(u.asDiagonal());
-//  Eigen::MatrixXd V(v.asDiagonal());
-  Eigen::MatrixXd P((K.array().colwise() * u.array()).rowwise() * v.array().transpose());
-  // Rcout << P.maxCoeff() << std::endl;
+  // Recover the dual potentials:
+  //
+  // f = epsilon * log(u)
+  // g = epsilon * log(v)
+  Eigen::VectorXd f = epsilon * u.array().log().matrix();
+  Eigen::VectorXd g = epsilon * v.array().log().matrix();
 
-  // Wasserstein distance
-  double W22_prime = (P.transpose() * costMatrix).trace();
+  // Dual objective:
+  //
+  // <f, a> + <g, b>
+  // - epsilon <exp(f / epsilon), K exp(g / epsilon)>
+  //
+  // Since exp(f / epsilon) = u and exp(g / epsilon) = v:
+  //
+  // <f, a> + <g, b> - epsilon u^T K v
+  double entropicCost =
+    epsilon * (
+        a.dot((u.array() / a.array()).log().matrix()) +
+          b.dot((v.array() / b.array()).log().matrix()) -
+          u.dot(K * v) +
+          1.0
+    );
 
-  // Return u and v as a List
   return List::create(
     Named("iter") = iter,
-//    Named("P") = P,
-    Named("cost") = W22_prime
+    Named("cost") = entropicCost
   );
 }
 
