@@ -85,7 +85,7 @@ res_md
 #> 
 #> Indices:
 #>        x1        x2 
-#> 0.4992386 0.2322164
+#> 0.6333836 0.3951720
 ```
 
 ## Dimension 2: solver choice for `ot_indices()`
@@ -138,15 +138,15 @@ res_sinkhorn
 #> 
 #> Indices:
 #>        x1        x2 
-#> 0.7305059 0.4970830 
+#> 0.8493566 0.6975445 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 200 
 #> Confidence level: 0.95 
 #> Bootstrap statistics:
 #>   input  original        bias    low.ci   high.ci
-#> 1    x1 0.7388703 0.008364458 0.7138344 0.7471773
-#> 2    x2 0.5098147 0.012731695 0.4696061 0.5245600
+#> 1    x1 0.8540474 0.004690796 0.8388588 0.8598544
+#> 2    x2 0.7047599 0.007215402 0.6765545 0.7185346
 ```
 
 ### Regularization and the speed-accuracy trade-off
@@ -180,7 +180,7 @@ res_eps_fast
 #> 
 #> Indices:
 #>        x1        x2 
-#> 0.8460829 0.6780586
+#> 0.9194824 0.8251826
 res_eps_precise
 #> Method: sinkhorn_log 
 #> 

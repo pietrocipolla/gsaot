@@ -48,5 +48,5 @@ higher_order_terms(ot_result, wb_result)
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.1101010 0.1217080 0.1366321 
+#> 0.2218041 0.2330969 0.3075903 
 ```
