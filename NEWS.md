@@ -1,3 +1,5 @@
+# gsaot 1.2.0
+
 * `ot_indices()` with `solver="sinkhorn"` or `solver="sinkhorn_stable"` now
 returns the full entropic cost, not only the dot product between the cost and
 the transport matrix
