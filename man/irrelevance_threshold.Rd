@@ -96,11 +96,10 @@ y <- t(A \%*\% t(x))
 
 M <- 25
 
-dummy_lb <- irrelevance_threshold(y, M)
-
 # Custom sampling funtion and network simplex solver
 dummy_optns <- list(distr = "rgamma", shape = 3)
 dummy_lb_cust <- irrelevance_threshold(y, M,
                                       dummy_optns = dummy_optns,
-                                      solver = "transport")
+                                      solver = "transport",
+                                      R_irr = 5)
 }
