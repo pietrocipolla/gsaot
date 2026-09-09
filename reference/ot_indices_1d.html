@@ -115,9 +115,10 @@ confidence levels can be computed as a postprocessing using
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>(default <code>"norm"</code>) Method to compute the default confidence
-interval. Only considered if <code>boot = TRUE</code>. For more information, check the
-<code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. Different confidence intervals can be
-computed as a postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
+interval. Only considered if <code>boot = TRUE</code>. The methods correspond to
+the <code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. All the methods except <code>"stud"</code>
+are supported. Different confidence intervals can be computed as a
+postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -159,8 +160,8 @@ as arguments.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method: 1-dimensional (p=2) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indices:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        x </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.849265 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.8492195 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

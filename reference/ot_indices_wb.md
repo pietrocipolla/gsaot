@@ -75,11 +75,11 @@ ot_indices_wb(
 - type:
 
   (default `"norm"`) Method to compute the default confidence interval.
-  Only considered if `boot = TRUE`. For more information, check the
-  `type` argument of
-  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html).
-  Different confidence intervals can be computed as a postprocessing
-  using
+  Only considered if `boot = TRUE`. The methods correspond to the `type`
+  argument of
+  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html). All
+  the methods except `"stud"` are supported. Different confidence
+  intervals can be computed as a postprocessing using
   [`confint.gsaot_indices()`](https://pietrocipolla.github.io/gsaot/reference/confint.gsaot_indices.md).
 
 ## Value
@@ -156,13 +156,13 @@ ot_indices_wb(x, y, 10)
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4217863 0.4496993 0.1157275 
+#> 0.4514096 0.4792100 0.1183413 
 #> 
 #> Advective component:
 #>        X1        X2        X3 
-#> 0.2617702 0.2906207 0.1039419 
+#> 0.2865070 0.3114821 0.1060809 
 #> 
 #> Diffusive component:
 #>         X1         X2         X3 
-#> 0.16001602 0.15907855 0.01178562 
+#> 0.16490259 0.16772800 0.01226039 
 ```

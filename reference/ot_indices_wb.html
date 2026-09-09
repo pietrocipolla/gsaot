@@ -111,9 +111,10 @@ confidence levels can be computed as a postprocessing using
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>(default <code>"norm"</code>) Method to compute the default confidence
-interval. Only considered if <code>boot = TRUE</code>. For more information, check the
-<code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. Different confidence intervals can be
-computed as a postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
+interval. Only considered if <code>boot = TRUE</code>. The methods correspond to
+the <code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. All the methods except <code>"stud"</code>
+are supported. Different confidence intervals can be computed as a
+postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -172,15 +173,15 @@ as arguments.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indices:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        X1        X2        X3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.4217863 0.4496993 0.1157275 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.4514096 0.4792100 0.1183413 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Advective component:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        X1        X2        X3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2617702 0.2906207 0.1039419 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2865070 0.3114821 0.1060809 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diffusive component:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X1         X2         X3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16001602 0.15907855 0.01178562 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16490259 0.16772800 0.01226039 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

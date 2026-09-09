@@ -71,7 +71,7 @@ ot_indices(
 
   - `"sinkhorn"` (default), the Sinkhorn's solver (Cuturi 2013) .
 
-  - `"sinkhorn_log"`, the Sinkhorn's solver in log scale (Peyré et
+  - `"sinkhorn_stable"`, the Sinkhorn's solver in log scale (Peyré et
     al. 2019) .
 
   - `"transport"`, a solver of the non regularized OT problem using
@@ -130,11 +130,11 @@ ot_indices(
 - type:
 
   (default `"norm"`) Method to compute the default confidence interval.
-  Only considered if `boot = TRUE`. For more information, check the
-  `type` argument of
-  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html).
-  Different confidence intervals can be computed as a postprocessing
-  using
+  Only considered if `boot = TRUE`. The methods correspond to the `type`
+  argument of
+  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html). All
+  the methods except `"stud"` are supported. Different confidence
+  intervals can be computed as a postprocessing using
   [`confint.gsaot_indices()`](https://pietrocipolla.github.io/gsaot/reference/confint.gsaot_indices.md).
 
 ## Value
@@ -188,7 +188,7 @@ OT is a widely studied topic in Operational Research and Calculus. The
 reference for the OT solvers in this package is Peyré et al. (2019) .
 The default solver is `"sinkhorn"`, the Sinkhorn's solver introduced in
 Cuturi (2013) . It solves the entropic-regularized version of the OT
-problem. The `"sinkhorn_log"` solves the same OT problem but in log
+problem. The `"sinkhorn_stable"` solves the same OT problem but in log
 scale. It is more stable for low values of the regularization parameter
 but slower to converge. The option `"transport"` is used to choose a
 solver for the non-regularized OT problem. Under the hood, the function
@@ -203,7 +203,7 @@ the next section for more information.
 The argument `solver_optns` should be empty (for default options) or a
 list with all or some of the required solver parameters. All the
 parameters not included in the list will be set to default values. The
-solvers `"sinkhorn"` and `"sinkhorn_log"` have the same options:
+solvers `"sinkhorn"` and `"sinkhorn_stable"` have the same options:
 
 - `numIterations` (default `1e3`): a positive integer defining the
   maximum number of Sinkhorn's iterations allowed. If the solver does
@@ -279,5 +279,5 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6891182 0.7467046 0.4518757 
+#> 0.7014637 0.7429182 0.4787550 
 ```

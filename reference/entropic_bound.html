@@ -87,7 +87,7 @@ dimension of the cost matrix.</p></dd>
 <dd><p>Solver for the Optimal Transport problem. Currently supported
 options are:</p><ul><li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver (Cuturi 2013)
 .</p></li>
-<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
+<li><p><code>"sinkhorn_stable"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
 .</p></li>
 </ul></dd>
 
@@ -109,7 +109,7 @@ cost matrix.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function allows the computation of the entropic lower bounds.
-<code>solver</code> should be either <code>"sinkhorn"</code> or <code>"sinkhorn_log"</code>.</p>
+<code>solver</code> should be either <code>"sinkhorn"</code> or <code>"sinkhorn_stable"</code>.</p>
     </div>
 
     <div class="section level2">

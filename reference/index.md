@@ -12,9 +12,6 @@
 - [`gaussian_fun()`](https://pietrocipolla.github.io/gsaot/reference/gaussian_fun.md)
   : Multivariate Gaussian linear model evaluation
 
-- [`higher_order_terms()`](https://pietrocipolla.github.io/gsaot/reference/higher_order_terms.md)
-  : Higher order terms for optimal transport sensitivity indices
-
 - [`irrelevance_threshold()`](https://pietrocipolla.github.io/gsaot/reference/irrelevance_threshold.md)
   : Irrelevance threshold for optimal transport sensitivity indices
 
@@ -45,6 +42,10 @@
 
 - [`print(`*`<gsaot_indices>`*`)`](https://pietrocipolla.github.io/gsaot/reference/print.gsaot_indices.md)
   : Print optimal transport sensitivity indices information
+
+- [`residual_gap()`](https://pietrocipolla.github.io/gsaot/reference/residual_gap.md)
+  : Residual gap for optimal transport sensitivity indices based on
+  squared Euclidean ground cost
 
 - [`sobol_fun()`](https://pietrocipolla.github.io/gsaot/reference/sobol_fun.md)
   : Sobol G function evaluation

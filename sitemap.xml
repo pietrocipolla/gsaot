@@ -10,7 +10,6 @@
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/confint.gsaot_indices.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/entropic_bound.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/gaussian_fun.html</loc></url>
-<url><loc>https://pietrocipolla.github.io/gsaot/reference/higher_order_terms.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/index.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/irrelevance_threshold.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/ishi_homma_fun.html</loc></url>
@@ -22,6 +21,7 @@
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/plot_comparison.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/plot_separations.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/print.gsaot_indices.html</loc></url>
+<url><loc>https://pietrocipolla.github.io/gsaot/reference/residual_gap.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/sobol_fun.html</loc></url>
 <url><loc>https://pietrocipolla.github.io/gsaot/reference/summary.gsaot_indices.html</loc></url>
 </urlset>

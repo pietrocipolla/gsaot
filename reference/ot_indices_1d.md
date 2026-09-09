@@ -78,11 +78,11 @@ ot_indices_1d(
 - type:
 
   (default `"norm"`) Method to compute the default confidence interval.
-  Only considered if `boot = TRUE`. For more information, check the
-  `type` argument of
-  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html).
-  Different confidence intervals can be computed as a postprocessing
-  using
+  Only considered if `boot = TRUE`. The methods correspond to the `type`
+  argument of
+  [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html). All
+  the methods except `"stud"` are supported. Different confidence
+  intervals can be computed as a postprocessing using
   [`confint.gsaot_indices()`](https://pietrocipolla.github.io/gsaot/reference/confint.gsaot_indices.md).
 
 ## Value
@@ -142,6 +142,6 @@ ot_indices_1d(data.frame(x), y, 10)
 #> Method: 1-dimensional (p=2) 
 #> 
 #> Indices:
-#>        x 
-#> 0.849265 
+#>         x 
+#> 0.8492195 
 ```

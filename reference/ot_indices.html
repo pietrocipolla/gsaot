@@ -114,7 +114,7 @@ dimension of the cost matrix.</p></dd>
 <dd><p>Solver for the Optimal Transport problem. Currently supported
 options are:</p><ul><li><p><code>"sinkhorn"</code> (default), the Sinkhorn's solver (Cuturi 2013)
 .</p></li>
-<li><p><code>"sinkhorn_log"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
+<li><p><code>"sinkhorn_stable"</code>, the Sinkhorn's solver in log scale (Peyré et al. 2019)
 .</p></li>
 <li><p><code>"transport"</code>, a solver of the non regularized OT problem using <code><a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport()</a></code>.</p></li>
 </ul></dd>
@@ -170,9 +170,10 @@ confidence levels can be computed as a postprocessing using
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>(default <code>"norm"</code>) Method to compute the default confidence
-interval. Only considered if <code>boot = TRUE</code>. For more information, check the
-<code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. Different confidence intervals can be
-computed as a postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
+interval. Only considered if <code>boot = TRUE</code>. The methods correspond to
+the <code>type</code> argument of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>. All the methods except <code>"stud"</code>
+are supported. Different confidence intervals can be computed as a
+postprocessing using <code><a href="confint.gsaot_indices.html">confint.gsaot_indices()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -215,7 +216,7 @@ Peyré et al. (2019)
 <code>"sinkhorn"</code>, the Sinkhorn's solver introduced in
 Cuturi (2013)
 . It solves the
-entropic-regularized version of the OT problem. The <code>"sinkhorn_log"</code> solves
+entropic-regularized version of the OT problem. The <code>"sinkhorn_stable"</code> solves
 the same OT problem but in log scale. It is more stable for low values of
 the regularization parameter but slower to converge. The option
 <code>"transport"</code> is used to choose a solver for the non-regularized OT
@@ -232,7 +233,7 @@ section for more information.</p>
 <p>The argument <code>solver_optns</code> should be empty (for default options) or a list
 with all or some of the required solver parameters. All the parameters not
 included in the list will be set to default values. The solvers
-<code>"sinkhorn"</code> and <code>"sinkhorn_log"</code> have the same options:</p><ul><li><p><code>numIterations</code> (default <code>1e3</code>): a positive integer defining the maximum number
+<code>"sinkhorn"</code> and <code>"sinkhorn_stable"</code> have the same options:</p><ul><li><p><code>numIterations</code> (default <code>1e3</code>): a positive integer defining the maximum number
 of Sinkhorn's iterations allowed. If the solver does not converge in the
 number of iterations set, the solver will throw an error.</p></li>
 <li><p><code>epsilon</code> (default <code>0.01</code>): a positive real number defining the regularization
@@ -293,7 +294,7 @@ page.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indices:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        X1        X2        X3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6891182 0.7467046 0.4518757 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7014637 0.7429182 0.4787550 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

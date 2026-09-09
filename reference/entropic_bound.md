@@ -50,7 +50,7 @@ entropic_bound(
 
   - `"sinkhorn"` (default), the Sinkhorn's solver (Cuturi 2013) .
 
-  - `"sinkhorn_log"`, the Sinkhorn's solver in log scale (Peyré et
+  - `"sinkhorn_stable"`, the Sinkhorn's solver in log scale (Peyré et
     al. 2019) .
 
 - solver_optns:
@@ -70,7 +70,7 @@ A scalar representing the entropic lower bound.
 ## Details
 
 The function allows the computation of the entropic lower bounds.
-`solver` should be either `"sinkhorn"` or `"sinkhorn_log"`.
+`solver` should be either `"sinkhorn"` or `"sinkhorn_stable"`.
 
 ## Examples
 

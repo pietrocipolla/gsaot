@@ -28,8 +28,10 @@ confint(object, parm = NULL, level = 0.95, type = "norm", ...)
 
 - type:
 
-  (default is `"norm"`) Method to compute the confidence interval. For
-  more information, check the `type` option of
+  (default is `"norm"`) Method to compute the confidence interval.
+  `"stud"` uses a Student t interval centered on the bias-corrected
+  estimate with standard error estimated from the bootstrap replicates.
+  The other methods correspond to the `type` option of
   [`boot::boot.ci()`](https://rdrr.io/pkg/boot/man/boot.ci.html).
 
 - ...:

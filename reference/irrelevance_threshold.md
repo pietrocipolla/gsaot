@@ -61,7 +61,7 @@ irrelevance_threshold(
 
   - `"sinkhorn"` (default), the Sinkhorn's solver (Cuturi 2013) .
 
-  - `"sinkhorn_log"`, the Sinkhorn's solver in log scale (Peyré et
+  - `"sinkhorn_stable"`, the Sinkhorn's solver in log scale (Peyré et
     al. 2019) .
 
   - `"transport"`, a solver of the non regularized OT problem using
@@ -102,7 +102,7 @@ package:
   (for `solver="wasserstein-bures"`)
 
 - [`ot_indices()`](https://pietrocipolla.github.io/gsaot/reference/ot_indices.md)
-  (for `solver %in% c("sinkhorn", "sinkhorn_log", "wasserstein")`) The
+  (for `solver %in% c("sinkhorn", "sinkhorn_stable", "transport")`) The
   user can choose the distribution of the dummy variable using the
   argument `dummy_optns`. `dummy_optns` should be a named list with at
   least a term called `"distr"` defining the sampling function. The

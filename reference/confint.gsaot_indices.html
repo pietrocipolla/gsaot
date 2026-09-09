@@ -71,7 +71,9 @@ parameters are considered.</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>(default is <code>"norm"</code>) Method to compute the confidence interval.
-For more information, check the <code>type</code> option of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>.</p></dd>
+<code>"stud"</code> uses a Student t interval centered on the bias-corrected estimate
+with standard error estimated from the bootstrap replicates. The other
+methods correspond to the <code>type</code> option of <code><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot::boot.ci()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -100,7 +100,7 @@ supports three solvers:
 - `solver = "sinkhorn"`: solves the entropic-regularized OT problem.
   This is faster and more scalable, especially when you want
   bootstrapping.
-- `solver = "sinkhorn_log"`: numerically more stable for very small
+- `solver = "sinkhorn_stable"`: numerically more stable for very small
   regularization, at a higher cost.
 
 ### Small to medium data: `solver = "transport"`
@@ -156,7 +156,7 @@ The main knob for Sinkhorn is the regularization parameter `epsilon`:
 - Larger `epsilon` yields faster convergence but more smoothing, so
   indices may be less sensitive to fine structure.
 - Smaller `epsilon` yields solutions closer to non-regularized OT but is
-  slower and may require `sinkhorn_log` for stability.
+  slower and may require `sinkhorn_stable` for stability.
 
 You can explore this trade-off by running the same problem with
 different `epsilon` values.
@@ -171,7 +171,7 @@ res_eps_fast <- ot_indices(
 
 res_eps_precise <- ot_indices(
   x, Y, M = 20,
-  solver = "sinkhorn_log",
+  solver = "sinkhorn_stable",
   solver_optns = list(epsilon = 0.005, numIterations = 2000)
 )
 
@@ -182,11 +182,11 @@ res_eps_fast
 #>        x1        x2 
 #> 0.9194824 0.8251826
 res_eps_precise
-#> Method: sinkhorn_log 
+#> Method: sinkhorn_stable 
 #> 
 #> Indices:
 #>        x1        x2 
-#> 0.4432757 0.1757531
+#> 0.5494807 0.2966507
 ```
 
 ## Dimension 3: Wasserstein-Bures indices
