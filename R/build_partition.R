@@ -7,7 +7,7 @@ build_partition <- function(x, M) {
   partition_indices <- matrix(nrow = N, ncol = K)
 
   # Build the partition for each input
-  for (k in seq(K)) {
+  for (k in seq_len(K)) {
     # If the variable is continuous build the partititon using quantiles
     if (is.double(x[, k])) {
       partition_indices[, k] <- build_continuous_partition(x[, k], M)
@@ -41,7 +41,7 @@ build_continuous_partition <- function(x, M) {
 
   # Build the return structure
   partitions <- c(rep(NA, times = sum(is.na(x))),
-    rep(seq(M), times = diff(partitions_indices)))[ord]
+    rep(seq_len(M), times = diff(partitions_indices)))[ord]
 
   return(partitions)
 }
@@ -51,7 +51,9 @@ build_discrete_partition <- function(x) {
   if (is.integer(x)) {
     x_unique <- sort(unique(x[!is.na(x)]))
   } else if (is.factor(x)) {
-    x_unique <- levels(x[!is.na(x)])
+    # Subsetting a factor retains unused levels. Drop them so that every
+    # generated partition corresponds to at least one observed value.
+    x_unique <- levels(droplevels(x[!is.na(x)]))
   } else {
     x_unique <- unique(x[!is.na(x)])
   }
@@ -66,7 +68,7 @@ build_discrete_partition <- function(x) {
   partitions <- rep(NA, times = N)
 
   # Find the indices assigned to each partition
-  for (m in seq(M)) {
+  for (m in seq_len(M)) {
     partitions[x == x_unique[m]] <- m
 
     if (sum(partitions == m, na.rm = TRUE) == 1) {

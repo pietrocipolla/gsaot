@@ -43,7 +43,7 @@ options are:
 \item \code{"1d"}, the one-dimensional analytic solution.
 \item \code{"wasserstein-bures"}, the Wasserstein-Bures solution.
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"sinkhorn_stable"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 \item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
 }}
 
@@ -71,7 +71,7 @@ in the package:
 \itemize{
 \item \code{\link[=ot_indices_1d]{ot_indices_1d()}} (for \code{solver="1d"})
 \item \code{\link[=ot_indices_wb]{ot_indices_wb()}} (for \code{solver="wasserstein-bures"})
-\item \code{\link[=ot_indices]{ot_indices()}} (for \code{solver \%in\% c("sinkhorn", "sinkhorn_log", "wasserstein")})
+\item \code{\link[=ot_indices]{ot_indices()}} (for \code{solver \%in\% c("sinkhorn", "sinkhorn_stable", "transport")})
 The user can choose the distribution of the dummy variable using the
 argument \code{dummy_optns}. \code{dummy_optns} should be a named list with at least
 a term called \code{"distr"} defining the sampling function. The other terms in

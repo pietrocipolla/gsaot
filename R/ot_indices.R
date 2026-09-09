@@ -28,7 +28,7 @@
 #' @param solver Solver for the Optimal Transport problem. Currently supported
 #'   options are:
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"sinkhorn_stable"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' @param solver_optns (optional) A list containing the options for the Optimal
 #'   Transport solver. See details for allowed options and default ones.
@@ -55,9 +55,10 @@
 #'   confidence levels can be computed as a postprocessing using
 #'   [confint.gsaot_indices()].
 #' @param type (default `"norm"`) Method to compute the default confidence
-#'   interval. Only considered if `boot = TRUE`. For more information, check the
-#'   `type` argument of [boot::boot.ci()]. Different confidence intervals can be
-#'   computed as a postprocessing using [confint.gsaot_indices()].
+#'   interval. Only considered if `boot = TRUE`. The methods correspond to
+#'   the `type` argument of [boot::boot.ci()]. All the methods except `"stud"`
+#'   are supported. Different confidence intervals can be computed as a
+#'   postprocessing using [confint.gsaot_indices()].
 #'
 #' @details ## Solvers
 #'
@@ -66,7 +67,7 @@
 #'   \insertCite{peyre2019computational;textual}{gsaot}. The default solver is
 #'   `"sinkhorn"`, the Sinkhorn's solver introduced in
 #'   \insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
-#'   entropic-regularized version of the OT problem. The `"sinkhorn_log"` solves
+#'   entropic-regularized version of the OT problem. The `"sinkhorn_stable"` solves
 #'   the same OT problem but in log scale. It is more stable for low values of
 #'   the regularization parameter but slower to converge. The option
 #'   `"transport"` is used to choose a solver for the non-regularized OT
@@ -80,7 +81,7 @@
 #'   The argument `solver_optns` should be empty (for default options) or a list
 #'   with all or some of the required solver parameters. All the parameters not
 #'   included in the list will be set to default values. The solvers
-#'   `"sinkhorn"` and `"sinkhorn_log"` have the same options:
+#'   `"sinkhorn"` and `"sinkhorn_stable"` have the same options:
 #'   * `numIterations` (default `1e3`): a positive integer defining the maximum number
 #'   of Sinkhorn's iterations allowed. If the solver does not converge in the
 #'   number of iterations set, the solver will throw an error.
@@ -201,7 +202,7 @@ ot_indices <- function(x,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log", "transport"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable", "transport"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -278,7 +279,7 @@ ot_indices <- function(x,
   solver_fun <- switch (
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_log" = sinkhorn_stable,
+    "sinkhorn_stable" = sinkhorn_stable,
     "transport" = transport::transport,
     default = NULL
   )
@@ -408,6 +409,7 @@ ot_indices <- function(x,
                          IS = IS,
                          partitions = partitions,
                          x = x, y = y,
+                         is_L22 = ifelse(cost_type, TRUE, FALSE),
                          indices_ci = W_ci,
                          bound_ci = V_ci,
                          IS_ci = IS_ci,
@@ -425,7 +427,8 @@ ot_indices <- function(x,
                        bound = V,
                        IS = IS,
                        partitions = partitions,
-                       x = x, y = y)
+                       x = x, y = y,
+                       is_L22 = ifelse(cost_type, TRUE, FALSE))
 
   return(out)
 }

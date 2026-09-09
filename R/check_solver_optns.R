@@ -1,14 +1,16 @@
 check_solver_optns <- function(solver, solver_optns) {
+  default_tau <- 1e4
+
   # If no options are provided use default values
   if (is.null(solver_optns)) {
     solver_optns <- switch (solver,
       "sinkhorn" = list(numIterations = 1e3,
                         epsilon = 0.01,
                         maxErr = 1e-9),
-      "sinkhorn_log" = list(numIterations = 1e3,
+      "sinkhorn_stable" = list(numIterations = 1e3,
                         epsilon = 0.01,
                         maxErr = 1e-9,
-                        tau = 1e4),
+                        tau = default_tau),
       "transport" = list(fullreturn = TRUE)
     )
 
@@ -16,7 +18,7 @@ check_solver_optns <- function(solver, solver_optns) {
   }
 
   # If options are provided, check correctness for sinkhorn solvers
-  if (solver == "sinkhorn" || solver == "sinkhorn_log") {
+  if (solver == "sinkhorn" || solver == "sinkhorn_stable") {
     stopifnot(all(names(solver_optns) %in% c("numIterations", "epsilon", "maxErr", "tau")))
 
     if (!exists("numIterations", solver_optns)) {
@@ -28,8 +30,8 @@ check_solver_optns <- function(solver, solver_optns) {
     if (!exists("maxErr", solver_optns)) {
       solver_optns[["maxErr"]] <- 1e-9
     }
-    if (!exists("tau", solver_optns) && solver == "sinkhorn_log") {
-      solver_optns[["tau"]] <- 1e5
+    if (!exists("tau", solver_optns) && solver == "sinkhorn_stable") {
+      solver_optns[["tau"]] <- default_tau
     }
 
     return(solver_optns)

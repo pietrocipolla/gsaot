@@ -4,7 +4,7 @@ test_that("ot_indices_wb returns proper structure for univariate output", {
 
   expect_s3_class(result, "gsaot_indices")
   expect_named(result, c("method", "indices", "bound", "x", "y",
-                         "separation_measures", "partitions", "boot", "adv",
+                         "separation_measures", "partitions", "is_L22", "boot", "adv",
                          "diff"))
   expect_true(all(paste0("X", 1:8) %in% names(result$indices)))
 })
@@ -15,8 +15,8 @@ test_that("ot_indices_wb returns proper structure for multivariate output", {
 
   expect_s3_class(result, "gsaot_indices")
   expect_named(result, c("method", "indices", "bound", "x", "y",
-                         "separation_measures", "partitions", "boot", "adv",
-                         "diff"))
+                         "separation_measures", "partitions", "is_L22", "boot",
+                         "adv", "diff"))
   expect_true(all(paste0("X", 1:3) %in% names(result$indices)))
 })
 
@@ -26,7 +26,7 @@ test_that("ot_indices_wb handles bootstrapping", {
 
   expect_s3_class(result, "gsaot_indices")
   expect_named(result, c("method", "indices", "bound", "x", "y",
-                         "separation_measures", "partitions", "boot",
+                         "separation_measures", "partitions", "is_L22", "boot",
                          "adv", "diff",
                          "indices_ci", "separation_measures_ci",
                          "bound_ci", "R", "type", "conf", "W_boot"))

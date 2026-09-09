@@ -51,9 +51,10 @@ confidence levels can be computed as a postprocessing using
 \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 
 \item{type}{(default \code{"norm"}) Method to compute the default confidence
-interval. Only considered if \code{boot = TRUE}. For more information, check the
-\code{type} argument of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
-computed as a postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
+interval. Only considered if \code{boot = TRUE}. The methods correspond to
+the \code{type} argument of \code{\link[boot:boot.ci]{boot::boot.ci()}}. All the methods except \code{"stud"}
+are supported. Different confidence intervals can be computed as a
+postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 }
 \value{
 A \code{gsaot_indices} object containing:

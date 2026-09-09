@@ -7,10 +7,10 @@
 #' @param solver Solver for the Optimal Transport problem. Currently supported
 #'   options are:
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"sinkhorn_stable"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #'
 #' @details The function allows the computation of the entropic lower bounds.
-#' `solver` should be either `"sinkhorn"` or `"sinkhorn_log"`.
+#' `solver` should be either `"sinkhorn"` or `"sinkhorn_stable"`.
 #'
 #' @return A scalar representing the entropic lower bound.
 #' @export
@@ -62,7 +62,7 @@ entropic_bound <- function(y,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable"))
 
   # RETURN THE SINKHORN LOWER BOUND
   sink_ind <- entropic_lower_bound(y, cost, solver, solver_optns, discrete_out, scaling)
@@ -151,7 +151,7 @@ entropic_lower_bound <- function(y,
   return(sink_ind)
 }
 
-#' Higher order terms for optimal transport sensitivity indices
+#' Residual gap for optimal transport sensitivity indices based on squared Euclidean ground cost
 #'
 #' Compute the higher order terms as the difference between the output of
 #' [ot_indices()] and the output of [ot_indices_wb()] computed on the same
@@ -160,8 +160,8 @@ entropic_lower_bound <- function(y,
 #' @param ot_result An object returned by [ot_indices()].
 #' @param wb_result An object returned by [ot_indices_wb()].
 #'
-#' @details The helper only computes the point estimate difference between two
-#'   already computed results. The function does not check that the ground cost
+#' @details The helper computes the point estimate difference between two
+#'   already computed results. The function checks that the ground cost
 #'   used for the `ot_result` object is the squared Euclidean one (default). The
 #'   user should therefore pay attention to this aspect when using the function.
 #'
@@ -173,9 +173,9 @@ entropic_lower_bound <- function(y,
 #' dat <- gaussian_fun(1000)
 #' ot_result <- ot_indices(dat$x, dat$y, 10)
 #' wb_result <- ot_indices_wb(dat$x, dat$y, 10)
-#' higher_order_terms(ot_result, wb_result)
+#' residual_gap(ot_result, wb_result)
 #'
-higher_order_terms <- function(ot_result, wb_result) {
+residual_gap <- function(ot_result, wb_result) {
   if (!inherits(ot_result, "gsaot_indices"))
     stop("`ot_result` must be an object returned by `ot_indices()`")
 
@@ -188,10 +188,13 @@ higher_order_terms <- function(ot_result, wb_result) {
   if (length(ot_result$indices) != length(wb_result$indices))
     stop("`ot_result` and `wb_result` must have the same number of inputs")
 
-  higher_terms <- ot_result$indices - wb_result$indices
-  names(higher_terms) <- names(ot_result$indices)
+  if (!ot_result$is_L22)
+    stop("`ot_result` must be computed using the squared Euclidean ground cost, L2")
 
-  higher_separation_measures <- lapply(seq_along(higher_terms), function(k) {
+  gap <- ot_result$indices - wb_result$indices
+  names(gap) <- names(ot_result$indices)
+
+  higher_separation_measures <- lapply(seq_along(gap), function(k) {
     ot_sep <- ot_result$separation_measures[[k]]
     wb_sep <- wb_result$separation_measures[[k]]
 
@@ -201,8 +204,8 @@ higher_order_terms <- function(ot_result, wb_result) {
     ot_sep - wb_sep[1, , drop = FALSE]
   })
 
-  out <- gsaot_indices(method = "higher order terms",
-                       indices = higher_terms,
+  out <- gsaot_indices(method = "residual gap",
+                       indices = gap,
                        bound = ot_result$bound,
                        IS = higher_separation_measures,
                        partitions = ot_result$partitions,
@@ -223,7 +226,7 @@ higher_order_terms <- function(ot_result, wb_result) {
 #' * `"1d"`, the one-dimensional analytic solution.
 #' * `"wasserstein-bures"`, the Wasserstein-Bures solution.
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"sinkhorn_stable"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' @param dummy_optns (default `NULL`) A list containing the options on the
 #'   distribution of the dummy variable. See `details` for more information.
@@ -237,7 +240,7 @@ higher_order_terms <- function(ot_result, wb_result) {
 #'   in the package:
 #' * [ot_indices_1d()] (for `solver="1d"`)
 #' * [ot_indices_wb()] (for `solver="wasserstein-bures"`)
-#' * [ot_indices()] (for `solver %in% c("sinkhorn", "sinkhorn_log", "wasserstein")`)
+#' * [ot_indices()] (for `solver %in% c("sinkhorn", "sinkhorn_stable", "transport")`)
 #'   The user can choose the distribution of the dummy variable using the
 #'   argument `dummy_optns`. `dummy_optns` should be a named list with at least
 #'   a term called `"distr"` defining the sampling function. The other terms in
@@ -301,7 +304,7 @@ irrelevance_threshold <- function(y,
 
   # Check if the solver is present in the pool
   match.arg(solver, c("1d", "wasserstein-bures", "sinkhorn",
-                      "sinkhorn_log", "transport", "sinkhorn_div"))
+                      "sinkhorn_stable", "transport"))
 
   # RETURN THE DUMMY INDICES
   # ----------------------------------------------------------------------------
@@ -326,7 +329,7 @@ irrelevance_threshold <- function(y,
                                                 solver,
                                                 solver_optns,
                                                 scaling),
-                        "sinkhorn_log" = ot_indices(x,
+                        "sinkhorn_stable" = ot_indices(x,
                                                     y,
                                                     M,
                                                     cost,
@@ -361,4 +364,3 @@ init_dummy_optns <- function(dummy_optns) {
 
   return(dummy_optns)
 }
-

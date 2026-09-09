@@ -8,6 +8,7 @@ gsaot_indices <- function(method,
                           IS,
                           partitions,
                           x, y,
+                          is_L22 = TRUE,
                           solver_optns = NULL,
                           Adv = NULL,
                           Diff = NULL,
@@ -24,6 +25,7 @@ gsaot_indices <- function(method,
                 x = x, y = y,
                 separation_measures = IS,
                 partitions = partitions,
+                is_L22 = is_L22,
                 boot = FALSE)
 
   if (!is.null(solver_optns))
@@ -363,7 +365,9 @@ summary.gsaot_indices <- function(object, digits = 3, ranking = NULL, ...) {
 #'   parameters are considered.
 #' @param level (default is 0.95) Confidence level for the interval.
 #' @param type (default is \code{"norm"}) Method to compute the confidence interval.
-#'   For more information, check the `type` option of [boot::boot.ci()].
+#'   `"stud"` uses a Student t interval centered on the bias-corrected estimate
+#'   with standard error estimated from the bootstrap replicates. The other
+#'   methods correspond to the `type` option of [boot::boot.ci()].
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return A data frame with the following columns:

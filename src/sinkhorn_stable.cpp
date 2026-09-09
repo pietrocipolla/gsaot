@@ -113,19 +113,23 @@ List sinkhorn_stable_cpp(Eigen::VectorXd a,
     return List::create(Named("Error") = "Increase number of iterations");
   }
 
-  // // Potentials (dual variables)
-  // Eigen::VectorXd f(epsilon * u);
-  // Eigen::VectorXd g(epsilon * v);
-  //
-  // // Wasserstein dual
-  // double W22 = f.dot(a) + g.dot(b);
+  // Recover the effective dual potentials for the KL-regularized problem.
+  // The absorbed potentials alpha and beta represent the large part of the
+  // scalings, while u_tilde and v_tilde contain the residual part. Since the
+  // reference measure in KL(P | a \otimes b) is a \otimes b, the duals are
+  // alpha + epsilon * log(u_tilde / a) and
+  // beta  + epsilon * log(v_tilde / b), respectively.
+  Eigen::VectorXd f = alpha +
+    epsilon * (u_tilde.array() / a.array()).log().matrix();
+  Eigen::VectorXd g = beta +
+    epsilon * (v_tilde.array() / b.array()).log().matrix();
 
-  // Optimal coupling
-  Eigen::MatrixXd P((K.array().colwise() * u_tilde.array()).rowwise() * v_tilde.array().transpose());
-  // Rcout << "P " << P.maxCoeff() << std::endl;
-
-  // Wasserstein distance
-  double W22_prime = (P.transpose() * costMatrix).trace();
+  // Evaluate the full dual objective without constructing the transport
+  // matrix. The exponential term has total mass
+  // u_tilde^T K v_tilde and equals one at exact feasibility.
+  double transportedMass = u_tilde.dot(K * v_tilde);
+  double entropicCost = f.dot(a) + g.dot(b) -
+    epsilon * transportedMass + epsilon;
 
   // Return u and v as a List
   return List::create(
@@ -133,8 +137,7 @@ List sinkhorn_stable_cpp(Eigen::VectorXd a,
     // Named("f") = f,
     // Named("g") = g,
     // Named("P") = P,
-    Named("cost") = W22_prime
-    // Named("cost_dual") = W22
+    Named("cost") = entropicCost
   );
 }
 
@@ -158,5 +161,5 @@ List sinkhorn_stable(Eigen::VectorXd a,
 // # a <- rep(1 / n, n)
 // # b <- rep(1 / m, m)
 // # C <- as.matrix(dist(rnorm(100)))#[, 1:50]
-// # sinkhorn_log(a, b, C, 1e5, 0.0000001, 1e-3, 1e5)
+// # sinkhorn_stable(a, b, C, 1e5, 0.0000001, 1e-3, 1e5)
 // # */

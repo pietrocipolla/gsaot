@@ -1,4 +1,10 @@
-* Added function `higher_order_terms()` to compute the higher-order terms of 
+* `ot_indices()` with `solver="sinkhorn"` or `solver="sinkhorn_stable"` now
+returns the full entropic cost, not only the dot product between the cost and
+the transport matrix
+
+* Changed naming from `"sinkhorn_log"` to `"sinkhorn_stable"` for consistency
+
+* Added function `residual_gap()` to compute the residual gap of 
 the Wasserstein-Bures decomposition
 
 * Improved `irrelevance_threshold`. Now it computes the threshold as an average 

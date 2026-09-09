@@ -17,7 +17,9 @@ parameters are considered.}
 \item{level}{(default is 0.95) Confidence level for the interval.}
 
 \item{type}{(default is \code{"norm"}) Method to compute the confidence interval.
-For more information, check the \code{type} option of \code{\link[boot:boot.ci]{boot::boot.ci()}}.}
+\code{"stud"} uses a Student t interval centered on the bias-corrected estimate
+with standard error estimated from the bootstrap replicates. The other
+methods correspond to the \code{type} option of \code{\link[boot:boot.ci]{boot::boot.ci()}}.}
 
 \item{...}{Additional arguments (currently unused).}
 }

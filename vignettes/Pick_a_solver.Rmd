@@ -69,7 +69,7 @@ The function `ot_indices()` supports three solvers:
 
 - `solver = "transport"`: solves the non-regularized OT problem via the `transport` package. This is a solid default for small to medium data sets when you want a close match to the exact OT solution.
 - `solver = "sinkhorn"`: solves the entropic-regularized OT problem. This is faster and more scalable, especially when you want bootstrapping.
-- `solver = "sinkhorn_log"`: numerically more stable for very small regularization, at a higher cost.
+- `solver = "sinkhorn_stable"`: numerically more stable for very small regularization, at a higher cost.
 
 ### Small to medium data: `solver = "transport"`
 
@@ -101,7 +101,7 @@ res_sinkhorn
 The main knob for Sinkhorn is the regularization parameter `epsilon`:
 
 - Larger `epsilon` yields faster convergence but more smoothing, so indices may be less sensitive to fine structure.
-- Smaller `epsilon` yields solutions closer to non-regularized OT but is slower and may require `sinkhorn_log` for stability.
+- Smaller `epsilon` yields solutions closer to non-regularized OT but is slower and may require `sinkhorn_stable` for stability.
 
 You can explore this trade-off by running the same problem with different `epsilon` values.
 
@@ -114,7 +114,7 @@ res_eps_fast <- ot_indices(
 
 res_eps_precise <- ot_indices(
   x, Y, M = 20,
-  solver = "sinkhorn_log",
+  solver = "sinkhorn_stable",
   solver_optns = list(epsilon = 0.005, numIterations = 2000)
 )
 
