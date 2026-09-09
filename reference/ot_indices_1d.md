@@ -143,5 +143,5 @@ ot_indices_1d(data.frame(x), y, 10)
 #> 
 #> Indices:
 #>         x 
-#> 0.8492195 
+#> 0.8546307 
 ```
