@@ -1,3 +1,17 @@
+# gsaot 1.2.0
+
+* `ot_indices()` with `solver="sinkhorn"` or `solver="sinkhorn_stable"` now
+returns the full entropic cost, not only the dot product between the cost and
+the transport matrix
+
+* Changed naming from `"sinkhorn_log"` to `"sinkhorn_stable"` for consistency
+
+* Added function `residual_gap()` to compute the residual gap of 
+the Wasserstein-Bures decomposition
+
+* Improved `irrelevance_threshold`. Now it computes the threshold as an average 
+of many draws
+
 * Added tests
 
 * Added new vignette on picking a solver

@@ -7,10 +7,10 @@
 #' @param solver Solver for the Optimal Transport problem. Currently supported
 #'   options are:
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"sinkhorn_stable"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #'
 #' @details The function allows the computation of the entropic lower bounds.
-#' `solver` should be either `"sinkhorn"` or `"sinkhorn_log"`.
+#' `solver` should be either `"sinkhorn"` or `"sinkhorn_stable"`.
 #'
 #' @return A scalar representing the entropic lower bound.
 #' @export
@@ -62,7 +62,7 @@ entropic_bound <- function(y,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable"))
 
   # RETURN THE SINKHORN LOWER BOUND
   sink_ind <- entropic_lower_bound(y, cost, solver, solver_optns, discrete_out, scaling)
@@ -151,6 +151,70 @@ entropic_lower_bound <- function(y,
   return(sink_ind)
 }
 
+#' Residual gap for optimal transport sensitivity indices based on squared Euclidean ground cost
+#'
+#' Compute the higher order terms as the difference between the output of
+#' [ot_indices()] and the output of [ot_indices_wb()] computed on the same
+#' sample.
+#'
+#' @param ot_result An object returned by [ot_indices()].
+#' @param wb_result An object returned by [ot_indices_wb()].
+#'
+#' @details The helper computes the point estimate difference between two
+#'   already computed results. The function checks that the ground cost
+#'   used for the `ot_result` object is the squared Euclidean one (default). The
+#'   user should therefore pay attention to this aspect when using the function.
+#'
+#' @return An object of class `gsaot_indices` containing the higher order terms
+#'   of the Wasserstein-Bures decomposition.
+#' @export
+#'
+#' @examples
+#' dat <- gaussian_fun(1000)
+#' ot_result <- ot_indices(dat$x, dat$y, 10)
+#' wb_result <- ot_indices_wb(dat$x, dat$y, 10)
+#' residual_gap(ot_result, wb_result)
+#'
+residual_gap <- function(ot_result, wb_result) {
+  if (!inherits(ot_result, "gsaot_indices"))
+    stop("`ot_result` must be an object returned by `ot_indices()`")
+
+  if (!inherits(wb_result, "gsaot_indices"))
+    stop("`wb_result` must be an object returned by `ot_indices_wb()`")
+
+  if (is.null(ot_result$indices) || is.null(wb_result$indices))
+    stop("Both results must contain `indices`")
+
+  if (length(ot_result$indices) != length(wb_result$indices))
+    stop("`ot_result` and `wb_result` must have the same number of inputs")
+
+  if (!ot_result$is_L22)
+    stop("`ot_result` must be computed using the squared Euclidean ground cost, L2")
+
+  gap <- ot_result$indices - wb_result$indices
+  names(gap) <- names(ot_result$indices)
+
+  higher_separation_measures <- lapply(seq_along(gap), function(k) {
+    ot_sep <- ot_result$separation_measures[[k]]
+    wb_sep <- wb_result$separation_measures[[k]]
+
+    if (is.null(ot_sep) || is.null(wb_sep))
+      return(NULL)
+
+    ot_sep - wb_sep[1, , drop = FALSE]
+  })
+
+  out <- gsaot_indices(method = "residual gap",
+                       indices = gap,
+                       bound = ot_result$bound,
+                       IS = higher_separation_measures,
+                       partitions = ot_result$partitions,
+                       x = ot_result$x,
+                       y = ot_result$y)
+
+  return(out)
+}
+
 #' Irrelevance threshold for optimal transport sensitivity indices
 #'
 #' Calculate irrelevance threshold using dummy variable for Optimal Transport sensitivity indices
@@ -162,7 +226,7 @@ entropic_lower_bound <- function(y,
 #' * `"1d"`, the one-dimensional analytic solution.
 #' * `"wasserstein-bures"`, the Wasserstein-Bures solution.
 #' * `"sinkhorn"` (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-#' * `"sinkhorn_log"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+#' * `"sinkhorn_stable"`, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 #' * `"transport"`, a solver of the non regularized OT problem using [transport::transport()].
 #' * `"sinkhorn_div"`, the Sinkhorn's solver for the divergence-based indices.
 #' @param dummy_optns (default `NULL`) A list containing the options on the
@@ -177,7 +241,7 @@ entropic_lower_bound <- function(y,
 #'   in the package:
 #' * [ot_indices_1d()] (for `solver="1d"`)
 #' * [ot_indices_wb()] (for `solver="wasserstein-bures"`)
-#' * [ot_indices()] (for `solver %in% c("sinkhorn", "sinkhorn_log", "wasserstein")`)
+#' * [ot_indices()] (for `solver %in% c("sinkhorn", "sinkhorn_stable", "transport")`)
 #'   The user can choose the distribution of the dummy variable using the
 #'   argument `dummy_optns`. `dummy_optns` should be a named list with at least
 #'   a term called `"distr"` defining the sampling function. The other terms in
@@ -204,13 +268,12 @@ entropic_lower_bound <- function(y,
 #'
 #' M <- 25
 #'
-#' dummy_lb <- irrelevance_threshold(y, M)
-#'
 #' # Custom sampling funtion and network simplex solver
 #' dummy_optns <- list(distr = "rgamma", shape = 3)
 #' dummy_lb_cust <- irrelevance_threshold(y, M,
 #'                                       dummy_optns = dummy_optns,
-#'                                       solver = "transport")
+#'                                       solver = "transport",
+#'                                       R_irr = 5)
 irrelevance_threshold <- function(y,
                                   M,
                                   dummy_optns = NULL,
@@ -262,11 +325,11 @@ irrelevance_threshold <- function(y,
                                                 y,
                                                 M,
                                                 cost,
-                                                discrete_out,
                                                 solver,
+                                                discrete_out,
                                                 solver_optns,
                                                 scaling),
-                        "sinkhorn_log" = ot_indices(x,
+                        "sinkhorn_stable" = ot_indices(x,
                                                     y,
                                                     M,
                                                     cost,
@@ -299,96 +362,6 @@ irrelevance_threshold <- function(y,
   dummy_ind <- mean(ind_iter)
 
   return(dummy_ind)
-}
-
-# Check that the bound_optns contain the required components, otherwise initialize them
-init_dummy_optns <- function(dummy_optns) {
-  if (is.null(dummy_optns)) {
-    dummy_optns <- list(distr = "rnorm")
-  }
-
-  return(dummy_optns)
-}
-
-# Compute the sinkhorn lower bound
-entropic_lower_bound <- function(y,
-                                 cost,
-                                 solver,
-                                 solver_optns,
-                                 discrete_out,
-                                 scaling) {
-  # Initialize useful values
-  N <- nrow(as.matrix(y))
-  cost_type <- identical(cost, "L2")
-
-  # BUILD AN HISTOGRAM IF REQUESTED (otherwise assume equal weights)
-  # ----------------------------------------------------------------------------
-  # Default values for continuous output
-  a <- rep(1 / N, N)
-  y_unique <- NULL
-
-  if (discrete_out) {
-    # y_unique is always needed, in order to avoid mismatches between the
-    # pre-computed cost matrix and the resampled outputs
-    y_unique <- unique(y)
-
-    # Function to build the histogram (maybe we can put this outside to make it
-    # easier to change?)
-    a <- apply(y_unique, MARGIN = 1, FUN = function(u) sum(
-      apply(y, 1, FUN = function(row) all(row == u)))) / N
-  }
-
-  if (identical(a, rep(1 / N, N)) & discrete_out)
-    warning("The output is continuous, consider using `discrete_out=FALSE`\n")
-
-  # BUILD COST MATRIX
-  # ----------------------------------------------------------------------------
-  if (discrete_out) {
-    if (cost_type) {
-      C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
-    } else {
-      C <- cost(y_unique)
-    }
-  } else {
-    if (cost_type) {
-      C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
-    } else {
-      C <- cost(y)
-    }
-  }
-
-  # If the scaling is requested, scale the cost matrix by the highest value
-  scaling_param <- 1
-  if (scaling) {
-    scaling_param <- max(C)
-    C <- C / scaling_param
-  }
-
-  # DEFINE THE OT SOLVER
-  # ----------------------------------------------------------------------------
-  solver_fun <- switch (
-    solver,
-    "sinkhorn" = sinkhorn,
-    "sinkhorn_stable" = sinkhorn_stable,
-    default = NULL
-  )
-
-  # Check the consistency of the options provided
-  solver_optns <- check_solver_optns(solver, solver_optns)
-
-  # Evaluate the upper bound of the indices
-  # ----------------------------------------------------------------------------
-  V <- higher_bound(C) * scaling_param
-
-  # COMPUTE THE LOWER BOUND
-  # ----------------------------------------------------------------------------
-  ret <- do.call(solver_fun,
-                 c(list(a = a, b = a, costm = C),
-                   solver_optns))
-
-  sink_ind <- ret$cost * scaling_param / V
-
-  return(sink_ind)
 }
 
 # Check that the bound_optns contain the required components, otherwise initialize them

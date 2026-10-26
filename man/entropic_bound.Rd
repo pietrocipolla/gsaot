@@ -36,7 +36,7 @@ dimension of the cost matrix.}
 options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"sinkhorn_stable"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 }}
 
 \item{solver_optns}{(optional) A list containing the options for the Optimal
@@ -53,7 +53,7 @@ Calculate entropic lower bounds for entropic Optimal Transport sensitivity indic
 }
 \details{
 The function allows the computation of the entropic lower bounds.
-\code{solver} should be either \code{"sinkhorn"} or \code{"sinkhorn_log"}.
+\code{solver} should be either \code{"sinkhorn"} or \code{"sinkhorn_stable"}.
 }
 \examples{
 N <- 1000

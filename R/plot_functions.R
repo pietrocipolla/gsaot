@@ -340,8 +340,8 @@ plot_comparison <- function(x_list,
     # Read the method name for plotting
     method_name <- obj$method
 
-    # Format method name with epsilon if method is "sinkhorn" or "sinkhorn_log"
-    if (method_name %in% c("sinkhorn", "sinkhorn_log")) {
+    # Format method name with epsilon for either Sinkhorn implementation
+    if (method_name %in% c("sinkhorn", "sinkhorn_stable")) {
       epsilon_val <- format(obj$solver_optns$epsilon, scientific = FALSE)
       method_name <- paste0(method_name, " (eps=", epsilon_val, ")")
     }
@@ -404,5 +404,4 @@ plot_comparison <- function(x_list,
 
   return(p)
 }
-
 

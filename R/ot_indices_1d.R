@@ -165,6 +165,7 @@ ot_indices_1d <- function(x,
                          IS = IS,
                          partitions = partitions,
                          x = x, y = y,
+                         is_L22 = ifelse(p == 2, TRUE, FALSE),
                          indices_ci = W_ci,
                          bound_ci = V_ci,
                          IS_ci = IS_ci,
@@ -181,7 +182,8 @@ ot_indices_1d <- function(x,
                        bound = V,
                        IS = IS,
                        partitions = partitions,
-                       x = x, y = y)
+                       x = x, y = y,
+                       is_L22 = ifelse(p == 2, TRUE, FALSE))
 
   return(out)
 }

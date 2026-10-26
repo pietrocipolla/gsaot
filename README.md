@@ -46,7 +46,7 @@ remotes::install_github("pietrocipolla/gsaot")
 
 ### :exclamation: :exclamation: Installation note
 
-The `sinkhorn` and `sinkhorn_log` solvers in `gsaot` greatly benefit
+The `sinkhorn` and `sinkhorn_stable` solvers in `gsaot` greatly benefit
 from optimization in compilation. To add this option (before package
 installation), edit your `.R/Makevars` file with the desired flags. Even
 though different compilers have different options, a common flag to
@@ -96,7 +96,7 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.6061460 0.6337609 0.2922763
+#> 0.7230669 0.7725176 0.5109855
 ```
 
 Second, Network Simplex solver:
@@ -108,7 +108,7 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.5049639 0.5188542 0.1682235
+#> 0.4932602 0.5307910 0.1787914
 ```
 
 Third, Wasserstein-Bures solver, with bootstrap:
@@ -120,30 +120,30 @@ sensitivity_indices
 #> 
 #> Indices:
 #>        X1        X2        X3 
-#> 0.4751984 0.4826512 0.1044734 
+#> 0.4586257 0.4905809 0.1132465 
 #> 
 #> Advective component:
-#>         X1         X2         X3 
-#> 0.28905226 0.30849658 0.09739885 
+#>        X1        X2        X3 
+#> 0.2810481 0.3110967 0.1048114 
 #> 
 #> Diffusive component:
-#>         X1         X2         X3 
-#> 0.18614614 0.17415462 0.00707455 
+#>          X1          X2          X3 
+#> 0.177577600 0.179484207 0.008435054 
 #> 
 #> Type of confidence interval: norm 
 #> Number of replicates: 100 
 #> Confidence level: 0.95 
 #> Bootstrap statistics:
 #>   input  component   original        bias      low.ci    high.ci
-#> 1    X1 wass-bures 0.48387515 0.008676749 0.458657687 0.49173911
-#> 2    X2 wass-bures 0.49374040 0.011089198 0.466735426 0.49856697
-#> 3    X3 wass-bures 0.12212017 0.017646775 0.083725558 0.12522124
-#> 4    X1  advective 0.29324822 0.004195965 0.278010956 0.30009356
-#> 5    X2  advective 0.31343443 0.004937852 0.298375896 0.31861727
-#> 6    X3  advective 0.10624660 0.008847758 0.080308465 0.11448923
-#> 7    X1  diffusive 0.19062692 0.004480784 0.178795145 0.19349713
-#> 8    X2  diffusive 0.18030596 0.006151346 0.166726877 0.18158236
-#> 9    X3  diffusive 0.01587357 0.008799018 0.001765732 0.01238337
+#> 1    X1 wass-bures 0.47094416 0.012318475 0.439759468 0.47749190
+#> 2    X2 wass-bures 0.50234531 0.011764409 0.473281120 0.50788069
+#> 3    X3 wass-bures 0.13081694 0.017570472 0.095125939 0.13136699
+#> 4    X1  advective 0.28762307 0.006574989 0.268271901 0.29382427
+#> 5    X2  advective 0.31613211 0.005035409 0.300270370 0.32192303
+#> 6    X3  advective 0.11369616 0.008884746 0.089916886 0.11970594
+#> 7    X1  diffusive 0.18332109 0.005743487 0.169803189 0.18535201
+#> 8    X2  diffusive 0.18621321 0.006729000 0.171303894 0.18766452
+#> 9    X3  diffusive 0.01712078 0.008685726 0.003249537 0.01362057
 ```
 
 Fourth, we can use the package to compute the sensitivity map on the
@@ -153,6 +153,6 @@ output:
 sensitivity_indices <- ot_indices_smap(x, y, M)
 sensitivity_indices
 #>             X1         X2        X3
-#> [1,] 0.5898173 0.03863799 0.1744461
-#> [2,] 0.3094364 0.70845462 0.1216729
+#> [1,] 0.5814812 0.04629205 0.1866779
+#> [2,] 0.2987823 0.71591879 0.1291407
 ```

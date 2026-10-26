@@ -52,7 +52,7 @@ dimension of the cost matrix.}
 options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"sinkhorn_stable"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 \item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
 }}
 
@@ -89,9 +89,10 @@ confidence levels can be computed as a postprocessing using
 \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 
 \item{type}{(default \code{"norm"}) Method to compute the default confidence
-interval. Only considered if \code{boot = TRUE}. For more information, check the
-\code{type} argument of \code{\link[boot:boot.ci]{boot::boot.ci()}}. Different confidence intervals can be
-computed as a postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
+interval. Only considered if \code{boot = TRUE}. The methods correspond to
+the \code{type} argument of \code{\link[boot:boot.ci]{boot::boot.ci()}}. All the methods except \code{"stud"}
+are supported. Different confidence intervals can be computed as a
+postprocessing using \code{\link[=confint.gsaot_indices]{confint.gsaot_indices()}}.}
 }
 \value{
 A \code{gsaot_indices} object containing:
@@ -139,7 +140,7 @@ reference for the OT solvers in this package is
 \insertCite{peyre2019computational;textual}{gsaot}. The default solver is
 \code{"sinkhorn"}, the Sinkhorn's solver introduced in
 \insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
-entropic-regularized version of the OT problem. The \code{"sinkhorn_log"} solves
+entropic-regularized version of the OT problem. The \code{"sinkhorn_stable"} solves
 the same OT problem but in log scale. It is more stable for low values of
 the regularization parameter but slower to converge. The option
 \code{"transport"} is used to choose a solver for the non-regularized OT
@@ -154,7 +155,7 @@ section for more information.
 The argument \code{solver_optns} should be empty (for default options) or a list
 with all or some of the required solver parameters. All the parameters not
 included in the list will be set to default values. The solvers
-\code{"sinkhorn"} and \code{"sinkhorn_log"} have the same options:
+\code{"sinkhorn"} and \code{"sinkhorn_stable"} have the same options:
 \itemize{
 \item \code{numIterations} (default \code{1e3}): a positive integer defining the maximum number
 of Sinkhorn's iterations allowed. If the solver does not converge in the
