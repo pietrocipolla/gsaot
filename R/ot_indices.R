@@ -251,13 +251,13 @@ ot_indices <- function(x,
   # ----------------------------------------------------------------------------
   if (discrete_out) {
     if (cost_type) {
-      C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
+      C <- squared_euclidean_cost(y_unique)
     } else {
       C <- cost(y_unique)
       }
   } else {
     if (cost_type) {
-      C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
+      C <- squared_euclidean_cost(y)
     } else {
       C <- cost(y)
     }

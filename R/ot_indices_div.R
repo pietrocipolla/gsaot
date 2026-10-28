@@ -12,7 +12,7 @@
 #'   The default solver is
 #'   `"sinkhorn"`, the Sinkhorn's solver introduced in
 #'   \insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
-#'   entropic-regularized version of the OT problem. The `"sinkhorn_log"` solves
+#'   entropic-regularized version of the OT problem. The `"sinkhorn_stable"` solves
 #'   the same OT problem but in log scale. It is more stable for low values of
 #'   the regularization parameter but slower to converge. Differently from [ot_indices()], the option
 #'   `"transport"` is not available. See the next section for more information.
@@ -22,7 +22,7 @@
 #'   The argument `solver_optns` should be empty (for default options) or a list
 #'   with all or some of the required solver parameters. All the parameters not
 #'   included in the list will be set to default values. The solvers
-#'   `"sinkhorn"` and `"sinkhorn_log"` have the same options:
+#'   `"sinkhorn"` and `"sinkhorn_stable"` have the same options:
 #'   * `numIterations` (default `1e3`): a positive integer defining the maximum number
 #'   of Sinkhorn's iterations allowed. If the solver does not converge in the
 #'   number of iterations set, the solver will throw an error.
@@ -106,7 +106,7 @@ ot_indices_div <- function(x,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -155,13 +155,13 @@ ot_indices_div <- function(x,
   # ----------------------------------------------------------------------------
   if (discrete_out) {
     if (cost_type) {
-      C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
+      C <- squared_euclidean_cost(y_unique)
     } else {
       C <- cost(y_unique)
     }
   } else {
     if (cost_type) {
-      C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
+      C <- squared_euclidean_cost(y)
     } else {
       C <- cost(y)
     }
@@ -183,7 +183,7 @@ ot_indices_div <- function(x,
   solver_fun <- switch(
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_log" = sinkhorn_stable,
+    "sinkhorn_stable" = sinkhorn_stable,
     default = NULL
   )
 

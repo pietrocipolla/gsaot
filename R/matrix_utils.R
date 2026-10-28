@@ -10,6 +10,21 @@ sqrtm <- function(A) {
   return(RA)
 }
 
+# Compute squared Euclidean distances without as.matrix(dist()), whose integer
+# indexing overflows once the dense matrix has more than 2^31 - 1 entries.
+squared_euclidean_cost <- function(y) {
+  squared_norms <- rowSums(y * y)
+  cost <- tcrossprod(y)
+
+  for (j in seq_len(ncol(cost))) {
+    cost[, j] <- pmax(0, squared_norms + squared_norms[j] - 2 * cost[, j])
+  }
+
+  diag(cost) <- 0
+
+  return(cost)
+}
+
 tracesqrtm <- function(A) {
   if (ncol(A) == 1) return(sqrt(A))
 

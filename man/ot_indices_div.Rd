@@ -52,7 +52,7 @@ dimension of the cost matrix.}
 options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"sinkhorn_stable"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 \item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
 }}
 
@@ -137,7 +137,7 @@ with values ranging between 0 and 1.
 The default solver is
 \code{"sinkhorn"}, the Sinkhorn's solver introduced in
 \insertCite{cuturi2013sinkhorn;textual}{gsaot}. It solves the
-entropic-regularized version of the OT problem. The \code{"sinkhorn_log"} solves
+entropic-regularized version of the OT problem. The \code{"sinkhorn_stable"} solves
 the same OT problem but in log scale. It is more stable for low values of
 the regularization parameter but slower to converge. Differently from \code{\link[=ot_indices]{ot_indices()}}, the option
 \code{"transport"} is not available. See the next section for more information.
@@ -148,7 +148,7 @@ the regularization parameter but slower to converge. Differently from \code{\lin
 The argument \code{solver_optns} should be empty (for default options) or a list
 with all or some of the required solver parameters. All the parameters not
 included in the list will be set to default values. The solvers
-\code{"sinkhorn"} and \code{"sinkhorn_log"} have the same options:
+\code{"sinkhorn"} and \code{"sinkhorn_stable"} have the same options:
 \itemize{
 \item \code{numIterations} (default \code{1e3}): a positive integer defining the maximum number
 of Sinkhorn's iterations allowed. If the solver does not converge in the

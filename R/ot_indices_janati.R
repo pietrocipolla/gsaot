@@ -64,7 +64,7 @@ ot_indices_janati <- function(x,
   if (!is.logical(scaling)) stop("`scaling` should be logical")
 
   # Check if the solver is present in the pool
-  match.arg(solver, c("sinkhorn", "sinkhorn_log"))
+  match.arg(solver, c("sinkhorn", "sinkhorn_stable"))
 
   # Check that bootstrapping is correctly set
   if ((!boot & !is.null(R)) | (boot & is.null(R))) {
@@ -112,9 +112,9 @@ ot_indices_janati <- function(x,
   # BUILD COST MATRIX
   # ----------------------------------------------------------------------------
   if (discrete_out) {
-    C <- as.matrix(stats::dist(y_unique, method = "euclidean")) ^ 2
+    C <- squared_euclidean_cost(y_unique)
   } else {
-    C <- as.matrix(stats::dist(y, method = "euclidean")) ^ 2
+    C <- squared_euclidean_cost(y)
   }
 
   # If the scaling is requested, scale the cost matrix by the highest value
@@ -133,7 +133,7 @@ ot_indices_janati <- function(x,
   solver_fun <- switch(
     solver,
     "sinkhorn" = sinkhorn,
-    "sinkhorn_log" = sinkhorn_stable,
+    "sinkhorn_stable" = sinkhorn_stable,
     default = NULL
   )
 

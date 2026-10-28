@@ -46,7 +46,7 @@ dimension of the cost matrix.}
 options are:
 \itemize{
 \item \code{"sinkhorn"} (default), the Sinkhorn's solver \insertCite{cuturi2013sinkhorn}{gsaot}.
-\item \code{"sinkhorn_log"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
+\item \code{"sinkhorn_stable"}, the Sinkhorn's solver in log scale \insertCite{peyre2019computational}{gsaot}.
 \item \code{"transport"}, a solver of the non regularized OT problem using \code{\link[transport:transport]{transport::transport()}}.
 }}
 
